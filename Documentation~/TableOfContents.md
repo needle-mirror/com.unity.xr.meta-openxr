@@ -1,0 +1,6 @@
+* [Introduction](xref:meta-openxr-manual)
+* [Project Setup](xref:meta-openxr-project-setup)
+* [Architecture](xref:meta-openxr-architecture)
+* [Features](xref:meta-openxr-features)
+  * [Camera](xref:meta-openxr-camera)
+  * [Plane Detection](xref:meta-openxr-plane-detection)

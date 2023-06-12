@@ -1,0 +1,37 @@
+{
+  "name": "com.unity.xr.meta-openxr",
+  "displayName": "Meta OpenXR Feature",
+  "version": "0.1.1",
+  "unity": "2021.3",
+  "unityRelease": "0f1",
+  "description": "Enables you to build mixed reality apps for Meta Quest devices by implementing support for Meta OpenXR extensions.",
+  "keywords": [
+    "openxr",
+    "meta",
+    "oculus",
+    "xr",
+    "vr",
+    "mr",
+    "virtual",
+    "reality",
+    "rift",
+    "quest",
+    "arfoundation"
+  ],
+  "dependencies": {
+    "com.unity.xr.openxr": "1.7.0",
+    "com.unity.xr.arfoundation": "5.1.0-pre.6"
+  },
+  "_upm": {
+    "changelog": "### Added\n\n- Added support for getting plane boundary vertices via [XRPlaneSubsystem.GetBoundary](xref:UnityEngine.XR.ARSubsystems.XRPlaneSubsystem.GetBoundary(UnityEngine.XR.ARSubsystems.TrackableId,Unity.Collections.Allocator,Unity.Collections.NativeArray{UnityEngine.Vector2}@)).\n- Added support for getting plane alignment via [ARPlane.alignment](xref:UnityEngine.XR.ARFoundation.ARPlane.alignment) as well as [planeAlignmentThreshold](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRPlaneSubsystem.planeAlignmentThreshold). Refer to [Plane alignment](xref:meta-openxr-plane-detection#plane-alignment) for more information.\n- Added support for [plane classification](xref:UnityEngine.XR.ARSubsystems.PlaneClassification).\n- Added support for planes to be updated and removed.\n- Added a custom Editor for [ARCameraManager](xref:UnityEngine.XR.ARFoundation.ARCameraManager) to clarify that its serialized properties have no effect on Meta Passthrough.\n- Added a custom Editor for [ARCameraBackground](xref:UnityEngine.XR.ARFoundation.ARCameraBackground) to clarify that it has no effect on Meta Quest devices.\n- Added support for [requestedDetectionMode](xref:UnityEngine.XR.ARFoundation.ARPlaneManager.requestedDetectionMode) to filter horizontal and vertical planes.\n\n### Changed\n\n- Changed the `trackableId` property of planes to be backed by OpenXR's `uuid` field, instead of a monotonically increasing counter.\n- Changed the display name of the AR Foundation Meta Quest feature.\n- Grouped the Meta Quest OpenXR features in an OpenXR feature group.\n- Passthrough layer is now composited behind AR content rather than alpha blended in front of it. This fixes an issue where AR opaques always appeared semi-transparent.\n\n### Fixed\n\n- Fixed an issue where the `trackingState` property of planes could be incorrectly reported in some rare cases.\n- Fixed an issue where the center of a plane in plane space was incorrectly reported as a value other than (0, 0).\n- Fixed an issue where `ARPlane`s were not removed if the `Redo Walls` action or the `Clear Room Set Up` action was performed through the Meta Quest menu."
+  },
+  "upmCi": {
+    "footprint": "462cffdd3051f007ee622b65d07b04ac741d4250"
+  },
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.meta-openxr@0.1/manual/index.html",
+  "repository": {
+    "url": "https://github.cds.internal.unity3d.com/unity/xr.sdk.meta-openxr.git",
+    "type": "git",
+    "revision": "c8ab99246d2a4a35202ba41e94bef7bc0dbb406f"
+  }
+}

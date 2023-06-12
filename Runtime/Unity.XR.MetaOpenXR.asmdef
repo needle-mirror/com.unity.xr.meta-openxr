@@ -1,0 +1,17 @@
+{
+    "name": "Unity.XR.MetaOpenXR",
+    "rootNamespace": "UnityEngine.XR.OpenXR.Features.Meta",
+    "references": [
+        "Unity.XR.ARSubsystems",
+        "Unity.XR.OpenXR"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
