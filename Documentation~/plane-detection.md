@@ -3,11 +3,20 @@ uid: meta-openxr-plane-detection
 ---
 # Plane detection
 
-Plane detection with the Meta OpenXR Feature works similarly to AR Foundation [Plane detection](xref:arfoundation-plane-detection), with a couple platform-specific nuances.
+[Plane detection](xref:arfoundation-plane-detection) on the Meta OpenXR platform works similarly to other AR platforms, but there are some platform-specific nuances to consider when developing your app. The following sections explain each of these platform-specific cases.
+
+## Room setup
+
+Plane detection on Meta Quest devices requires that you run [Room Setup](xref:meta-openxr-device-setup#room-setup) on your Meta Quest device before any planes can be detected.
+
+Unlike other AR platforms, Meta OpenXR does not dynamically discover planes at runtime. Instead, the Meta OpenXR Feature queries the device's Room Setup data and returns all plane components that are stored in its [Scene Model](https://developer.oculus.com/documentation/native/android/openxr-scene-overview#scene-model). Some entities in the Scene Model, such as Tables or Couches, include planes, while others do not.
+
+> [!Important]
+> If Room Setup is not complete, AR Foundation cannot detect any planes.
 
 ## Trackable ID
 
-Unlike other AR Foundation platforms, the [trackableId](xref:UnityEngine.XR.ARFoundation.ARTrackable`2.trackableId) property of any [ARPlane](xref:UnityEngine.XR.ARFoundation.ARPlane) from the Meta OpenXR platform persists across multiple sessions in the same room setup. This allows you to, for instance, save the `trackableId` of a user's wall to persist a virtual painting on that wall each time the user opens your app.
+Unlike other AR platforms, the [trackableId](xref:UnityEngine.XR.ARFoundation.ARTrackable`2.trackableId) property of any [ARPlane](xref:UnityEngine.XR.ARFoundation.ARPlane) from the Meta OpenXR platform persists across multiple sessions in the same room setup. This allows you to, for instance, save the `trackableId` of a user's table to persist a virtual centerpiece on the table each time the user runs your app.
 
 ## Plane alignment
 

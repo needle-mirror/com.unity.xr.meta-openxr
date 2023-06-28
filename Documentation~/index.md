@@ -19,7 +19,7 @@ This package is dependent on both [AR Foundation](https://docs.unity3d.com/Packa
 | [Body tracking](xref:arfoundation-body-tracking) | | Detect and track a human body. |
 | [Point clouds](xref:arfoundation-point-clouds) | | Detect and track feature points. |
 | [Raycasts](xref:arfoundation-raycasts) | Yes | Cast rays against tracked items. |
-| [Anchors](xref:arfoundation-anchors) | | Track arbitrary points in space. |
+| [Anchors](xref:arfoundation-anchors) | Yes | Track arbitrary points in space. |
 | [Meshing](xref:arfoundation-meshing) | | Generate meshes of the environment. |
 | [Environment probes](xref:arfoundation-environment-probes) | | Generate cubemaps of the environment. |
 | [Occlusion](xref:arfoundation-occlusion) | | Occlude AR content with physical objects and perform human segmentation. |
@@ -30,7 +30,7 @@ This package is dependent on both [AR Foundation](https://docs.unity3d.com/Packa
 To use the Meta OpenXR Feature package, your project must meet the following requirements:
 
 * Unity 2021.3 or newer
-* AR Foundation 5.0 or newer
-* OpenXR 1.6 or newer
+* AR Foundation 5.1.0-pre.6 or newer
+* OpenXR 1.7 or newer
 
 When you install this package, if you don't already have AR Foundation or OpenXR in your project, the Package Manager will automatically install these dependencies.
