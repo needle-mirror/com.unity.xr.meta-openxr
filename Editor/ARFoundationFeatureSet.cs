@@ -6,12 +6,20 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
     [OpenXRFeatureSet(
         FeatureIds = new[]
         {
-            ARFoundationFeature.featureId,
+            ARSessionFeature.featureId,
+            ARAnchorFeature.featureId,
+            ARCameraFeature.featureId,
+            ARPlaneFeature.featureId,
+            ARRaycastFeature.featureId,
             MetaQuestFeature.featureId,
         },
-        DefaultFeatureIds = new[]
+        DefaultFeatureIds = new []
         {
-            ARFoundationFeature.featureId,
+            ARSessionFeature.featureId,
+            ARAnchorFeature.featureId,
+            ARCameraFeature.featureId,
+            ARPlaneFeature.featureId,
+            ARRaycastFeature.featureId,
             MetaQuestFeature.featureId,
         },
         RequiredFeatureIds = new[]

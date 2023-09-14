@@ -3,25 +3,30 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// <summary>
     /// Static constants
     /// </summary>
-    internal static class Constants
+    static class Constants
     {
         internal const string k_ARFoundationLibrary = "libUnityARFoundationMeta";
 
         /// <summary>
         /// Key used to store and retrieve custom configuration settings from EditorBuildSettings.
         /// </summary>
-        public const string k_SettingsKey = "com.unity.xr.meta-openxr.settings";
+        internal const string k_SettingsKey = "com.unity.xr.meta-openxr.settings";
 
 #if UNITY_EDITOR
         /// <summary>
-        /// Root URL for the Meta OpenXR documentation
+        /// Root URL for the Unity OpenXR: Meta documentation
         /// </summary>
-        public const string k_DocumentationManualURL = "https://docs.unity3d.com/Packages/com.unity.xr.meta-openxr@0.1/manual/";
+        const string k_DocumentationManualURL = "https://docs.unity3d.com/Packages/com.unity.xr.meta-openxr@0.1/manual/";
 
         /// <summary>
-        /// Main documentation URL for Meta OpenXR
+        /// Main documentation URL for Unity OpenXR: Meta
         /// </summary>
-        public const string k_DocumentationURL = k_DocumentationManualURL + "index.html";
+        internal const string k_DocumentationURL = k_DocumentationManualURL + "index.html";
+
+        /// <summary>
+        /// Company name for OpenXR Feature implementations.
+        /// </summary>
+        internal const string k_CompanyName = "Unity Technologies";
 #endif
     }
 }

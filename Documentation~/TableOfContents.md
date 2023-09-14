@@ -3,5 +3,6 @@
 * [Project setup](xref:meta-openxr-project-setup)
 * [Architecture](xref:meta-openxr-architecture)
 * [Features](xref:meta-openxr-features)
+  * [Session](xref:meta-openxr-session)
   * [Camera](xref:meta-openxr-camera)
   * [Plane detection](xref:meta-openxr-plane-detection)

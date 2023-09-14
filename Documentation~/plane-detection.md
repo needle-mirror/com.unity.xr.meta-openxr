@@ -9,10 +9,10 @@ uid: meta-openxr-plane-detection
 
 Plane detection on Meta Quest devices requires that you run [Room Setup](xref:meta-openxr-device-setup#room-setup) on your Meta Quest device before any planes can be detected.
 
-Unlike other AR platforms, Meta OpenXR does not dynamically discover planes at runtime. Instead, the Meta OpenXR Feature queries the device's Room Setup data and returns all plane components that are stored in its [Scene Model](https://developer.oculus.com/documentation/native/android/openxr-scene-overview#scene-model). Some entities in the Scene Model, such as Tables or Couches, include planes, while others do not.
+Unlike other AR platforms, Meta OpenXR does not dynamically discover planes at runtime. Instead, the Unity OpenXR: Meta queries the device's Room Setup data and returns all plane components that are stored in its [Scene Model](https://developer.oculus.com/documentation/native/android/openxr-scene-overview#scene-model). Some entities in the Scene Model, such as Tables or Couches, include planes, while others do not.
 
 > [!Important]
-> If Room Setup is not complete, AR Foundation cannot detect any planes.
+> If Room Setup is not complete, AR Foundation cannot detect any planes. If your app requires planes, you can use [scene capture](xref:meta-openxr-session#scene-capture) to prompt the user to complete Room Setup.
 
 ## Trackable ID
 
@@ -20,7 +20,7 @@ Unlike other AR platforms, the [trackableId](xref:UnityEngine.XR.ARFoundation.AR
 
 ## Plane alignment
 
-Also unique to the Meta OpenXR platform is the [planeAlignmentThreshold](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRPlaneProvider.planeAlignmentThreshold) property, which determines the threshold for [PlaneAlignment](xref:UnityEngine.XR.ARSubsystems.PlaneAlignment) categorization. Plane alignment is calculated by taking each component of the plane's normal vector and finding their difference from 0. If the difference is less than the `planeAlignmentThreshold`, then the `MetaOpenXRPlaneSubsystem` will categorize the plane depending on which of the normal vector's components are within the threshold. The `x` and `z` components are both checked for horizontal planes while the `y` component is checked for vertical planes.
+Also unique to the Meta OpenXR platform is the [planeAlignmentThreshold](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRPlaneSubsystem.planeAlignmentThreshold) property, which determines the threshold for [PlaneAlignment](xref:UnityEngine.XR.ARSubsystems.PlaneAlignment) categorization. Plane alignment is calculated by taking each component of the plane's normal vector and finding their difference from 0. If the difference is less than the `planeAlignmentThreshold`, then the `MetaOpenXRPlaneSubsystem` will categorize the plane depending on which of the normal vector's components are within the threshold. The `x` and `z` components are both checked for horizontal planes while the `y` component is checked for vertical planes.
 
 ## Plane classification
 

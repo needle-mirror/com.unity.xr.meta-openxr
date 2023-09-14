@@ -13,7 +13,7 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
     {
         public override int callbackOrder => 1;
 
-        public override Type featureType => typeof(ARFoundationFeature);
+        public override Type featureType => typeof(ARSessionFeature);
 
         protected override void OnPreprocessBuildExt(BuildReport report)
         {
@@ -134,10 +134,17 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
 
             internal void AddMetaData()
             {
-                OpenXRSettings androidOpenXRSettings = OpenXRSettings.GetSettingsForBuildTargetGroup(BuildTargetGroup.Android);
-                var arFoundationFeature = androidOpenXRSettings.GetFeature<ARFoundationFeature>();
+                var androidOpenXRSettings = OpenXRSettings.GetSettingsForBuildTargetGroup(BuildTargetGroup.Android);
+                AddPassthroughMetaData(androidOpenXRSettings);
+                AddAnchorMetaData(androidOpenXRSettings);
+                AddSceneMetaData(androidOpenXRSettings);
+            }
 
-                if (arFoundationFeature == null)
+            void AddPassthroughMetaData(OpenXRSettings androidOpenXRSettings)
+            {
+                var arCameraFeature = androidOpenXRSettings.GetFeature<ARCameraFeature>();
+
+                if (arCameraFeature == null || !arCameraFeature.enabled)
                     return;
 
                 UpdateOrCreateAttribute(ManifestElement,
@@ -145,11 +152,33 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
                     "com.oculus.feature.PASSTHROUGH",
                     ("required", "true")
                 );
+            }
+
+            void AddAnchorMetaData(OpenXRSettings androidOpenXRSettings)
+            {
+                var arAnchorFeature = androidOpenXRSettings.GetFeature<ARAnchorFeature>();
+
+                if (arAnchorFeature == null || !arAnchorFeature.enabled)
+                    return;
 
                 UpdateOrCreateAttribute(ManifestElement,
                     "uses-permission",
                     "com.oculus.permission.USE_ANCHOR_API"
                 );
+            }
+
+            void AddSceneMetaData(OpenXRSettings androidOpenXRSettings)
+            {
+                var arPlaneFeature = androidOpenXRSettings.GetFeature<ARPlaneFeature>();
+
+                if (arPlaneFeature == null || !arPlaneFeature.enabled)
+                    return;
+
+                UpdateOrCreateAttribute(ManifestElement,
+                    "uses-permission",
+                    "com.oculus.permission.USE_SCENE"
+                );
+
             }
         }
     }

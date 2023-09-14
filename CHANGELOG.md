@@ -8,6 +8,31 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2023-09-14
+
+### Added
+
+- Added `com.oculus.permission.USE_SCENE` permission to the manifest which will show a permission dialog to get user consent if scene data such as planes is requested.
+
+## [0.2.0] - 2023-09-08
+
+### Added
+
+- Added support for `XRSessionSubsystem`'s `trackingState` and `notTrackingReason`.
+- Added support for [Scene capture](xref:meta-openxr-session#scene-capture).
+
+### Changed
+
+- Split **AR Foundation: Meta** Feature into separate OpenXR Features, one for each AR Foundation subsystem. Go to **Project Settings** > **XR Plug-in Management** > **OpenXR** to enable or disable these features.
+- Changed minimum Unity version to 2022.3
+- Updated linked OpenXR version to 1.0.28 from 1.0.25.
+- Changed the package name from **Meta OpenXR Feature** to **Unity OpenXR: Meta**.
+- Changed blending factors for blending Unity content over passthrough from [source alpha, 1 - source alpha] to [1, 1 - source alpha] to support rendering additive materials.
+
+### Fixed
+
+- Fixed Session availability API to properly check that an OpenXR session instance exists.
+
 ## [0.1.2] - 2023-06-28
 
 ### Fixed

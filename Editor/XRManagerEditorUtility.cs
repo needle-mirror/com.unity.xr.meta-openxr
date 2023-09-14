@@ -9,7 +9,7 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
 {
     static class XRManagerEditorUtility
     {
-        static readonly string[] k_RequiredFeatureIds = { ARFoundationFeature.featureId, MetaQuestFeature.featureId };
+        static readonly string[] k_RequiredFeatureIds = { ARSessionFeature.featureId, MetaQuestFeature.featureId };
         static XRGeneralSettingsPerBuildTarget s_AllSettings;
 
         internal static bool IsMetaOpenXRTheActiveBuildTarget()

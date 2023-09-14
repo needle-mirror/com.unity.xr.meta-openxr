@@ -1,10 +1,10 @@
 {
   "name": "com.unity.xr.meta-openxr",
-  "displayName": "Meta OpenXR Feature",
-  "version": "0.1.2",
-  "unity": "2021.3",
+  "displayName": "Unity OpenXR Meta",
+  "version": "0.2.1",
+  "unity": "2022.3",
   "unityRelease": "0f1",
-  "description": "Enables you to build mixed reality apps for Meta Quest devices by implementing support for Meta OpenXR extensions.",
+  "description": "Enables you to build mixed reality apps for Meta Quest devices by implementing support for Meta's OpenXR extensions.",
   "keywords": [
     "openxr",
     "meta",
@@ -23,15 +23,15 @@
     "com.unity.xr.arfoundation": "5.1.0-pre.6"
   },
   "_upm": {
-    "changelog": "### Fixed\n\n- Fixed math operations for comparing structs with single-precision values.\n- Fixed an issue where it was possible to incorrectly remove or update planes before they were added in some uncommon situations. This resulted in an `InvalidOperationException` in AR Foundation that is now no longer thrown."
+    "changelog": "### Added\n\n- Added `com.oculus.permission.USE_SCENE` permission to the manifest which will show a permission dialog to get user consent if scene data such as planes is requested."
   },
   "upmCi": {
-    "footprint": "c767157f6bba96eae6fbeabe82bee0453e59d57e"
+    "footprint": "62b7bae5a64e07e030bea2469829e9356d16b718"
   },
-  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.meta-openxr@0.1/manual/index.html",
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.meta-openxr@0.2/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/xr.sdk.meta-openxr.git",
     "type": "git",
-    "revision": "034f2e946c8fc8780272eec35062a912778969f4"
+    "revision": "d609bfe9c054862f80c45755918a7b3652af2e2b"
   }
 }

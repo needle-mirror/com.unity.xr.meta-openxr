@@ -3,7 +3,7 @@ uid: meta-openxr-project-setup
 ---
 # Project setup
 
-To enable the Meta OpenXR Feature in your project, follow the steps below:
+To enable the Unity OpenXR: Meta in your project, follow the steps below:
 
 1. Go to **Edit** > **Project Settings...** > **XR Plug-in Management**.
 2. In the Android tab, under **Plug-in Providers**, enable **OpenXR**.
