@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine.XR.ARSubsystems;
-
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.XR.OpenXR.Features;
@@ -12,11 +11,11 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// Enables AR Foundation plane support via OpenXR for Meta Quest devices.
     /// </summary>
 #if UNITY_EDITOR
-    [OpenXRFeature(UiName = "AR Foundation: Meta Quest Plane",
+    [OpenXRFeature(UiName = "Meta Quest: AR Plane Detection",
         BuildTargetGroups = new[] { BuildTargetGroup.Android },
         Company = Constants.k_CompanyName,
-        Desc = "AR Foundation plane support on Meta Quest devices",
-        DocumentationLink = Constants.k_DocumentationURL,
+        Desc = "AR Foundation plane detection support on Meta Quest devices",
+        DocumentationLink = Constants.DocsUrls.k_PlanesUrl,
         OpenxrExtensionStrings = k_OpenXRRequestedExtensions,
         Category = FeatureCategory.Feature,
         FeatureId = featureId,
@@ -34,12 +33,12 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// For more information, refer to
         /// <see href="https://docs.unity3d.com/Packages/com.unity.xr.openxr@1.6/manual/features.html#enabling-openxr-spec-extension-strings"/>.
         /// </summary>
+        /// <seeaslo href="https://developer.oculus.com/documentation/native/android/mobile-scene-api-ref/"/>
         const string k_OpenXRRequestedExtensions =
-            // Plane (https://developer.oculus.com/documentation/native/android/mobile-scene-api-ref/)
-            "XR_FB_spatial_entity " +
-            "XR_FB_spatial_entity_query " +
-            "XR_FB_spatial_entity_storage " +
-            "XR_FB_scene ";
+            Constants.OpenXRExtensions.k_XR_FB_spatial_entity + " " +
+            Constants.OpenXRExtensions.k_XR_FB_spatial_entity_query + " " +
+            Constants.OpenXRExtensions.k_XR_FB_spatial_entity_storage + " " +
+            Constants.OpenXRExtensions.k_XR_FB_scene;
 
         static List<XRPlaneSubsystemDescriptor> s_PlaneDescriptors = new();
 
@@ -49,12 +48,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// </summary>
         protected override void OnSubsystemCreate()
         {
-            if (OpenXRRuntime.IsExtensionEnabled("XR_FB_spatial_entity"))
-            {
-                CreateSubsystem<XRPlaneSubsystemDescriptor, XRPlaneSubsystem>(
-                    s_PlaneDescriptors,
-                    MetaOpenXRPlaneSubsystem.k_SubsystemId);
-            }
+            CreateSubsystem<XRPlaneSubsystemDescriptor, XRPlaneSubsystem>(
+                s_PlaneDescriptors,
+                MetaOpenXRPlaneSubsystem.k_SubsystemId);
         }
 
         /// <summary>
@@ -64,5 +60,15 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         {
             DestroySubsystem<XRPlaneSubsystem>();
         }
+
+#if UNITY_EDITOR
+        /// <summary>
+        /// Validation Rules for ARPlaneFeature.
+        /// </summary>
+        protected override void GetValidationChecks(List<ValidationRule> rules, BuildTargetGroup targetGroup)
+        {
+            rules.AddRange(SharedValidationRules.EnableARSessionValidationRules(this));
+        }
+#endif
     }
 }

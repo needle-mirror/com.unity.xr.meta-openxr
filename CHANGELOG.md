@@ -8,18 +8,34 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2023-09-30
+
+### Added
+
+- Added new extension methods for the `XRDisplaySubsystem` to support getting the supported display refresh rates and requesting a display refresh rate. Refer to [Meta Quest Display Utilities](xref:meta-openxr-display-utilities) for more information.
+
+- Added documentation for recommended settings when using [Universal Render Pipeline](xref:meta-openxr-project-setup#universal-render-pipeline).
+
+### Changed
+
+- Renamed the AR features in the `Meta Quest` OpenXR feature group for brevity and consistency.
+
+- Changed the `ARPlaneFeature` implementation to request the Android permission `com.oculus.permission.USE_SCENE` on Start on OpenXR runtime versions 1.0.31 and newer, as required by the OpenXR specification.
+
+- Changed the `Unity.XR.MetaOpenXR` runtime assembly to only be included on Android and Editor platforms. This was always intended, but previously the assembly had been included on all platforms.
+
+### Fixed
+
+- Fixed an issue where the `ARAnchorFeature` enabled more OpenXR extensions than were necessary for the `XRAnchorSubsystem` to function correctly.
+
 ## [0.2.1] - 2023-09-14
 
 ### Added
 
 - Added `com.oculus.permission.USE_SCENE` permission to the manifest which will show a permission dialog to get user consent if scene data such as planes is requested.
-
-## [0.2.0] - 2023-09-08
-
-### Added
-
 - Added support for `XRSessionSubsystem`'s `trackingState` and `notTrackingReason`.
 - Added support for [Scene capture](xref:meta-openxr-session#scene-capture).
+- Added validation rules. Go to **Project Settings** > **XR Plug-in Management** > **Validation Rules** to check if your project settings match the validation rules.
 
 ### Changed
 

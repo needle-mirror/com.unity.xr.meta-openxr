@@ -4,6 +4,9 @@ using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
+#if UNITY_ANDROID
+using UnityEngine.Android;
+#endif
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
@@ -16,6 +19,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     public sealed class MetaOpenXRPlaneSubsystem : XRPlaneSubsystem
     {
         internal const string k_SubsystemId = "MetaOpenXR-Plane";
+
+        const string k_AndroidScenePermission = "com.oculus.permission.USE_SCENE";
 
         /// <summary>
         /// Plane alignment is determined by calculating the offset of the normal vector components
@@ -46,10 +51,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             /// <inheritdoc/>
             protected override bool TryInitialize()
             {
-                if (OpenXRRuntime.IsExtensionEnabled("XR_FB_spatial_entity") &&
-                    OpenXRRuntime.IsExtensionEnabled("XR_FB_spatial_entity_query") &&
-                    OpenXRRuntime.IsExtensionEnabled("XR_FB_spatial_entity_storage") &&
-                    OpenXRRuntime.IsExtensionEnabled("XR_FB_scene"))
+                if (OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_spatial_entity) &&
+                    OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_spatial_entity_query) &&
+                    OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_spatial_entity_storage) &&
+                    OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_scene))
                 {
                     NativeApi.Create();
                     return true;
@@ -71,7 +76,31 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             }
 
             /// <inheritdoc/>
-            public override void Start() => NativeApi.Start();
+            public override void Start()
+            {
+#if UNITY_ANDROID
+                // Meta requires that we ask for scene permission beginning with OpenXR 1.0.31
+                if (OpenXRUtility.IsOpenXRVersionGreaterOrEqual(1, 0, 31) &&
+                    !Permission.HasUserAuthorizedPermission(k_AndroidScenePermission))
+                {
+                    var callbacks = new PermissionCallbacks();
+                    callbacks.PermissionDenied += _ => LogAndroidPermissionFailure();
+#if UNITY_2023_1_OR_NEWER
+                    callbacks.PermissionRequestDismissed += _ => LogAndroidPermissionFailure();
+#else
+                    callbacks.PermissionDeniedAndDontAskAgain += _ => LogAndroidPermissionFailure();
+#endif // UNITY_2023_1_OR_NEWER
+                    Permission.RequestUserPermission(k_AndroidScenePermission, callbacks);
+                }
+#endif // UNITY_ANDROID
+
+                NativeApi.Start();
+            }
+
+#if UNITY_ANDROID
+            static void LogAndroidPermissionFailure() =>
+                Debug.LogError($"Plane detection requires system permission {k_AndroidScenePermission}, but permission was not granted.");
+#endif
 
             /// <inheritdoc/>
             public override void Stop() => NativeApi.Stop();
@@ -99,7 +128,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 FlipBoundaryWindingOrder(boundary);
             }
 
-            void FlipBoundaryWindingOrder(NativeArray<Vector2> vertices)
+            static void FlipBoundaryWindingOrder(NativeArray<Vector2> vertices)
             {
                 var half = vertices.Length / 2;
                 for (var i = 0; i < half; ++i)

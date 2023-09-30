@@ -12,6 +12,7 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
             ARPlaneFeature.featureId,
             ARRaycastFeature.featureId,
             MetaQuestFeature.featureId,
+            DisplayUtilitiesFeature.featureId,
         },
         DefaultFeatureIds = new []
         {
@@ -21,6 +22,7 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
             ARPlaneFeature.featureId,
             ARRaycastFeature.featureId,
             MetaQuestFeature.featureId,
+            DisplayUtilitiesFeature.featureId,
         },
         RequiredFeatureIds = new[]
         {

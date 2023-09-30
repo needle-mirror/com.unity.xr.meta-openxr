@@ -3,10 +3,9 @@ uid: meta-openxr-session
 ---
 # Session
 
-This page is a supplement to the AR Foundation [Session](xref:arfoundation-session) manual, and the following sections only contain information about APIs where the Meta OpenXR platform exhibits unique platform-specific behavior.
+This page is a supplement to the AR Foundation [Session](xref:arfoundation-session) manual. The following sections only contain information about APIs where Meta Quest exhibits unique platform-specific behavior.
 
-> [!TIP]
-> When developing an AR app, refer to both the AR Foundation package documentation as well as the [required packages](xref:arfoundation-manual#required-packages) for each platform you support.
+[!include[](../snippets/arf-docs-tip.md)]
 
 ## Scene capture
 
@@ -14,7 +13,7 @@ Unlike other AR platforms, Meta OpenXR does not dynamically detect trackables at
 
 During scene capture, the device presents an interface where users can label surfaces and objects in their environment such as walls and furniture. When scene capture is complete, the Scene Model is saved to the device and persists across applications and sessions.
 
-![A Meta Quest 3 screenshot shows a small room with a table rendered via Passthrough. A bounding box is drawn around the table as part of the interface for scene capture.](images/scene-capture.png)<br/>*Scene capture shown on a Quest 3.*
+![A Meta Quest 3 screenshot shows a small room with a table rendered via Passthrough. A bounding box is drawn around the table as part of the interface for scene capture.](../images/scene-capture.png)<br/>*Scene capture shown on a Quest 3.*
 
 > [!NOTE]
 > The user interface for scene capture varies depending on which Meta Quest device is used, but all devices support the same OpenXR API.
@@ -34,7 +33,7 @@ The scene capture life cycle consists of four phases:
 4. Unity resumes and invokes `OnApplicationPause` again, passing `false`.
 
 ### Code sample
+
 Use [MetaOpenXRSessionSubsystem.TryRequestSceneCapture](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRSessionSubsystem.TryRequestSceneCapture) to initiate scene capture, as shown below:
 
-[!code-cs[meta_scene_capture](../Tests/CodeSamples/MetaSceneCaptureSample.cs#meta_scene_capture)]
-
+[!code-cs[meta_scene_capture](../../Tests/CodeSamples/MetaSceneCaptureSample.cs#meta_scene_capture)]

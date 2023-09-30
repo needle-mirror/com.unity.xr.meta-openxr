@@ -19,7 +19,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         {
             protected override bool TryInitialize()
             {
-                if (!OpenXRRuntime.IsExtensionEnabled("XR_FB_spatial_entity"))
+                if (!OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_spatial_entity))
                     return false;
 
                 NativeApi.Create();
@@ -27,12 +27,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             }
 
             public override void Start()
-            {
-            }
+            { }
 
             public override void Stop()
-            {
-            }
+            { }
 
             public override void Destroy() => NativeApi.Destroy();
 

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine.XR.ARSubsystems;
-
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.XR.OpenXR.Features;
@@ -14,12 +13,12 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// Enables AR Foundation session support via OpenXR for Meta Quest devices.
     /// </summary>
 #if UNITY_EDITOR
-    [OpenXRFeature(UiName = "AR Foundation: Meta Quest Session",
+    [OpenXRFeature(UiName = "Meta Quest: AR Session",
         BuildTargetGroups = new[] { BuildTargetGroup.Android },
         Company = Constants.k_CompanyName,
-        Desc = "AR Foundation support on Meta Quest devices",
-        DocumentationLink = Constants.k_DocumentationURL,
-        OpenxrExtensionStrings = k_OpenXRRequestedExtensions,
+        Desc = "AR Foundation support on Meta Quest devices. Required as a dependency of any other AR feature.",
+        DocumentationLink = Constants.DocsUrls.k_SessionUrl,
+        OpenxrExtensionStrings = Constants.OpenXRExtensions.k_XR_FB_scene_capture,
         Category = FeatureCategory.Feature,
         FeatureId = featureId,
         Version = "0.1.0")]
@@ -30,13 +29,6 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// The feature id string. This is used to give the feature a well known id for reference.
         /// </summary>
         public const string featureId = "com.unity.openxr.feature.arfoundation-meta-session";
-
-        /// <summary>
-        /// The set of OpenXR spec extension strings to enable, separated by spaces.
-        /// For more information, refer to
-        /// <see href="https://docs.unity3d.com/Packages/com.unity.xr.openxr@1.6/manual/features.html#enabling-openxr-spec-extension-strings"/>.
-        /// </summary>
-        const string k_OpenXRRequestedExtensions = "XR_FB_scene_capture ";
 
         static List<XRSessionSubsystemDescriptor> s_SessionDescriptors = new();
 
@@ -63,6 +55,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// Called after xrCreateInstance.
         /// </summary>
         /// <param name="xrInstance">Handle of the xrInstance</param>
+        /// <returns>Returns `true` if successful. Returns `false` otherwise.</returns>
         protected override bool OnInstanceCreate(ulong xrInstance)
         {
             return base.OnInstanceCreate(xrInstance)

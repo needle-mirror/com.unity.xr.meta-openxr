@@ -45,11 +45,17 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
         class MetaOpenXRProvider : Provider
         {
-            /// <summary>
-            /// Construct the camera functionality provider for Meta.
-            /// </summary>
-            public MetaOpenXRProvider()
-                => NativeApi.UnityMetaQuest_Passthrough_Construct();
+            protected override bool TryInitialize()
+            {
+                if (OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_passthrough) &&
+                    OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_composition_layer_alpha_blend))
+                {
+                    NativeApi.UnityMetaQuest_Passthrough_Construct();
+                    return true;
+                }
+
+                return false;
+            }
 
             /// <summary>
             /// Start the camera functionality.

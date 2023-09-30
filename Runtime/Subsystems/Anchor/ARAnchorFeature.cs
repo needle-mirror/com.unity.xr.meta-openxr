@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine.XR.ARSubsystems;
-
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.XR.OpenXR.Features;
@@ -12,12 +11,12 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// Enables AR Foundation anchor support via OpenXR for Meta Quest devices.
     /// </summary>
 #if UNITY_EDITOR
-    [OpenXRFeature(UiName = "AR Foundation: Meta Quest Anchor",
+    [OpenXRFeature(UiName = "Meta Quest: AR Anchors",
         BuildTargetGroups = new[] { BuildTargetGroup.Android },
         Company = Constants.k_CompanyName,
         Desc = "AR Foundation anchor support on Meta Quest devices",
-        DocumentationLink = Constants.k_DocumentationURL,
-        OpenxrExtensionStrings = k_OpenXRRequestedExtensions,
+        DocumentationLink = Constants.DocsUrls.k_AnchorsUrl,
+        OpenxrExtensionStrings = Constants.OpenXRExtensions.k_XR_FB_spatial_entity,
         Category = FeatureCategory.Feature,
         FeatureId = featureId,
         Version = "0.1.0")]
@@ -29,17 +28,6 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// </summary>
         public const string featureId = "com.unity.openxr.feature.arfoundation-meta-anchor";
 
-        /// <summary>
-        /// The set of OpenXR spec extension strings to enable, separated by spaces.
-        /// For more information, refer to
-        /// <see href="https://docs.unity3d.com/Packages/com.unity.xr.openxr@1.6/manual/features.html#enabling-openxr-spec-extension-strings"/>.
-        /// </summary>
-        const string k_OpenXRRequestedExtensions =
-            // (https://developer.oculus.com/documentation/native/android/mobile-scene-api-ref/)
-            "XR_FB_spatial_entity " +
-            "XR_FB_spatial_entity_query " +
-            "XR_FB_spatial_entity_storage ";
-
         static List<XRAnchorSubsystemDescriptor> s_AnchorDescriptors = new();
 
         /// <summary>
@@ -48,12 +36,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// </summary>
         protected override void OnSubsystemCreate()
         {
-            if (OpenXRRuntime.IsExtensionEnabled("XR_FB_spatial_entity"))
-            {
-                CreateSubsystem<XRAnchorSubsystemDescriptor, XRAnchorSubsystem>(
-                    s_AnchorDescriptors,
-                    MetaOpenXRAnchorSubsystem.k_SubsystemId);
-            }
+            CreateSubsystem<XRAnchorSubsystemDescriptor, XRAnchorSubsystem>(
+                s_AnchorDescriptors,
+                MetaOpenXRAnchorSubsystem.k_SubsystemId);
         }
 
         /// <summary>
@@ -63,5 +48,15 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         {
             DestroySubsystem<XRAnchorSubsystem>();
         }
+
+#if UNITY_EDITOR
+        /// <summary>
+        /// Validation Rules for ARAnchorFeature.
+        /// </summary>
+        protected override void GetValidationChecks(List<ValidationRule> rules, BuildTargetGroup targetGroup)
+        {
+            rules.AddRange(SharedValidationRules.EnableARSessionValidationRules(this));
+        }
+#endif
     }
 }

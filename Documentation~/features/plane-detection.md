@@ -3,7 +3,9 @@ uid: meta-openxr-plane-detection
 ---
 # Plane detection
 
-[Plane detection](xref:arfoundation-plane-detection) on the Meta OpenXR platform works similarly to other AR platforms, but there are some platform-specific nuances to consider when developing your app. The following sections explain each of these platform-specific cases.
+This page is a supplement to the AR Foundation [Plane detection](xref:arfoundation-plane-detection) manual. The following sections only contain information about APIs where Meta Quest exhibits unique platform-specific behavior.
+
+[!include[](../snippets/arf-docs-tip.md)]
 
 ## Room setup
 
