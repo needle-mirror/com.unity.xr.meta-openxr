@@ -13,15 +13,15 @@ If you are setting up a Meta Quest device for the first time, refer to Meta's [S
 
 For the best experience on your Meta Quest device, consider updating to the latest version of the Meta Quest software. This will ensure that you have access to Meta's latest enhancements and bug fixes. You can update your Meta Quest software by going to **Settings** > **System** > **Software Update** in the universal menu on your device.
 
-## Room Setup
+## Space Setup
 
-Some AR Foundation features require that you first run Room Setup on your Meta Quest device before you launch your app. For example, if your app uses plane detection, AR Foundation will not be able to detect any planes unless you first run Room Setup.
+Some AR Foundation features require that you first run Space Setup on your Meta Quest device before you launch your app. For example, if your app uses plane detection, AR Foundation will not be able to detect any planes unless you first run Space Setup.
 
-To run Room Setup, follow the steps below:
+To run Space Setup, follow the steps below:
 
 1. Press ![the universal menu button](images/universal-menu.png) on your right Touch controller to access the universal menu.
-2. Go to **Settings** > **Experimental** > **Room Setup** and select the **Set up** button.
-3. Follow the prompts in your headset to complete Room Setup.
+2. Go to **Settings** > **Physical Space** > **Space Setup** and select the **Set up** button.
+3. Follow the prompts in your headset to complete Space Setup.
 
 > [!NOTE]
-> If **Room Setup** is not an available option in the **Settings** > **Experimental** menu on your device, you must update to a more recent version of the Meta Quest software for this option to appear.
+> If **Space Setup** is not an available option in the **Settings** > **Physical Space** menu on your device, you must update to a more recent version of the Meta Quest software for this option to appear.

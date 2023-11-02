@@ -7,18 +7,18 @@ This page is a supplement to the AR Foundation [Plane detection](xref:arfoundati
 
 [!include[](../snippets/arf-docs-tip.md)]
 
-## Room setup
+## Space setup
 
-Plane detection on Meta Quest devices requires that you run [Room Setup](xref:meta-openxr-device-setup#room-setup) on your Meta Quest device before any planes can be detected.
+Plane detection on Meta Quest devices requires that you run [Space Setup](xref:meta-openxr-device-setup#space-setup) on your Meta Quest device before any planes can be detected.
 
-Unlike other AR platforms, Meta OpenXR does not dynamically discover planes at runtime. Instead, the Unity OpenXR: Meta queries the device's Room Setup data and returns all plane components that are stored in its [Scene Model](https://developer.oculus.com/documentation/native/android/openxr-scene-overview#scene-model). Some entities in the Scene Model, such as Tables or Couches, include planes, while others do not.
+Unlike other AR platforms, Meta OpenXR does not dynamically discover planes at runtime. Instead, the Unity OpenXR: Meta queries the device's Space Setup data and returns all plane components that are stored in its [Scene Model](https://developer.oculus.com/documentation/native/android/openxr-scene-overview#scene-model). Some entities in the Scene Model, such as Tables or Couches, include planes, while others do not.
 
 > [!Important]
-> If Room Setup is not complete, AR Foundation cannot detect any planes. If your app requires planes, you can use [scene capture](xref:meta-openxr-session#scene-capture) to prompt the user to complete Room Setup.
+> If Space Setup is not complete, AR Foundation cannot detect any planes. If your app requires planes, you can use [scene capture](xref:meta-openxr-session#scene-capture) to prompt the user to complete Space Setup.
 
 ## Trackable ID
 
-Unlike other AR platforms, the [trackableId](xref:UnityEngine.XR.ARFoundation.ARTrackable`2.trackableId) property of any [ARPlane](xref:UnityEngine.XR.ARFoundation.ARPlane) from the Meta OpenXR platform persists across multiple sessions in the same room setup. This allows you to, for instance, save the `trackableId` of a user's table to persist a virtual centerpiece on the table each time the user runs your app.
+Unlike other AR platforms, the [trackableId](xref:UnityEngine.XR.ARFoundation.ARTrackable`2.trackableId) property of any [ARPlane](xref:UnityEngine.XR.ARFoundation.ARPlane) from the Meta OpenXR platform persists across multiple sessions in the same space setup. This allows you to, for instance, save the `trackableId` of a user's table to persist a virtual centerpiece on the table each time the user runs your app.
 
 ## Plane alignment
 
@@ -30,18 +30,13 @@ This package maps Meta's native [semantic label component](https://developer.ocu
 
 Refer to the table below to understand the mapping between Meta's semantic labels and AR Foundation's classifications:
 
-| Meta Label       | AR Foundation Label   |
-| :--------------- | :-------------------- |
-| DESK             | Table                 |
-| COUCH            | Seat                  |
-| FLOOR            | Floor                 |
-| CEILING          | Ceiling               |
-| WALL_FACE        | Wall                  |
-| DOOR_FRAME       | Door                  |
-| WINDOW_FRAME     | Window                |
-| SCREEN           | Other                 |
-| LAMP             | Other                 |
-| PLANT            | Other                 |
-| STORAGE          | Other                 |
-| BED              | Other                 |
-| OTHER            | Other                 |
+| Meta Label          | AR Foundation Label   |
+| :------------------ | :-------------------- |
+| TABLE               | Table                 |
+| COUCH               | Seat                  |
+| FLOOR               | Floor                 |
+| CEILING             | Ceiling               |
+| WALL_FACE           | Wall                  |
+| DOOR_FRAME          | Door                  |
+| WINDOW_FRAME        | Window                |
+| OTHER               | Other                 |

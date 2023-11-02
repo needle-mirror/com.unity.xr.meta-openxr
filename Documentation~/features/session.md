@@ -9,7 +9,7 @@ This page is a supplement to the AR Foundation [Session](xref:arfoundation-sessi
 
 ## Scene capture
 
-Unlike other AR platforms, Meta OpenXR does not dynamically detect trackables at runtime. Instead, Meta's OpenXR runtime queries the device's Room Setup data and returns information stored in its [Scene Model](https://developer.oculus.com/documentation/native/android/openxr-scene-overview#scene-model). In the Meta OpenXR API, this Room Setup process is referred to as _scene capture_.
+Unlike other AR platforms, Meta OpenXR does not dynamically detect trackables at runtime. Instead, Meta's OpenXR runtime queries the device's Space Setup data and returns information stored in its [Scene Model](https://developer.oculus.com/documentation/native/android/openxr-scene-overview#scene-model). In the Meta OpenXR API, this Space Setup process is referred to as _scene capture_.
 
 During scene capture, the device presents an interface where users can label surfaces and objects in their environment such as walls and furniture. When scene capture is complete, the Scene Model is saved to the device and persists across applications and sessions.
 
@@ -18,7 +18,7 @@ During scene capture, the device presents an interface where users can label sur
 > [!NOTE]
 > The user interface for scene capture varies depending on which Meta Quest device is used, but all devices support the same OpenXR API.
 
-The user can initiate scene capture any time via the [Room Setup](xref:meta-openxr-device-setup#room-setup) option in Settings, and your app can also initiate scene capture any time via the scene capture API.
+The user can initiate scene capture any time via the [Space Setup](xref:meta-openxr-device-setup#space-setup) option in Settings, and your app can also initiate scene capture any time via the scene capture API.
 
 > [!TIP]
 > Due to current limitations of tracking technology, it is possible that detected planes and other trackables can become misaligned with their physical counterparts over the duration of an AR session. As a workaround for this issue, you can give users the option to initiate scene capture from within your app, allowing them to realign the bounding boxes of trackables in their space.

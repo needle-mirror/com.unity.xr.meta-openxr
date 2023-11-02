@@ -7,7 +7,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// </summary>
         internal const string k_CompanyName = "Unity Technologies";
         internal const string k_PackageName = "com.unity.xr.meta-openxr";
-        internal const string k_MajorMinorVersion = "0.2";
+        internal const string k_MajorMinorVersion = "1.0";
 
         internal const string k_ARFoundationLibrary = "libUnityARFoundationMeta";
 
@@ -19,13 +19,14 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         internal static class DocsUrls
         {
             const string k_DocumentationBaseUrl = "https://docs.unity3d.com/Packages/" + k_PackageName + "@" + k_MajorMinorVersion + "/manual/";
+            const string k_DocumentationFeatureBaseUrl = k_DocumentationBaseUrl + "features/";
             internal const string k_IndexUrl = k_DocumentationBaseUrl + "index.html";
-            internal const string k_DisplayUtilitiesUrl = k_DocumentationBaseUrl + "display-utilities.html";
-            internal const string k_AnchorsUrl = k_DocumentationBaseUrl + "anchors.html";
-            internal const string k_CameraUrl = k_DocumentationBaseUrl + "camera.html";
-            internal const string k_PlanesUrl = k_DocumentationBaseUrl + "plane-detection.html";
-            internal const string k_RaycastsUrl = k_DocumentationBaseUrl + "raycasts.html";
-            internal const string k_SessionUrl = k_DocumentationBaseUrl + "session.html";
+            internal const string k_DisplayUtilitiesUrl = k_DocumentationFeatureBaseUrl + "display-utilities.html";
+            internal const string k_AnchorsUrl = k_DocumentationFeatureBaseUrl + "anchors.html";
+            internal const string k_CameraUrl = k_DocumentationFeatureBaseUrl + "camera.html";
+            internal const string k_PlanesUrl = k_DocumentationFeatureBaseUrl + "plane-detection.html";
+            internal const string k_RaycastsUrl = k_DocumentationFeatureBaseUrl + "raycasts.html";
+            internal const string k_SessionUrl = k_DocumentationFeatureBaseUrl + "session.html";
         }
 
         internal static class OpenXRExtensions

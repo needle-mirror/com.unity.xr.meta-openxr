@@ -8,20 +8,28 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2023-11-02
+
+### Changed
+
+- Updated documentation to reflect changes to the **Room Setup** process including it being renamed to **Space Setup** and relocated to **Settings** > **Physical Space**
+
+### Fixed
+
+- Fixed an issue where Meta's OpenXR runtime would log a warning every frame for each `ARPlane` in the scene regarding the use of an older version of their OpenXR API for semantic labels.
+- Fixed documentation links for Meta-OpenXR features in `Project Settings` > `XR Plug-in Management` > `OpenXR`.
+
 ## [1.0.0] - 2023-09-30
 
 ### Added
 
 - Added new extension methods for the `XRDisplaySubsystem` to support getting the supported display refresh rates and requesting a display refresh rate. Refer to [Meta Quest Display Utilities](xref:meta-openxr-display-utilities) for more information.
-
 - Added documentation for recommended settings when using [Universal Render Pipeline](xref:meta-openxr-project-setup#universal-render-pipeline).
 
 ### Changed
 
 - Renamed the AR features in the `Meta Quest` OpenXR feature group for brevity and consistency.
-
 - Changed the `ARPlaneFeature` implementation to request the Android permission `com.oculus.permission.USE_SCENE` on Start on OpenXR runtime versions 1.0.31 and newer, as required by the OpenXR specification.
-
 - Changed the `Unity.XR.MetaOpenXR` runtime assembly to only be included on Android and Editor platforms. This was always intended, but previously the assembly had been included on all platforms.
 
 ### Fixed
