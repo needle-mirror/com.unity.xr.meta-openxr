@@ -13,7 +13,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// Enables AR Foundation session support via OpenXR for Meta Quest devices.
     /// </summary>
 #if UNITY_EDITOR
-    [OpenXRFeature(UiName = "Meta Quest: AR Session",
+    [OpenXRFeature(UiName = "Meta Quest: Session",
         BuildTargetGroups = new[] { BuildTargetGroup.Android },
         Company = Constants.k_CompanyName,
         Desc = "AR Foundation support on Meta Quest devices. Required as a dependency of any other AR feature.",

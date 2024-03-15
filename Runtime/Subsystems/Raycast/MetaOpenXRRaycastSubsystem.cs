@@ -18,7 +18,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void RegisterDescriptor()
         {
-            XRRaycastSubsystemDescriptor.RegisterDescriptor(new XRRaycastSubsystemDescriptor.Cinfo
+            XRRaycastSubsystemDescriptor.Register(new XRRaycastSubsystemDescriptor.Cinfo
             {
                 id = k_SubsystemId,
                 providerType = typeof(MetaOpenXRRaycastProvider),

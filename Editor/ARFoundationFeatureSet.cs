@@ -10,9 +10,11 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
             ARAnchorFeature.featureId,
             ARCameraFeature.featureId,
             ARPlaneFeature.featureId,
+            ARBoundingBoxFeature.featureId,
             ARRaycastFeature.featureId,
             MetaQuestFeature.featureId,
             DisplayUtilitiesFeature.featureId,
+            ARMeshFeature.featureId,
         },
         DefaultFeatureIds = new []
         {
@@ -20,9 +22,11 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
             ARAnchorFeature.featureId,
             ARCameraFeature.featureId,
             ARPlaneFeature.featureId,
+            ARBoundingBoxFeature.featureId,
             ARRaycastFeature.featureId,
             MetaQuestFeature.featureId,
             DisplayUtilitiesFeature.featureId,
+            ARMeshFeature.featureId,
         },
         RequiredFeatureIds = new[]
         {

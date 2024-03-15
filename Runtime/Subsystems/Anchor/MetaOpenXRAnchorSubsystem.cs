@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using AOT;
 using Unity.Collections;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
@@ -17,12 +19,23 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
         class MetaOpenXRAnchorProvider : Provider
         {
+            static readonly Dictionary<Guid, AwaitableCompletionSource<Result<XRAnchor>>> s_AddAsyncPendingRequests = new();
+
+            static readonly UnityEngine.Pool.ObjectPool<AwaitableCompletionSource<Result<XRAnchor>>> s_AddAsyncCompletionSources = new(
+                createFunc: () => new AwaitableCompletionSource<Result<XRAnchor>>(),
+                actionOnGet: null,
+                actionOnRelease: null,
+                actionOnDestroy: null,
+                collectionCheck: false,
+                defaultCapacity: 8,
+                maxSize: 1024);
+
             protected override bool TryInitialize()
             {
                 if (!OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_spatial_entity))
                     return false;
 
-                NativeApi.Create();
+                NativeApi.Create(s_AddAsyncCallback);
                 return true;
             }
 
@@ -59,11 +72,46 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 }
             }
 
-            public override bool TryAddAnchor(Pose pose, out XRAnchor anchor)
-                => NativeApi.TryAddAnchor(pose, out anchor);
+            /// <summary>
+            /// Attempts to create an anchor at the given <paramref name="pose"/>.
+            /// </summary>
+            /// <param name="pose">The pose, in session space, of the anchor.</param>
+            /// <returns>The result of the async operation.</returns>
+            public override Awaitable<Result<XRAnchor>> TryAddAnchorAsync(Pose pose)
+            {
+                var requestId = Guid.NewGuid();
+                var completionSource = s_AddAsyncCompletionSources.Get();
+                s_AddAsyncPendingRequests.Add(requestId, completionSource);
+                NativeApi.TryAddAnchorAsync(requestId, pose);
+                return completionSource.Awaitable;
+            }
 
             public override bool TryRemoveAnchor(TrackableId anchorId)
                 => NativeApi.TryRemoveAnchor(anchorId);
+
+            /// <summary>
+            /// Function pointer marshalled to native API to call when <see cref="TryAddAnchorAsync"/> is complete.
+            /// </summary>
+            static readonly IntPtr s_AddAsyncCallback = Marshal.GetFunctionPointerForDelegate((AddAsyncDelegate)OnAddAsyncComplete);
+
+            /// <summary>
+            /// Delegate method type for <see cref="MetaOpenXRAnchorProvider.s_AddAsyncCallback"/>.
+            /// </summary>
+            delegate void AddAsyncDelegate(Guid requestId, int xrResult, XRAnchor anchor);
+
+            [MonoPInvokeCallback(typeof(AddAsyncDelegate))]
+            static void OnAddAsyncComplete(Guid requestId, int xrResult, XRAnchor anchor)
+            {
+                if (!s_AddAsyncPendingRequests.Remove(requestId, out var completionSource))
+                {
+                    Debug.LogError($"An unknown error occurred during a system callback for {nameof(TryAddAnchorAsync)}.");
+                    return;
+                }
+
+                completionSource.SetResult(new Result<XRAnchor>(new XRResultStatus(xrResult), anchor));
+                completionSource.Reset();
+                s_AddAsyncCompletionSources.Release(completionSource);
+            }
 
             [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
             static void RegisterDescriptor()
@@ -74,15 +122,16 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                     providerType = typeof(MetaOpenXRAnchorProvider),
                     subsystemTypeOverride = null,
                     supportsTrackableAttachments = false,
+                    supportsSynchronousAdd = false,
                 };
 
-                XRAnchorSubsystemDescriptor.Create(anchorSubsystemCinfo);
+                XRAnchorSubsystemDescriptor.Register(anchorSubsystemCinfo);
             }
 
             static unsafe class NativeApi
             {
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_Create")]
-                public static extern void Create();
+                public static extern void Create(IntPtr tryAddAnchorAsyncCallback);
 
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_Destroy")]
                 public static extern void Destroy();
@@ -97,8 +146,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_ReleaseChanges")]
                 public static extern void ReleaseChanges();
 
-                [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TryAddAnchor")]
-                public static extern bool TryAddAnchor(Pose pose, out XRAnchor anchor);
+                [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TryAddAnchorAsync")]
+                public static extern void TryAddAnchorAsync(Guid requestId, Pose pose);
 
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TryRemoveAnchor")]
                 public static extern bool TryRemoveAnchor(TrackableId anchorId);

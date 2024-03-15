@@ -9,6 +9,6 @@ This page is a supplement to the AR Foundation [Raycasts](xref:arfoundation-rayc
 
 ## Raycast architecture
 
-This package defines an implementation of AR Foundation's [XRRaycastSubsystem.Provider](xref:UnityEngine.XR.ARSubsystems.XRRaycastSubsystem.Provider), but the implementation does not use any OpenXR functionality. In fact, the raycast provider in this pacakge is completely empty. By including an empty raycast provider, this package enables a fallback Unity-world-space raycast implementation in AR Foundation's `ARRaycastManager`.
+This package defines an implementation of AR Foundation's [XRRaycastSubsystem.Provider](xref:UnityEngine.XR.ARSubsystems.XRRaycastSubsystem.Provider), but the implementation does not use any OpenXR functionality. In fact, the raycast provider in this package is completely empty. By including an empty raycast provider, this package enables a fallback Unity-world-space raycast implementation in AR Foundation's `ARRaycastManager`.
 
 If your app uses AR raycasts, you should use the [ARRaycastManager](xref:UnityEngine.XR.ARFoundation.ARRaycastManager) APIs. Do not access `MetaOpenXRRaycastSubsystem` directly.

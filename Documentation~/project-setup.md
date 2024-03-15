@@ -14,26 +14,45 @@ To enable the Unity OpenXR: Meta in your project, follow the steps below:
 ![Unity's Project Settings window is open to XR Plug-in Management > OpenXR, showing a list of enabled features in the Meta Quest feature group](images/openxr-features-all.png)<br/>*The Meta Quest OpenXR feature group*
 
 > [!NOTE]
-> XR Plug-in Management supports only one enabled plug-in provider at a time per build target. If your project also targets ARCore using the [Google ARCore XR Plug-in](https://docs.unity3d.com/Packages/com.unity.xr.arcore@5.0), to avoid errors you should disable the **Google ARCore** plug-in provider before you build an APK for Meta Quest devices. Likewise, you should disable **OpenXR** before you build for ARCore.
+> XR Plug-in Management supports only one enabled plug-in provider at a time per build target. If your project also targets ARCore using the [Google ARCore XR Plug-in](https://docs.unity3d.com/Packages/com.unity.xr.arcore@6.0), to avoid errors you should disable the **Google ARCore** plug-in provider before you build an APK for Meta Quest devices. Likewise, you should disable **OpenXR** before you build for ARCore.
 
 ## Scene setup
 
 To set up your scene for Meta OpenXR, first follow the standard AR Foundation [scene setup](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@5.0?subfolder=/manual/project-setup/scene-setup.html). If your scene will use the Meta Quest device's Passthrough camera, see the additional information below.
 
-Ensure that the **Tracked Pose Driver** component on your camera is has "centerEyePositon [XR HMD]" included in the position and rotation input actions.
+Ensure that the **Tracked Pose Driver** component on your camera has "centerEyePosition [XR HMD]" included in the position and rotation input actions.
 
-### Camera clear flags
+### Camera background
 
-Meta Passthrough requires that your Camera's **Clear Flags** are set to **Solid Color**, with the **Background** color alpha channel value set to zero.
+Meta Passthrough requires that your Camera's **Background Color** (Universal Render Pipeline) or **Clear Flags** (Built-In Render Pipeline) are set to **Solid Color**, with the **Background** color alpha channel value set to zero.
 
-If you have completed AR Foundation scene setup, follow these instructions to set your Camera's **Clear Flags**:
+> [!NOTE]
+> The passthrough video is layered behind the image rendered by the scene camera. If you configure the camera's background color (or clear flags) to use a skybox or an opaque solid color, then the passthrough video is covered up by the camera background.
 
-- Your GameObject hierarchy should contain a GameObject named **XR Origin**. Expand its children to reveal the **Camera Offset** and **Main Camera** GameObjects.
-- Inspect the **Main Camera** GameObject.
-- The Camera component's **Clear Flags** should already be set to **Solid Color**. Select the **Background** color to open the color picker.
-- Set the color's **A** value to 0.
+If you have completed the AR Foundation scene set up, follow these instructions to configure your scene to render with a transparent camera background:
+
+1. Locate the GameObject named **XR Origin** in your GameObject hierarchy. (Refer to [Scene setup](xref:arfoundation-scene-setup) in the AR Foundation manual for instructions on how to set up the scene if it does not already contain an **XR Origin**.) 
+2. Expand the hierarchy to reveal the **Camera Offset** and **Main Camera** GameObjects.
+3. Inspect the **Main Camera** GameObject.
+4. Select from the following options. The options differ based on the render pipeline you're using:
+    * URP: In the **Environment** section, set the **Background Type** to **Solid Color**.
+    * Built-In Render Pipeline: Set **Clear Flags** to **Solid Color**. 
+5. Select the **Background** color to open the color picker.
+6. Set the color's **A** value to 0. 
 
 Your scene is now configured to support Meta Passthrough.
+
+## Vulkan Graphics API
+
+Meta [recommends](https://developer.oculus.com/documentation/unity/unity-conf-settings/#rendering-settings) that you use the Vulkan Graphics API in your project, as some of the newer features for Meta Quest devices are only supported with that API.
+
+To change your project's Graphics API to Vulkan, follow these steps:
+
+1. Go to **Edit** > **Project Settings** > **Player**.
+2. On the Android tab, under **Other Settings** > **Rendering** > **Graphics APIs**, click the **Add** button (**+**) to add a new Graphics API.
+3. Select `Vulkan`.
+4. Re-order the Graphics API's using the handles (**=**) so that Vulkan is listed first.
+5. Optionally, select any other Graphics API's and click the **Remove** buton (**-**) to remove them.
 
 ## Universal Render Pipeline
 
@@ -41,22 +60,10 @@ Meta Quest is compatible with the Universal Render Pipeline (URP), but the defau
 
 | Setting                  | Location                                          | Recommended value |
 | :----------------------- | :------------------------------------------------ | :---------------- |
-| **Graphics API**         | **Project Settings** > **Player**, Other Settings | **Vulkan** |
 | **Terrain Holes**        | Universal Render Pipeline Asset                   | Disabled |
 | **HDR**                  | Universal Render Pipeline Asset                   | Disabled |
 | **Post-processing**      | Universal Renderer Data                           | Disabled |
 | **Intermediate Texture** | Universal Renderer Data                           | **Auto** |
-
-### Vulkan Graphics API
-
-Unity recommends that you use the Vulkan Graphics API with URP. Vulkan currently supports the greatest number of configurations with functional Passthrough. Due to current limitations of URP, Vulkan is also required to support Passthrough in development builds.
-
-Follow the steps below to change your project's Graphics API to Vulkan:
-
-1. Go to **Edit** > **Project Settings** > **Player**.
-2. On the Android tab, under **Other Settings**, click the **Add** button (**+**) to add a new Graphics API.
-3. Select `Vulkan`.
-4. Re-order the Graphics API's using the handles (**=**) so that Vulkan is listed first.
 
 ### Universal Render Pipeline Asset settings
 

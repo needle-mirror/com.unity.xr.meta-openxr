@@ -4,10 +4,14 @@
     "references": [
         "Unity.XR.ARFoundation",
         "Unity.XR.MetaOpenXR",
-        "UnityEngine.TestRunner"
+        "UnityEngine.TestRunner",
+        "Unity.XR.ARSubsystems",
+        "Unity.XR.Management",
+        "Unity.XR.OpenXR"
     ],
     "includePlatforms": [
-        "Android"
+        "Android",
+        "Editor"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": true,

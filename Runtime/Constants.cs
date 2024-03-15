@@ -7,7 +7,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// </summary>
         internal const string k_CompanyName = "Unity Technologies";
         internal const string k_PackageName = "com.unity.xr.meta-openxr";
-        internal const string k_MajorMinorVersion = "1.0";
+        internal const string k_MajorMinorVersion = "2.0";
 
         internal const string k_ARFoundationLibrary = "libUnityARFoundationMeta";
 
@@ -25,8 +25,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             internal const string k_AnchorsUrl = k_DocumentationFeatureBaseUrl + "anchors.html";
             internal const string k_CameraUrl = k_DocumentationFeatureBaseUrl + "camera.html";
             internal const string k_PlanesUrl = k_DocumentationFeatureBaseUrl + "plane-detection.html";
+            internal const string k_BoundingBoxUrl = k_DocumentationFeatureBaseUrl + "bounding-box-detection.html";
             internal const string k_RaycastsUrl = k_DocumentationFeatureBaseUrl + "raycasts.html";
             internal const string k_SessionUrl = k_DocumentationFeatureBaseUrl + "session.html";
+            internal const string k_MeshUrl = k_DocumentationFeatureBaseUrl + "meshing.html";
         }
 
         internal static class OpenXRExtensions
@@ -39,6 +41,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             internal const string k_XR_FB_spatial_entity_storage = "XR_FB_spatial_entity_storage";
             internal const string k_XR_FB_scene = "XR_FB_scene";
             internal const string k_XR_FB_scene_capture = "XR_FB_scene_capture";
+            internal const string k_XR_META_spatial_entity_mesh = "XR_META_spatial_entity_mesh";
         }
     }
 }

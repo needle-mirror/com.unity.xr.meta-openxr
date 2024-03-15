@@ -78,22 +78,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             /// <inheritdoc/>
             public override void Start()
             {
-#if UNITY_ANDROID
-                // Meta requires that we ask for scene permission beginning with OpenXR 1.0.31
-                if (OpenXRUtility.IsOpenXRVersionGreaterOrEqual(1, 0, 31) &&
-                    !Permission.HasUserAuthorizedPermission(k_AndroidScenePermission))
-                {
-                    var callbacks = new PermissionCallbacks();
-                    callbacks.PermissionDenied += _ => LogAndroidPermissionFailure();
-#if UNITY_2023_1_OR_NEWER
-                    callbacks.PermissionRequestDismissed += _ => LogAndroidPermissionFailure();
-#else
-                    callbacks.PermissionDeniedAndDontAskAgain += _ => LogAndroidPermissionFailure();
-#endif // UNITY_2023_1_OR_NEWER
-                    Permission.RequestUserPermission(k_AndroidScenePermission, callbacks);
-                }
-#endif // UNITY_ANDROID
-
+                PermissionsUtility.RequestPlatformPermissions(k_SubsystemId);
                 NativeApi.Start();
             }
 
@@ -165,16 +150,16 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
             static void RegisterDescriptor()
             {
-                XRPlaneSubsystemDescriptor.Create(new XRPlaneSubsystemDescriptor.Cinfo
+                XRPlaneSubsystemDescriptor.Register(new XRPlaneSubsystemDescriptor.Cinfo
                 {
                     id = k_SubsystemId,
                     providerType = typeof(MetaOpenXRPlaneProvider),
                     subsystemTypeOverride = typeof(MetaOpenXRPlaneSubsystem),
-                    supportsHorizontalPlaneDetection = false,
-                    supportsVerticalPlaneDetection = false,
+                    supportsHorizontalPlaneDetection = true,
+                    supportsVerticalPlaneDetection = true,
                     supportsArbitraryPlaneDetection = true,
                     supportsBoundaryVertices = true,
-                    supportsClassification = false
+                    supportsClassification = true
                 });
             }
 

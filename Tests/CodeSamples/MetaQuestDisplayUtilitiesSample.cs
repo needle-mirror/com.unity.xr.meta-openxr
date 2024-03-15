@@ -1,11 +1,14 @@
+using Unity.Collections;
+using UnityEngine.TestTools;
+using UnityEngine.XR.Management;
+
 namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
 {
     public class MetaQuestDisplayUtilitiesSample
     {
-        [UnityTest]
         public void RequestDisplayRefreshRate()
         {
-            #region request_display_refreshRate
+#region request_display_refreshRate
             // Omitted null checks for brevity. You should check each line for null.
             var displaySubsystem = XRGeneralSettings.Instance
                 .Manager
@@ -23,7 +26,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
                 // Returns false if you request a value that is not in the refreshRates array.
                 bool success = displaySubsystem.TryRequestDisplayRefreshRate(refreshRates[0]);
             }
-            #endregion
+#endregion
         }
     }
 }

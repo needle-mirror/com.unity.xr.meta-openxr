@@ -11,7 +11,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// Enables AR Foundation plane support via OpenXR for Meta Quest devices.
     /// </summary>
 #if UNITY_EDITOR
-    [OpenXRFeature(UiName = "Meta Quest: AR Plane Detection",
+    [OpenXRFeature(UiName = "Meta Quest: Planes",
         BuildTargetGroups = new[] { BuildTargetGroup.Android },
         Company = Constants.k_CompanyName,
         Desc = "AR Foundation plane detection support on Meta Quest devices",

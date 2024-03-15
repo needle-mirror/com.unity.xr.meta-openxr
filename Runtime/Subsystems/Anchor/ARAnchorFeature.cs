@@ -11,7 +11,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// Enables AR Foundation anchor support via OpenXR for Meta Quest devices.
     /// </summary>
 #if UNITY_EDITOR
-    [OpenXRFeature(UiName = "Meta Quest: AR Anchors",
+    [OpenXRFeature(UiName = "Meta Quest: Anchors",
         BuildTargetGroups = new[] { BuildTargetGroup.Android },
         Company = Constants.k_CompanyName,
         Desc = "AR Foundation anchor support on Meta Quest devices",

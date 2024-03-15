@@ -15,7 +15,7 @@ To enable Meta Quest Display Utilities in your app:
 2. Under **OpenXR Feature Groups**, select the **Meta Quest** feature group.
 3. If disabled, enable the **Meta Quest Display Utilities** OpenXR feature.
 
-As a standalone feature of this package, **Meta OpenXR Display Utilities** solely depends on **Meta Quest Support** and does not require that you enable any other feature in the **Meta Quest** feature group.
+As a standalone feature of this package, **Meta Quest: Display Utilities** solely depends on **Meta Quest Support** and does not require that you enable any other feature in the **Meta Quest** feature group.
 
 ## Code sample
 

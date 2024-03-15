@@ -18,7 +18,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// Enables AR Foundation passthrough support via OpenXR for Meta Quest devices.
     /// </summary>
 #if UNITY_EDITOR
-    [OpenXRFeature(UiName = "Meta Quest: AR Camera (Passthrough)",
+    [OpenXRFeature(UiName = "Meta Quest: Camera (Passthrough)",
         BuildTargetGroups = new[] { BuildTargetGroup.Android },
         Company = Constants.k_CompanyName,
         Desc = "AR Foundation camera support on Meta Quest devices",

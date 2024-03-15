@@ -15,7 +15,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void RegisterDescriptor()
         {
-            var cameraSubsystemCinfo = new XRCameraSubsystemCinfo
+            var cameraSubsystemCinfo = new XRCameraSubsystemDescriptor.Cinfo
             {
                 id = k_SubsystemId,
                 providerType = typeof(MetaOpenXRProvider),
@@ -37,10 +37,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 supportsCameraGrain = false,
             };
 
-            if (!XRCameraSubsystem.Register(cameraSubsystemCinfo))
-            {
-                Debug.LogError($"Failed to register the {k_SubsystemId} subsystem.");
-            }
+            XRCameraSubsystemDescriptor.Register(cameraSubsystemCinfo);
         }
 
         class MetaOpenXRProvider : Provider
