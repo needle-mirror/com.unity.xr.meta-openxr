@@ -1,8 +1,8 @@
 {
   "name": "com.unity.xr.meta-openxr",
   "displayName": "Unity OpenXR Meta",
-  "version": "2.0.0-pre.1",
-  "unity": "2023.3",
+  "version": "2.0.0",
+  "unity": "6000.0",
   "description": "Enables you to build mixed reality apps for Meta Quest devices by implementing support for Meta's OpenXR extensions.",
   "keywords": [
     "openxr",
@@ -18,19 +18,21 @@
     "arfoundation"
   ],
   "dependencies": {
-    "com.unity.xr.openxr": "1.9.1",
-    "com.unity.xr.arfoundation": "6.0.0-pre.7"
+    "com.unity.xr.openxr": "1.10.0",
+    "com.unity.xr.arfoundation": "6.0.1",
+    "com.unity.xr.management": "4.4.0",
+    "com.unity.xr.core-utils": "2.3.0"
   },
   "_upm": {
-    "changelog": "### Added\n\n- Added support for the [ARPlane.classifications](xref:UnityEngine.XR.ARFoundation.ARPlane.classifications) data type introduced in AR Foundation 6.0, including new classification values and support for planes with multiple classifications.\n- Added an API for the tracking of 3D bounding boxes. Refer to [Bounding boxes](xref:meta-openxr-bounding-boxes) for more information.\n- Added support for the [Asynchronous TryAddAnchor API](xref:arfoundation-whats-new#asynchronous-anchor-creation) introduced in AR Foundation 6.\n- Added [XRResultStatusExtensions](xref:UnityEngine.XR.OpenXR.Features.Meta.XRResultStatusExtensions), extending the [XRResultStatus](xref:UnityEngine.XR.ARSubsystems.XRResultStatus) type to support conversion to [XrResult](xref:UnityEngine.XR.OpenXR.NativeTypes.XrResult).\n- Added support for `NotAxisAligned` plane detection mode introduced in AR Foundation 6.0.\n- Added support for the [Meshing](xref:meta-openxr-meshing) subsystem.\n\n### Changed\n\n- Changed the AR Foundation dependency version to 6.0.0-pre.7.\n- Changed the minimum version of Unity to 2023.3, as required by AR Foundation 6.0.0-pre.7.\n- Changed the behavior of `MetaOpenXRSessionSubsystem.sessionId` to now return a non-empty, unique Guid value per Meta OpenXR session. You can access the session id using `XRSessionSubsystem.sessionId`.\n- Changed the way the Android Manifest is written to override the `IAndroidManifestRequirementProvider` interface so that direct XML manipulation is not necessary.\n- Changed the names of the Meta Quest features in the Editor to remove the \"AR\" prefix.\n\n### Fixed\n\n- Fixed an issue where the subsystem descriptor for `MetaOpenXRPlaneSubsystem` incorrectly stated that horizontal plane detection, vertical plane detection, and classification were unsupported. These features have all been supported since the 1.0 release, and the subsystem descriptor now returns the correct values.\n- Fixed a very rare issue where plane detection could possibly fail to update planes due to an unhandled error."
+    "changelog": "### Added\n\n- Added support for saving anchors, loading anchors, and erasing anchors introduced in AR Foundation 6.\n- Added explicit dependencies for the XR Plug-in Management and XR Core Utils packages, which were previously implicit.\n\n### Changed\n\n- Changed the `MetaOpenXRPlaneSubsystem` to correctly apply the [PlaneClassifications.InvisibleWallFace](xref:UnityEngine.XR.ARSubsystems.PlaneClassifications.InvisibleWallFace) semantic label for invisible wall faces.\n- Changed the plane and bounding box subsystems to no longer attempt to request the Android system permission `com.oculus.permission.USE_SCENE` on your app's behalf. To use these features with OpenXR Plug-in version 1.11.0 or newer, your app must request this permission. Refer to [Spatial Data Permission](https://developer.oculus.com/documentation/unity/unity-spatial-data-perm/) (Meta Quest Developer Center) to learn how to request this permission.\n- Changed minimum version of AR Foundation dependency from 6.0.0-pre.7 to 6.0.1.\n- Changed minimum Unity Editor version from 2023.3 to 6000.0 as required by AR Foundation 6.0.1.\n- Changed minimum version of OpenXR Plug-in dependency from 1.9.1 to 1.10.0.\n\n### Fixed\n\n- Fixed an issue where trackable poses would fail to update when the OpenXR runtime returned valid but untracked data.\n- Fixed an issue where planes that should be classified as `WallArt` were classified as `Other`.\n\n### Security"
   },
   "upmCi": {
-    "footprint": "83b3d2eaad8697b24296e269bfe4a0ab5d7c3378"
+    "footprint": "5da4fbaad0d6cd7b858874b28d73aa7295dd501c"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.meta-openxr@2.0/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/xr.sdk.meta-openxr.git",
     "type": "git",
-    "revision": "2e2b5d29e937c36991b72355277832754df87798"
+    "revision": "0fbc0c0d52f01ae35b03d7e29370e0974203cd9a"
   }
 }

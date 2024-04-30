@@ -13,7 +13,7 @@ To use planes on Meta Quest devices, the user must first complete [Space Setup](
 
 Unlike other AR platforms, Meta OpenXR does not dynamically discover planes at runtime. Instead, the Unity OpenXR: Meta queries the device's Space Setup data and returns all plane components that are stored in its [Scene Model](https://developer.oculus.com/documentation/native/android/openxr-scene-overview#scene-model). Some entities in the Scene Model, such as Tables or Couches, include planes, while others do not.
 
-> [!Important]
+> [!IMPORTANT]
 > If Space Setup is not complete, AR Foundation cannot use plane data. If your app requires planes, you can use [scene capture](xref:meta-openxr-session#scene-capture) to prompt the user to complete Space Setup.
 
 ## Trackable ID

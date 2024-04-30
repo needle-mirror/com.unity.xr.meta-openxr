@@ -3,6 +3,9 @@ using System.Runtime.InteropServices;
 using Unity.Collections;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
+#if UNITY_ANDROID
+using UnityEngine.Android;
+#endif
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
@@ -15,6 +18,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     public sealed class MetaOpenXRBoundingBoxSubsystem : XRBoundingBoxSubsystem
     {
         internal const string k_SubsystemId = "MetaOpenXR-BoundingBox";
+
+        const string k_AndroidScenePermission = "com.oculus.permission.USE_SCENE";
 
         class MetaOpenXRBoundingBoxProvider : Provider
         {
@@ -33,20 +38,20 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 return false;
             }
 
-            /// <inheritdoc/>
             public override void Start()
             {
-                PermissionsUtility.RequestPlatformPermissions(k_SubsystemId);
+#if UNITY_ANDROID
+                if (!Permission.HasUserAuthorizedPermission(k_AndroidScenePermission))
+                    Debug.LogWarning($"Bounding boxes requires system permission {k_AndroidScenePermission}, but permission was not granted.");
+#endif
+
                 NativeApi.Start();
             }
 
-            /// <inheritdoc/>
             public override void Stop() { }
 
-            /// <inheritdoc/>
             public override void Destroy() => NativeApi.Destroy();
 
-            /// <inheritdoc/>
             public override unsafe TrackableChanges<XRBoundingBox> GetChanges(XRBoundingBox defaultXRBoundingBox, Allocator allocator)
             {
                 NativeApi.GetChanges(

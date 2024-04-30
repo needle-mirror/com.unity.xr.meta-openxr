@@ -8,6 +8,28 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2024-04-30
+
+### Added
+
+- Added support for saving anchors, loading anchors, and erasing anchors introduced in AR Foundation 6.
+- Added explicit dependencies for the XR Plug-in Management and XR Core Utils packages, which were previously implicit.
+
+### Changed
+
+- Changed the `MetaOpenXRPlaneSubsystem` to correctly apply the [PlaneClassifications.InvisibleWallFace](xref:UnityEngine.XR.ARSubsystems.PlaneClassifications.InvisibleWallFace) semantic label for invisible wall faces.
+- Changed the plane and bounding box subsystems to no longer attempt to request the Android system permission `com.oculus.permission.USE_SCENE` on your app's behalf. To use these features with OpenXR Plug-in version 1.11.0 or newer, your app must request this permission. Refer to [Spatial Data Permission](https://developer.oculus.com/documentation/unity/unity-spatial-data-perm/) (Meta Quest Developer Center) to learn how to request this permission.
+- Changed minimum version of AR Foundation dependency from 6.0.0-pre.7 to 6.0.1.
+- Changed minimum Unity Editor version from 2023.3 to 6000.0 as required by AR Foundation 6.0.1.
+- Changed minimum version of OpenXR Plug-in dependency from 1.9.1 to 1.10.0.
+
+### Fixed
+
+- Fixed an issue where trackable poses would fail to update when the OpenXR runtime returned valid but untracked data.
+- Fixed an issue where planes that should be classified as `WallArt` were classified as `Other`.
+
+### Security
+
 ## [2.0.0-pre.1] - 2024-03-15
 
 ### Added
@@ -26,6 +48,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Changed the behavior of `MetaOpenXRSessionSubsystem.sessionId` to now return a non-empty, unique Guid value per Meta OpenXR session. You can access the session id using `XRSessionSubsystem.sessionId`.
 - Changed the way the Android Manifest is written to override the `IAndroidManifestRequirementProvider` interface so that direct XML manipulation is not necessary.
 - Changed the names of the Meta Quest features in the Editor to remove the "AR" prefix.
+- Changed documentation to indicate that Meshing is now a supported feature.
 
 ### Fixed
 
@@ -93,7 +116,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added support for getting plane boundary vertices via [XRPlaneSubsystem.GetBoundary](xref:UnityEngine.XR.ARSubsystems.XRPlaneSubsystem.GetBoundary(UnityEngine.XR.ARSubsystems.TrackableId,Unity.Collections.Allocator,Unity.Collections.NativeArray{UnityEngine.Vector2}@)).
-- Added support for getting plane alignment via [ARPlane.alignment](xref:UnityEngine.XR.ARFoundation.ARPlane.alignment) as well as [planeAlignmentThreshold](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRPlaneSubsystem.planeAlignmentThreshold). Refer to [Plane alignment](xref:meta-openxr-plane-detection#plane-alignment) for more information.
+- Added support for getting plane alignment via [ARPlane.alignment](xref:UnityEngine.XR.ARFoundation.ARPlane.alignment) as well as [planeAlignmentThreshold](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRPlaneSubsystem.planeAlignmentThreshold). Refer to [Plane alignment](xref:meta-openxr-planes#plane-alignment) for more information.
 - Added support for [plane classification](xref:UnityEngine.XR.ARSubsystems.PlaneClassification).
 - Added support for planes to be updated and removed.
 - Added a custom Editor for [ARCameraManager](xref:UnityEngine.XR.ARFoundation.ARCameraManager) to clarify that its serialized properties have no effect on Meta Passthrough.

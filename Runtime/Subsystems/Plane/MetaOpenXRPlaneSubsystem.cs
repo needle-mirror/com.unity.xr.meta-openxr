@@ -38,17 +38,14 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         {
             bool m_HasDiscoveredPlanes;
 
-            /// <inheritdoc/>
             public override PlaneDetectionMode requestedPlaneDetectionMode
             {
                 get => NativeApi.GetPlaneDetectionMode();
                 set => NativeApi.SetPlaneDetectionMode(value);
             }
 
-            /// <inheritdoc/>
             public override PlaneDetectionMode currentPlaneDetectionMode => requestedPlaneDetectionMode;
 
-            /// <inheritdoc/>
             protected override bool TryInitialize()
             {
                 if (OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_spatial_entity) &&
@@ -75,25 +72,20 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 set => NativeApi.SetPlaneAlignmentThreshold(value);
             }
 
-            /// <inheritdoc/>
             public override void Start()
             {
-                PermissionsUtility.RequestPlatformPermissions(k_SubsystemId);
+#if UNITY_ANDROID
+                if (!Permission.HasUserAuthorizedPermission(k_AndroidScenePermission))
+                    Debug.LogWarning($"Plane detection requires system permission {k_AndroidScenePermission}, but permission was not granted.");
+#endif
+
                 NativeApi.Start();
             }
 
-#if UNITY_ANDROID
-            static void LogAndroidPermissionFailure() =>
-                Debug.LogError($"Plane detection requires system permission {k_AndroidScenePermission}, but permission was not granted.");
-#endif
-
-            /// <inheritdoc/>
             public override void Stop() => NativeApi.Stop();
 
-            /// <inheritdoc/>
             public override void Destroy() => NativeApi.Destroy();
 
-            /// <inheritdoc/>
             public override unsafe void GetBoundary(
                 TrackableId trackableId,
                 Allocator allocator,
@@ -123,7 +115,6 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 }
             }
 
-            /// <inheritdoc/>
             public override unsafe TrackableChanges<BoundedPlane> GetChanges(BoundedPlane defaultPlane, Allocator allocator)
             {
                 NativeApi.GetChanges(

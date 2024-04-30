@@ -15,5 +15,6 @@ This package implements the following AR features:
 | [Bounding boxes](xref:meta-openxr-bounding-boxes) | Use Scene Model data to track bounding boxes of 3D objects. |
 | [Anchors](xref:meta-openxr-anchors) | Track arbitrary points in space. |
 | [Raycasts](xref:meta-openxr-raycasts) | Cast rays against tracked items. |
+| [Meshing](xref:meta-openxr-meshing) | Generate meshes of the environment. |
 
 [!include[](../snippets/arf-docs-tip.md)]

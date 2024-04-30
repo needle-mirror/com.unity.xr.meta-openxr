@@ -48,6 +48,11 @@ This package defines the following OpenXR Features:
   	<td><a href="raycasts.md">Raycasts</a></td>
   	<td>Cast rays against tracked items.</td>
   </tr>
+  <tr>
+  	<td></td>
+  	<td><a href="meshing.md">Meshing</a></td>
+  	<td>Generate meshes of the environment.</td>
+  </tr>
 </table>
 
 > [!TIP]

@@ -13,6 +13,7 @@ This release includes the following significant changes:
 - Added [XRResultStatusExtensions](xref:UnityEngine.XR.OpenXR.Features.Meta.XRResultStatusExtensions), extending the [XRResultStatus](xref:UnityEngine.XR.ARSubsystems.XRResultStatus) type to support conversion to [XrResult](xref:UnityEngine.XR.OpenXR.NativeTypes.XrResult).
 - Added support for `NotAxisAligned` plane detection mode introduced in AR Foundation 6.0.
 - Added support for the [Meshing](xref:arfoundation-meshing) subsystem.
+- Added support for saving anchors, loading anchors, and erasing anchors introduced in AR Foundation 6.0.
 
 ## Changed
 

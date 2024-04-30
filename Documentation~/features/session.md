@@ -28,7 +28,7 @@ The user can initiate scene capture any time via the [Space Setup](xref:meta-ope
 The scene capture life cycle consists of four phases:
 
 1. You request to initiate scene capture.
-2. If the request was successful, on a subsequent frame Unity invokes [MonoBehaviour.OnApplicationPause(bool)](xref:UnityEngine.MonoBehaviour.OnApplicationPause), passing `true`. Your app is suspended during scene capture.
+2. If the request was successful, on a subsequent frame Unity invokes [MonoBehaviour.OnApplicationPause(bool)](xref:MonoBehaviour.OnApplicationPause), passing `true`. Your app is suspended during scene capture.
 3. The user completes scene capture as prompted by the device.
 4. Unity resumes and invokes `OnApplicationPause` again, passing `false`.
 

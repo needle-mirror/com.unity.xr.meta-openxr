@@ -3,9 +3,26 @@ uid: meta-openxr-manual
 ---
 # Unity OpenXR: Meta
 
-Unity OpenXR: Meta enables Meta Quest device support for your AR Foundation projects and provides a C# interface for Meta's OpenXR runtime. This package depends on both [AR Foundation](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@5.1) and the [OpenXR Plug-in](https://docs.unity3d.com/Packages/com.unity.xr.openxr@1.7).
+Unity OpenXR: Meta enables Meta Quest device support for your AR Foundation projects and provides a C# interface for Meta's OpenXR runtime. This package depends on both [AR Foundation](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@6.0) and the [OpenXR Plug-in](https://docs.unity3d.com/Packages/com.unity.xr.openxr@1.9).
 
-## Getting started
+## Installation
+
+Unity OpenXR: Meta is an official Unity package available from the [Package Manager](https://docs.unity3d.com/6000.0/Documentation/Manual/upm-ui.html). To understand how to install a package via the Package Manager, refer to [Install a UPM package from a registry](https://docs.unity3d.com/6000.0/Documentation/Manual/upm-ui-install.html).
+
+### Requirements
+
+To use Unity OpenXR: Meta, your project must meet the following requirements:
+
+* Unity 6 (6000.0)
+* AR Foundation 6.0.1 or newer
+* OpenXR Plug-in 1.10.0 or newer
+
+The Package Manager will automatically install these dependencies, if you don't already have them installed.
+
+> [!NOTE]
+> You can visit the Unity Forum for more information on the [Unity 6 New Naming Convention](https://forum.unity.com/threads/unity-6-new-naming-convention.1558592/).
+
+## Get started
 
 To enable the features in this package, go to **Project Settings** > **XR Plug-in Management** > **OpenXR** > **OpenXR Feature Groups** and enable the **Meta Quest** feature group as shown below:
 
@@ -65,6 +82,11 @@ This package defines the following OpenXR Features:
   	<td><a href="features/raycasts.md">Raycasts</a></td>
   	<td>Cast rays against tracked items.</td>
   </tr>
+  <tr>
+  	<td></td>
+  	<td><a href="features/meshing.md">Meshing</a></td>
+  	<td>Generate meshes of the environment.</td>
+  </tr>
 </table>
 
 
@@ -79,23 +101,15 @@ This package does not implement the following AR features:
 | [Face tracking](xref:arfoundation-face-tracking) | Detect and track human faces. |
 | [Body tracking](xref:arfoundation-body-tracking) | Detect and track a human body. |
 | [Point clouds](xref:arfoundation-point-clouds) | Detect and track feature points. |
-| [Meshing](xref:arfoundation-meshing) | Generate meshes of the environment. |
 | [Environment probes](xref:arfoundation-environment-probes) | Generate cubemaps of the environment. |
 | [Occlusion](xref:arfoundation-occlusion) | Occlude AR content with physical objects and perform human segmentation. |
 | [Participants](xref:arfoundation-participant-tracking) | Track other devices in a shared AR session. |
 
-## A quick primer on OpenXR
+## A primer on OpenXR
 
-OpenXR is an open-source standard that defines an interface between XR apps and platform runtimes. The OpenXR specification contains two categories of features: _core features_, which are present on every platform, and _extensions_, which are optional and may not be implemented by some platforms.
+OpenXR is an open-source standard that defines an interface between XR apps and platform runtimes. The OpenXR specification contains two categories of features: 
 
-Unity's [OpenXR Plug-in](https://docs.unity3d.com/Packages/com.unity.xr.openxr@1.9.1) integrates core features, while this package integrates Meta-specific vendor extensions. Refer to [Architecture](xref:meta-openxr-architecture) for a full list of OpenXR extensions that this package uses.
+* Core features: present on every platform
+* Extensions: optional and may not be implemented by some platforms.
 
-## Requirements
-
-To use Unity OpenXR: Meta, your project must meet the following requirements:
-
-* Unity 2023.3 or newer
-* AR Foundation 6.0.0-pre.7 or newer
-* OpenXR 1.9.1 or newer
-
-When you install this package, if you don't already have AR Foundation or OpenXR in your project, the Package Manager will automatically install these dependencies.
+Unity's [OpenXR Plug-in](https://docs.unity3d.com/Packages/com.unity.xr.openxr@1.9) integrates core features, while this package integrates Meta-specific vendor extensions. Refer to [Architecture](xref:meta-openxr-architecture) for a full list of OpenXR extensions that this package uses.

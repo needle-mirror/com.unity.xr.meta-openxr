@@ -7,6 +7,8 @@ The Meta Quest Display Utilities feature enables you to:
 1. Get the supported display refresh rates for the device.
 2. Request a selected display refresh rate.
 
+<a id="enable-display-utilities"/>
+
 ## Enable Display Utilities
 
 To enable Meta Quest Display Utilities in your app:
@@ -22,7 +24,7 @@ As a standalone feature of this package, **Meta Quest: Display Utilities** solel
 Once enabled, Meta Quest Display Utilities adds additional capabilities to Unity's [XRDisplaySubsystem](xref:UnityEngine.XR.XRDisplaySubsystem) using C# extension methods: [TryGetSupportedDisplayRefreshRates](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRDisplaySubsystemExtensions.TryGetSupportedDisplayRefreshRates*) and [TryRequestDisplayRefreshRate](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRDisplaySubsystemExtensions.TryRequestDisplayRefreshRate*) 
 
 > [!IMPORTANT]
-> These extension methods will always return false if you did not [Enable Meta Quest Display Utilities](#enable-meta-quest-display-utilities) in **XR Plug-in Management**.
+> These extension methods will always return false if you did not [Enable Display Utilities](#enable-display-utilities) in **XR Plug-in Management**.
 
 The code sample below demonstrates how to use these extension methods:
 
