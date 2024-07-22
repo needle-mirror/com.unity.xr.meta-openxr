@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.meta-openxr",
   "displayName": "Unity OpenXR Meta",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "unity": "6000.0",
   "description": "Enables you to build mixed reality apps for Meta Quest devices by implementing support for Meta's OpenXR extensions.",
   "keywords": [
@@ -24,15 +24,15 @@
     "com.unity.xr.core-utils": "2.3.0"
   },
   "_upm": {
-    "changelog": "### Added\n\n- Added support for saving anchors, loading anchors, and erasing anchors introduced in AR Foundation 6.\n- Added explicit dependencies for the XR Plug-in Management and XR Core Utils packages, which were previously implicit.\n\n### Changed\n\n- Changed the `MetaOpenXRPlaneSubsystem` to correctly apply the [PlaneClassifications.InvisibleWallFace](xref:UnityEngine.XR.ARSubsystems.PlaneClassifications.InvisibleWallFace) semantic label for invisible wall faces.\n- Changed the plane and bounding box subsystems to no longer attempt to request the Android system permission `com.oculus.permission.USE_SCENE` on your app's behalf. To use these features with OpenXR Plug-in version 1.11.0 or newer, your app must request this permission. Refer to [Spatial Data Permission](https://developer.oculus.com/documentation/unity/unity-spatial-data-perm/) (Meta Quest Developer Center) to learn how to request this permission.\n- Changed minimum version of AR Foundation dependency from 6.0.0-pre.7 to 6.0.1.\n- Changed minimum Unity Editor version from 2023.3 to 6000.0 as required by AR Foundation 6.0.1.\n- Changed minimum version of OpenXR Plug-in dependency from 1.9.1 to 1.10.0.\n\n### Fixed\n\n- Fixed an issue where trackable poses would fail to update when the OpenXR runtime returned valid but untracked data.\n- Fixed an issue where planes that should be classified as `WallArt` were classified as `Other`.\n\n### Security"
+    "changelog": "### Added\n\n- Added Scene setup documentation to clarify best practices for requesting Android system permissions.\n\n### Changed\n\n- Changed the **Meta Quest: Bounding boxes**, **Meta Quest: Anchors**, **Meta Quest: Meshing**, and **Meta Quest: Planes** features implementation to replace the use of `XR_FB_spatial_entity_query` and `XR_FB_spatial_entity_storage` with newer OpenXR extensions from Meta. This is a backwards-compatible change with no effect on your code.\n\n### Fixed\n\n- Fixed an issue with [BoundedPlane.nativePtr](xref:UnityEngine.XR.ARSubsystems.BoundedPlane.nativePtr), [XRBoundingBox.nativePtr](xref:UnityEngine.XR.ARSubsystems.XRBoundingBox.nativePtr), and [XRAnchor.nativePtr](xref:UnityEngine.XR.ARSubsystems.XRAnchor.nativePtr) so they now return a pointer to a struct with a version number and a pointer to the `XrSpace` handle of their respective trackable type. Refer to [Plane native pointer](xref:meta-openxr-planes#Native-pointer), [Bounding box native pointer](xref:meta-openxr-bounding-boxes#Native-pointer), and [Anchor native pointer](xref:meta-openxr-anchors#Native-pointer) for more information."
   },
   "upmCi": {
-    "footprint": "5da4fbaad0d6cd7b858874b28d73aa7295dd501c"
+    "footprint": "e2b84e353fe7d55383909a8f7c47cd4f830737d7"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.meta-openxr@2.0/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/xr.sdk.meta-openxr.git",
     "type": "git",
-    "revision": "0fbc0c0d52f01ae35b03d7e29370e0974203cd9a"
+    "revision": "f1114e177c6bf63c8e67d6a5fbd25ec785788a72"
   }
 }

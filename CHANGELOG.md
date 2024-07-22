@@ -8,6 +8,20 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2024-07-22
+
+### Added
+
+- Added Scene setup documentation to clarify best practices for requesting Android system permissions.
+
+### Changed
+
+- Changed the **Meta Quest: Bounding boxes**, **Meta Quest: Anchors**, **Meta Quest: Meshing**, and **Meta Quest: Planes** features implementation to replace the use of `XR_FB_spatial_entity_query` and `XR_FB_spatial_entity_storage` with newer OpenXR extensions from Meta. This is a backwards-compatible change with no effect on your code.
+
+### Fixed
+
+- Fixed an issue with [BoundedPlane.nativePtr](xref:UnityEngine.XR.ARSubsystems.BoundedPlane.nativePtr), [XRBoundingBox.nativePtr](xref:UnityEngine.XR.ARSubsystems.XRBoundingBox.nativePtr), and [XRAnchor.nativePtr](xref:UnityEngine.XR.ARSubsystems.XRAnchor.nativePtr) so they now return a pointer to a struct with a version number and a pointer to the `XrSpace` handle of their respective trackable type. Refer to [Plane native pointer](xref:meta-openxr-planes#Native-pointer), [Bounding box native pointer](xref:meta-openxr-bounding-boxes#Native-pointer), and [Anchor native pointer](xref:meta-openxr-anchors#Native-pointer) for more information.
+
 ## [2.0.0] - 2024-04-30
 
 ### Added

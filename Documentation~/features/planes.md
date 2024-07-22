@@ -3,18 +3,22 @@ uid: meta-openxr-planes
 ---
 # Planes
 
-This page is a supplement to the AR Foundation [Plane detection](xref:arfoundation-plane-detection) manual. The following sections only contain information about APIs where Meta Quest exhibits unique platform-specific behavior.
+This page is a supplement to the AR Foundation [Plane detection](xref:arfoundation-plane-detection) manual. The following sections only contain information about APIs where Meta's OpenXR runtime exhibits unique behavior.
 
 [!include[](../snippets/arf-docs-tip.md)]
 
-## Space setup
+## Space Setup
 
-To use planes on Meta Quest devices, the user must first complete [Space Setup](xref:meta-openxr-device-setup#space-setup).
+Before your app can access planes from Meta's OpenXR runtime, the user must first complete [Space Setup](xref:meta-openxr-device-setup#space-setup) on their device.
 
-Unlike other AR platforms, Meta OpenXR does not dynamically discover planes at runtime. Instead, the Unity OpenXR: Meta queries the device's Space Setup data and returns all plane components that are stored in its [Scene Model](https://developer.oculus.com/documentation/native/android/openxr-scene-overview#scene-model). Some entities in the Scene Model, such as Tables or Couches, include planes, while others do not.
+Unlike other AR platforms, Meta OpenXR does not dynamically discover planes at runtime. Instead, this provider queries the device's Space Setup data and returns all plane components that are stored in its [Scene Model](https://developer.oculus.com/documentation/native/android/openxr-scene-overview#scene-model). Some entities in the Scene Model, such as Tables or Couches, include planes, while others do not.
 
 > [!IMPORTANT]
-> If Space Setup is not complete, AR Foundation cannot use plane data. If your app requires planes, you can use [scene capture](xref:meta-openxr-session#scene-capture) to prompt the user to complete Space Setup.
+> If Space Setup is not complete, AR Foundation cannot access plane data from the device. If your app requires planes, you can use [scene capture](xref:meta-openxr-session#scene-capture) to prompt the user to complete Space Setup.
+
+## Permissions
+
+Your app's user must grant an Android system permission before you can access plane data. Refer to [Permissions](xref:meta-openxr-scene-setup#permissions) for more information.
 
 ## Trackable ID
 
@@ -42,3 +46,25 @@ Refer to the table below to understand the mapping between AR Foundation's class
 | WindowFrame           | WINDOW_FRAME        |
 | InvisibleWallFace     | INVISIBLE_WALL_FACE |
 | Other                 | OTHER               |
+
+## Native pointer
+
+[BoundedPlane.nativePtr](xref:UnityEngine.XR.ARSubsystems.BoundedPlane.nativePtr) values returned by this package contain a pointer to the following struct:
+
+```c
+typedef struct UnityXRNativePlane
+{
+    int version;
+    void* planePtr;
+} UnityXRNativePlane;
+```
+
+Cast the `void* planePtr` to an [XrSpace](https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#spaces) handle in C++ using the following example code:
+
+```cpp
+// Marhshal the native plane data from the BoundedPlane.nativePtr in C#
+UnityXRNativePlane nativePlaneData;
+XrSpace* planeXrSpaceHandle = reinterpret_cast<XrSpace*>(&nativePlaneData.planePtr);
+```
+
+To learn more about native pointers and their usage, refer to [Extending AR Foundation](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@6.0/manual/architecture/extensions.html).

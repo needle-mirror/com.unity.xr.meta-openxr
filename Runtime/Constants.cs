@@ -37,11 +37,11 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             internal const string k_XR_FB_display_refresh_rate = "XR_FB_display_refresh_rate";
             internal const string k_XR_FB_passthrough = "XR_FB_passthrough";
             internal const string k_XR_FB_spatial_entity = "XR_FB_spatial_entity";
-            internal const string k_XR_FB_spatial_entity_query = "XR_FB_spatial_entity_query";
-            internal const string k_XR_FB_spatial_entity_storage = "XR_FB_spatial_entity_storage";
             internal const string k_XR_FB_scene = "XR_FB_scene";
             internal const string k_XR_FB_scene_capture = "XR_FB_scene_capture";
             internal const string k_XR_META_spatial_entity_mesh = "XR_META_spatial_entity_mesh";
+            internal const string k_XR_META_spatial_entity_discovery = "XR_META_spatial_entity_discovery";
+            internal const string k_XR_META_spatial_entity_persistence = "XR_META_spatial_entity_persistence";
         }
     }
 }

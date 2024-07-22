@@ -66,15 +66,19 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
             protected override bool TryInitialize()
             {
-                if (!OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_spatial_entity))
-                    return false;
+                if (OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_spatial_entity) &&
+                    OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_META_spatial_entity_discovery) &&
+                    OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_META_spatial_entity_persistence))
+                {
+                    NativeApi.Create(
+                        s_AddAsyncCallback,
+                        s_SaveAsyncCallback,
+                        s_LoadAsyncCallback,
+                        s_EraseAsyncCallback);
+                    return true;
+                }
 
-                NativeApi.Create(
-                    s_AddAsyncCallback,
-                    s_SaveAsyncCallback,
-                    s_LoadAsyncCallback,
-                    s_EraseAsyncCallback);
-                return true;
+                return false;
             }
 
             public override void Start() => NativeApi.Start();
@@ -273,7 +277,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             /// <summary>
             /// Delegate method type for <see cref="MetaOpenXRAnchorProvider.s_SaveAsyncCallback"/>.
             /// </summary>
-            delegate void SaveAsyncDelegate(TrackableId anchorId, SerializableGuid serializableGuid, XRResultStatus resultStatus);
+            delegate void SaveAsyncDelegate(TrackableId anchorId, XRResultStatus resultStatus);
 
             /// <summary>
             /// Delegate method type for <see cref="MetaOpenXRAnchorProvider.s_LoadAsyncCallback"/>.
@@ -300,7 +304,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             }
 
             [MonoPInvokeCallback(typeof(SaveAsyncDelegate))]
-            static void OnSaveAsyncComplete(TrackableId anchorId, SerializableGuid serializableGuid, XRResultStatus resultStatus)
+            static void OnSaveAsyncComplete(TrackableId anchorId, XRResultStatus resultStatus)
             {
                 if (!s_SaveAsyncPendingRequests.Remove(anchorId, out var completionSource))
                 {
@@ -308,7 +312,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                     return;
                 }
 
-                completionSource.SetResult(new Result<SerializableGuid>(resultStatus, serializableGuid));
+                completionSource.SetResult(new Result<SerializableGuid>(resultStatus, anchorId));
                 completionSource.Reset();
                 s_SaveAsyncCompletionSources.Release(completionSource);
             }

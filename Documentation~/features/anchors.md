@@ -32,3 +32,25 @@ You can use the `XRResultStatus.nativeStatusCode` property to access the underly
 ## Persistent anchor GUIDs
 
 On Meta's OpenXR runtime, the `SerializableGuid` returned by [ARAnchorManager.TrySaveAnchorAsync](xref:UnityEngine.XR.ARFoundation.ARAnchorManager.TrySaveAnchorAsync) is the same value as the input anchor's [trackableId](xref:UnityEngine.XR.ARSubsystems.ITrackable.trackableId).
+
+## Native pointer
+
+[XRAnchor.nativePtr](xref:UnityEngine.XR.ARSubsystems.XRAnchor.nativePtr) values returned by this package contain a pointer to the following struct:
+
+```c
+typedef struct UnityXRNativeAnchor
+{
+    int version;
+    void* referencePointPtr;
+} UnityXRNativeAnchor;
+```
+
+Cast the `void* referencePointPtr` to an [XrSpace](https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#spaces) handle in C++ using the following example code:
+
+```cpp
+// Marhshal the native anchor data from the XRAnchor.nativePtr in C#
+UnityXRNativeAnchor nativeAnchor;
+XrSpace* anchorXrSpaceHandle = reinterpret_cast<XrSpace*>(&nativeAnchor.referencePointPtr);
+```
+
+To learn more about native pointers and their usage, refer to [Extending AR Foundation](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@6.0/manual/architecture/extensions.html).

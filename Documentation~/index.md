@@ -11,13 +11,13 @@ Unity OpenXR: Meta is an official Unity package available from the [Package Mana
 
 ### Requirements
 
-To use Unity OpenXR: Meta, your project must meet the following requirements:
+To use Unity OpenXR: Meta 2.0, your project must meet the following requirements:
 
 * Unity 6 (6000.0)
 * AR Foundation 6.0.1 or newer
 * OpenXR Plug-in 1.10.0 or newer
 
-The Package Manager will automatically install these dependencies, if you don't already have them installed.
+The Package Manager will automatically install these dependencies if you don't already have them installed.
 
 > [!NOTE]
 > You can visit the Unity Forum for more information on the [Unity 6 New Naming Convention](https://forum.unity.com/threads/unity-6-new-naming-convention.1558592/).
@@ -88,7 +88,6 @@ This package defines the following OpenXR Features:
   	<td>Generate meshes of the environment.</td>
   </tr>
 </table>
-
 
 ### Unsupported AR features
 

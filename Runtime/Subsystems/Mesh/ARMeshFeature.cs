@@ -37,10 +37,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// <seeaslo href="https://developer.oculus.com/documentation/native/android/mobile-scene-api-ref/"/>
         const string k_OpenXRRequestedExtensions =
             Constants.OpenXRExtensions.k_XR_FB_spatial_entity + " " +
-            Constants.OpenXRExtensions.k_XR_FB_spatial_entity_query + " " +
-            Constants.OpenXRExtensions.k_XR_FB_spatial_entity_storage + " " +
             Constants.OpenXRExtensions.k_XR_FB_scene + " " +
-            Constants.OpenXRExtensions.k_XR_META_spatial_entity_mesh;
+            Constants.OpenXRExtensions.k_XR_META_spatial_entity_mesh + " " +
+            Constants.OpenXRExtensions.k_XR_META_spatial_entity_discovery;
 
         static List<XRMeshSubsystemDescriptor> s_MeshDescriptors = new();
 
