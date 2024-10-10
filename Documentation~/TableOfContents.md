@@ -7,6 +7,6 @@
   * [AR features](xref:meta-openxr-ar-features)
     * [Session](xref:meta-openxr-session)
     * [Camera](xref:meta-openxr-camera)
-    * [Plane detection](xref:meta-openxr-plane-detection)
+    * [Planes](xref:meta-openxr-planes)
     * [Anchors](xref:meta-openxr-anchors)
     * [Raycasts](xref:meta-openxr-raycasts)

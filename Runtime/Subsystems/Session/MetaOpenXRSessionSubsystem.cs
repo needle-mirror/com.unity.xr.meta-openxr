@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+using System;
+using System.Runtime.InteropServices;
 using UnityEngine.XR.ARSubsystems;
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
@@ -43,8 +44,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         class MetaOpenXRProvider : Provider
         {
             XrSessionState m_SessionState;
+            Guid m_SessionId;
 
-            /// <inheritdoc/>
             public override TrackingState trackingState
             {
                 get
@@ -70,7 +71,6 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 }
             }
 
-            /// <inheritdoc/>
             public override NotTrackingReason notTrackingReason
             {
                 get
@@ -96,19 +96,20 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 }
             }
 
-            /// <inheritdoc/>
+            public override Guid sessionId => m_SessionId;
+
             public MetaOpenXRProvider() => NativeApi.UnityOpenXRMeta_Session_Construct();
 
-            /// <inheritdoc/>
-            public override void Start() => NativeApi.UnityOpenXRMeta_Session_Start();
+            public override void Start()
+            {
+                m_SessionId = Guid.NewGuid();
+                NativeApi.UnityOpenXRMeta_Session_Start();
+            }
 
-            /// <inheritdoc/>
             public override void Stop() => NativeApi.UnityOpenXRMeta_Session_Stop();
 
-            /// <inheritdoc/>
             public override void Destroy() => NativeApi.UnityOpenXRMeta_Session_Destruct();
 
-            /// <inheritdoc/>
             public override Promise<SessionAvailability> GetAvailabilityAsync()
                 => Promise<SessionAvailability>.CreateResolvedPromise(
                     NativeApi.UnityOpenXRMeta_Session_IsSupported()

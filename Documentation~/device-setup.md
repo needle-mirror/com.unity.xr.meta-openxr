@@ -15,11 +15,11 @@ For the best experience on your Meta Quest device, consider updating to the late
 
 ## Space Setup
 
-Some AR Foundation features require that you first run Space Setup on your Meta Quest device before you launch your app. For example, if your app uses plane detection, AR Foundation will not be able to detect any planes unless you first run Space Setup.
+Some AR Foundation features require that you first run Space Setup on your Meta Quest device before you launch your app. For example, if your app uses planes, AR Foundation will not be able to use plane data unless you first run Space Setup.
 
 To run Space Setup, follow the steps below:
 
-1. Press ![the universal menu button](images/universal-menu.png) on your right Touch controller to access the universal menu.
+1. Press ![the universal menu button](images/universal-menu.png) /![the universal menu button](images/universal-menu-2.png) on your right Touch controller to access the universal menu.
 2. Go to **Settings** > **Physical Space** > **Space Setup** and select the **Set up** button.
 3. Follow the prompts in your headset to complete Space Setup.
 

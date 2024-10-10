@@ -20,7 +20,47 @@ Refer to [Device setup](xref:meta-openxr-device-setup) and [Project setup](xref:
 
 ## Features
 
-[!include[](snippets/features-table.md)]
+This package defines the following OpenXR Features:
+
+<table>
+  <tr>
+    <td colspan="2"><strong>Feature</strong></td>
+    <td><strong>Description</strong>
+  </tr>
+  <tr>
+    <td colspan="2"><a href="features/display-utilities.md">Display Utilities</a></td>
+    <td>Get the supported display refresh rates for the device and request a display refresh rate.</td>
+  </tr>
+  <tr>
+    <td colspan="2"><a href="features/ar-features.md">AR Features</a></td>
+    <td>AR Features implement AR Foundation interfaces.</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><a href="features/session.md">Session</a></td>
+    <td>Enable, disable, and configure AR on the target platform.</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><a href="features/camera.md">Camera</a></td>
+    <td>Render images from device cameras and perform light estimation.</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><a href="features/planes.md">Planes</a></td>
+    <td>Use Scene Model data to track flat surfaces.</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><a href="features/anchors.md">Anchors</a></td>
+    <td>Track arbitrary points in space.</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><a href="features/raycasts.md">Raycasts</a></td>
+    <td>Cast rays against tracked items.</td>
+  </tr>
+</table>
 
 ### Unsupported AR features
 
@@ -49,7 +89,7 @@ Unity's [OpenXR Plug-in](https://docs.unity3d.com/Packages/com.unity.xr.openxr@1
 To use Unity OpenXR: Meta, your project must meet the following requirements:
 
 * Unity 2022.3 or newer
-* AR Foundation 5.1.0-pre.6 or newer
+* AR Foundation 5.1.0 or newer
 * OpenXR 1.7 or newer
 
 When you install this package, if you don't already have AR Foundation or OpenXR in your project, the Package Manager will automatically install these dependencies.

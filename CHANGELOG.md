@@ -8,6 +8,20 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2024-10-10
+
+### Changed
+
+- Changed the AR Foundation dependency version from 5.1.0-pre.6 to 5.1.0.
+- Changed the behavior of `MetaOpenXRSessionSubsystem.sessionId` to now return a non-empty, unique Guid value per Meta OpenXR session. You can access the session id using `XRSessionSubsystem.sessionId`.
+
+### Fixed
+
+- Fixed an issue where the subsystem descriptor for `MetaOpenXRPlaneSubsystem` incorrectly stated that horizontal plane detection, vertical plane detection, and classification were unsupported. These features have all been supported since the 1.0 release, and the subsystem descriptor now returns the correct values.
+- Fixed a very rare issue where plane detection could possibly fail to update planes due to an unhandled error.
+- Fixed an issue where trackable poses would fail to update when the OpenXR runtime returned valid but untracked data.
+- Fixed an issue with [BoundedPlane.nativePtr](xref:UnityEngine.XR.ARSubsystems.BoundedPlane.nativePtr) and [XRAnchor.nativePtr](xref:UnityEngine.XR.ARSubsystems.XRAnchor.nativePtr) so they now return a pointer to a struct with a version number and a pointer to the `XrSpace` handle of their respective trackable type. Refer to [Plane native pointer](xref:meta-openxr-planes#Native-pointer) and [Anchor native pointer](xref:meta-openxr-anchors#Native-pointer) for more information.
+
 ## [1.0.1] - 2023-11-02
 
 ### Changed

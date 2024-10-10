@@ -170,11 +170,11 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                     id = k_SubsystemId,
                     providerType = typeof(MetaOpenXRPlaneProvider),
                     subsystemTypeOverride = typeof(MetaOpenXRPlaneSubsystem),
-                    supportsHorizontalPlaneDetection = false,
-                    supportsVerticalPlaneDetection = false,
+                    supportsHorizontalPlaneDetection = true,
+                    supportsVerticalPlaneDetection = true,
                     supportsArbitraryPlaneDetection = true,
                     supportsBoundaryVertices = true,
-                    supportsClassification = false
+                    supportsClassification = true
                 });
             }
 

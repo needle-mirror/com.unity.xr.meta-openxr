@@ -1,7 +1,7 @@
 ---
-uid: meta-openxr-plane-detection
+uid: meta-openxr-planes
 ---
-# Plane detection
+# Planes
 
 This page is a supplement to the AR Foundation [Plane detection](xref:arfoundation-plane-detection) manual. The following sections only contain information about APIs where Meta Quest exhibits unique platform-specific behavior.
 
@@ -9,12 +9,12 @@ This page is a supplement to the AR Foundation [Plane detection](xref:arfoundati
 
 ## Space setup
 
-Plane detection on Meta Quest devices requires that you run [Space Setup](xref:meta-openxr-device-setup#space-setup) on your Meta Quest device before any planes can be detected.
+To use planes on Meta Quest devices, the user must first complete [Space Setup](xref:meta-openxr-device-setup#space-setup).
 
 Unlike other AR platforms, Meta OpenXR does not dynamically discover planes at runtime. Instead, the Unity OpenXR: Meta queries the device's Space Setup data and returns all plane components that are stored in its [Scene Model](https://developer.oculus.com/documentation/native/android/openxr-scene-overview#scene-model). Some entities in the Scene Model, such as Tables or Couches, include planes, while others do not.
 
 > [!Important]
-> If Space Setup is not complete, AR Foundation cannot detect any planes. If your app requires planes, you can use [scene capture](xref:meta-openxr-session#scene-capture) to prompt the user to complete Space Setup.
+> If Space Setup is not complete, AR Foundation cannot use plane data. If your app requires planes, you can use [scene capture](xref:meta-openxr-session#scene-capture) to prompt the user to complete Space Setup.
 
 ## Trackable ID
 
@@ -40,3 +40,25 @@ Refer to the table below to understand the mapping between Meta's semantic label
 | DOOR_FRAME          | Door                  |
 | WINDOW_FRAME        | Window                |
 | OTHER               | Other                 |
+
+## Native pointer
+
+[BoundedPlane.nativePtr](xref:UnityEngine.XR.ARSubsystems.BoundedPlane.nativePtr) values returned by this package contain a pointer to the following struct:
+
+```c
+typedef struct UnityXRNativePlane
+{
+    int version;
+    void* planePtr;
+} UnityXRNativePlane;
+```
+
+Cast the `void* planePtr` to an [XrSpace](https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#spaces) handle in C++ using the following example code:
+
+```cpp
+// Marhshal the native plane data from the BoundedPlane.nativePtr in C#
+UnityXRNativePlane nativePlaneData;
+XrSpace* planeXrSpaceHandle = static_cast<XrSpace*>(nativePlaneData.planePtr);
+```
+
+To learn more about native pointers and their usage, refer to [Extending AR Foundation](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@5.1/manual/architecture/extensions.html).

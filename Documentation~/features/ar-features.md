@@ -11,7 +11,7 @@ This package implements the following AR features:
 | :------ | :---------- |
 | [Session](xref:meta-openxr-session) | Enable, disable, and configure AR on the target platform. |
 | [Camera](xref:meta-openxr-camera) | Render images from device cameras and perform light estimation. |
-| [Plane Detection](xref:meta-openxr-plane-detection) | Detect and track flat surfaces. |
+| [Planes](xref:meta-openxr-planes) | Use Scene Model data to track flat surfaces. |
 | [Anchors](xref:meta-openxr-anchors) | Track arbitrary points in space. |
 | [Raycasts](xref:meta-openxr-raycasts) | Cast rays against tracked items. |
 

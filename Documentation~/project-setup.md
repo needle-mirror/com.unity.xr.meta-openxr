@@ -8,13 +8,13 @@ To enable the Unity OpenXR: Meta in your project, follow the steps below:
 1. Go to **Edit** > **Project Settings...** > **XR Plug-in Management**.
 2. In the Android tab, under **Plug-in Providers**, enable **OpenXR**.
 3. While still in the Project Settings window, go to **XR Plug-in Management** > **OpenXR**.
-4. In the Android tab, under **Interaction Profiles**, add **Oculus Touch Controller Profile**.
+4. In the Android tab, under **Enabled Interaction Profiles**, add **Oculus Touch Controller Profile**.
 5. Under **OpenXR Feature Groups**, enable the **Meta Quest** feature group.
 
 ![Unity's Project Settings window is open to XR Plug-in Management > OpenXR, showing a list of enabled features in the Meta Quest feature group](images/openxr-features-all.png)<br/>*The Meta Quest OpenXR feature group*
 
 > [!NOTE]
-> XR Plug-in Management supports only one enabled plug-in provider at a time per build target. If your project also targets ARCore using the [Google ARCore XR Plug-in](https://docs.unity3d.com/Packages/com.unity.xr.arcore@5.0), to avoid errors you should disable the **Google ARCore** plug-in provider before you build an APK for Meta Quest devices. Likewise, you should disable **OpenXR** before you build for ARCore.
+> XR Plug-in Management supports only one enabled plug-in provider at a time per build target. If your project also targets ARCore using the [Google ARCore XR Plug-in](https://docs.unity3d.com/Packages/com.unity.xr.arcore@5.0), to avoid errors you should disable the **Google ARCore** plug-in provider in the Android tab of **Project Settings** > **XR Plug-in Management** before you build an APK for Meta Quest devices. Likewise, you should disable **OpenXR** before you build for ARCore.
 
 ## Scene setup
 
