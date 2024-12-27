@@ -27,7 +27,7 @@ On OpenXR platforms, the [XRResultStatus.nativeStatusCode](xref:UnityEngine.XR.A
 
 You can use the `XRResultStatus.nativeStatusCode` property to access the underlying `XrResult` value, as shown in the example below:
 
-[!code-cs[anchors_resultstatus_xrresult](../../Tests/CodeSamples/AnchorsSamples.cs#anchors_resultstatus_xrresult)]
+[!code-cs[anchors_resultstatus_xrresult](../../Tests/Runtime/CodeSamples/AnchorsSamples.cs#anchors_resultstatus_xrresult)]
 
 ## Persistent anchor GUIDs
 
@@ -48,9 +48,9 @@ typedef struct UnityXRNativeAnchor
 Cast the `void* referencePointPtr` to an [XrSpace](https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#spaces) handle in C++ using the following example code:
 
 ```cpp
-// Marhshal the native anchor data from the XRAnchor.nativePtr in C#
+// Marshal the native anchor data from the XRAnchor.nativePtr in C#
 UnityXRNativeAnchor nativeAnchor;
-XrSpace* anchorXrSpaceHandle = reinterpret_cast<XrSpace*>(&nativeAnchor.referencePointPtr);
+XrSpace* anchorXrSpaceHandle = static_cast<XrSpace*>(nativeAnchor.referencePointPtr);
 ```
 
 To learn more about native pointers and their usage, refer to [Extending AR Foundation](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@6.0/manual/architecture/extensions.html).

@@ -37,7 +37,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         {
             refreshRates = default;
 
-            if (!OpenXRUtility.IsOpenXRFeatureEnabled<DisplayUtilitiesFeature>())
+            if (!OpenXRUtils.IsOpenXRFeatureEnabled<DisplayUtilitiesFeature>())
             {
                 Debug.LogError(k_FeatureNotEnabledError);
                 return false;
@@ -79,7 +79,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// <seealso cref="XRDisplaySubsystem.TryGetDisplayRefreshRate"/>
         public static bool TryRequestDisplayRefreshRate(this XRDisplaySubsystem subsystem, float refreshRate)
         {
-            if (!OpenXRUtility.IsOpenXRFeatureEnabled<DisplayUtilitiesFeature>())
+            if (!OpenXRUtils.IsOpenXRFeatureEnabled<DisplayUtilitiesFeature>())
             {
                 Debug.LogError(k_FeatureNotEnabledError);
                 return false;
@@ -94,9 +94,11 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             public static extern int GetDisplayRefreshRateCount();
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_Display_TryGetDisplayRefreshRates")]
+            [return: MarshalAs(UnmanagedType.U1)]
             public static extern bool TryGetDisplayRefreshRates(void* refreshRates, uint capacity);
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_Display_TryRequestDisplayRefreshRate")]
+            [return: MarshalAs(UnmanagedType.U1)]
             public static extern bool TryRequestDisplayRefreshRate(float refreshRate);
         }
     }

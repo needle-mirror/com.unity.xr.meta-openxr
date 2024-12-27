@@ -30,16 +30,16 @@ This package maps Meta's native [semantic labels](https://developer.oculus.com/d
 
 Refer to the table below to understand the mapping between AR Foundation's classifications and Meta's semantic labels:
 
-| AR Foundation Label   | Meta Label          |
-| :-------------------- | :------------------ |
-| Couch                 | COUCH               |
-| Table                 | TABLE               |
-| Bed                   | BED                 |
-| Lamp                  | LAMP                |
-| Plant                 | PLANT               |
-| Screen                | SCREEN              |
-| Storage               | STORAGE             |
-| Other                 | OTHER               |
+| AR Foundation Label | Meta Label |
+| :------------------ | :--------- |
+| Couch               | COUCH   |
+| Table               | TABLE   |
+| Bed                 | BED     |
+| Lamp                | LAMP    |
+| Plant               | PLANT   |
+| Screen              | SCREEN  |
+| Storage             | STORAGE |
+| Other               | OTHER   |
 
 ## Native pointer
 
@@ -58,7 +58,7 @@ Cast the `void* boundingBoxPtr` to an [XrSpace](https://registry.khronos.org/Ope
 ```cpp
 // Marhshal the native bounding box data from the XRBoundingBox.nativePtr in C#
 UnityXRNativeBoundingBox nativeBoundingBoxData;
-XrSpace* boundingBoxXrSpaceHandle = reinterpret_cast<XrSpace*>(&nativeBoundingBoxData.boundingBoxPtr);
+XrSpace* boundingBoxXrSpaceHandle = static_cast<XrSpace*>(nativeBoundingBoxData.boundingBoxPtr);
 ```
 
 To learn more about native pointers and their usage, refer to [Extending AR Foundation](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@6.0/manual/architecture/extensions.html).

@@ -21,11 +21,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         class MetaOpenXRAnchorProvider : Provider
         {
             static readonly Dictionary<Guid, AwaitableCompletionSource<Result<XRAnchor>>> s_AddAsyncPendingRequests = new();
-
             static readonly Dictionary<TrackableId, AwaitableCompletionSource<Result<SerializableGuid>>> s_SaveAsyncPendingRequests = new();
-
             static readonly Dictionary<SerializableGuid, AwaitableCompletionSource<Result<XRAnchor>>> s_LoadAsyncPendingRequests = new();
-
             static readonly Dictionary<SerializableGuid, AwaitableCompletionSource<XRResultStatus>> s_EraseAsyncPendingRequests = new();
 
             static readonly Pool.ObjectPool<AwaitableCompletionSource<Result<XRAnchor>>> s_AddAsyncCompletionSources = new(
@@ -66,22 +63,11 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
             protected override bool TryInitialize()
             {
-                if (OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_spatial_entity) &&
-                    OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_META_spatial_entity_discovery) &&
-                    OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_META_spatial_entity_persistence))
-                {
-                    NativeApi.Create(
-                        s_AddAsyncCallback,
-                        s_SaveAsyncCallback,
-                        s_LoadAsyncCallback,
-                        s_EraseAsyncCallback);
-                    return true;
-                }
-
-                return false;
+                NativeApi.Create(s_AddAsyncCallback, s_SaveAsyncCallback, s_LoadAsyncCallback, s_EraseAsyncCallback);
+                return true;
             }
 
-            public override void Start() => NativeApi.Start();
+            public override void Start() { }
 
             public override void Stop() { }
 
@@ -373,9 +359,6 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                     IntPtr trySaveAnchorAsyncCallback,
                     IntPtr tryLoadAnchorAsyncCallback,
                     IntPtr tryEraseAnchorAsyncCallback);
-
-                [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_Start")]
-                public static extern void Start();
 
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_Destroy")]
                 public static extern void Destroy();

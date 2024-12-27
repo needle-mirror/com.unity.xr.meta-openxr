@@ -12,7 +12,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// </summary>
 #if UNITY_EDITOR
     [OpenXRFeature(UiName = displayName,
-        BuildTargetGroups = new[] { BuildTargetGroup.Android },
+        BuildTargetGroups = new[] { BuildTargetGroup.Android, BuildTargetGroup.Standalone },
         Company = Constants.k_CompanyName,
         Desc = "Enables you to request a specific display refresh rate",
         DocumentationLink = Constants.DocsUrls.k_DisplayUtilitiesUrl,
@@ -21,7 +21,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         FeatureId = featureId,
         Version = "0.1.0")]
 #endif
-    public class DisplayUtilitiesFeature : OpenXRFeature
+    public class DisplayUtilitiesFeature : MetaOpenXRFeature
     {
         /// <summary>
         /// UI display name of this feature.

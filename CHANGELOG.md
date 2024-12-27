@@ -8,19 +8,34 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.0.1] - 2024-07-22
+## [2.1.0-pre.1] - 2024-12-27
 
 ### Added
 
+- Added a validation rule to warn you that soft shadows can negatively affect performance for Meta Quest.
 - Added Scene setup documentation to clarify best practices for requesting Android system permissions.
+- Added support for running scenes in the editor via [Quest Link](xref:meta-openxr-link).
+- Added a public class [MetaOpenXRFeature](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRFeature) as the new base class for OpenXR features in this package.
+- Added the Meta Quest Boundary Visibility feature, which enables you to suppress the visibility of the boundary so users can move freely with Passthrough enabled. Refer to [Boundary visibility](xref:meta-openxr-boundary-visibility) for more information.
+- Added support for [Occlusion](xref:meta-openxr-occlusion).
 
 ### Changed
 
 - Changed the **Meta Quest: Bounding boxes**, **Meta Quest: Anchors**, **Meta Quest: Meshing**, and **Meta Quest: Planes** features implementation to replace the use of `XR_FB_spatial_entity_query` and `XR_FB_spatial_entity_storage` with newer OpenXR extensions from Meta. This is a backwards-compatible change with no effect on your code.
+- Changed the **Meta Quest: Camera (Passthrough)** feature to no longer enable the `XR_FB_composition_layer_alpha_blend` OpenXR extension. This is a backwards-compatible change with no effect on your code.
+- Changed the severity level of validation rules for features that depend on **Meta Quest: Session** from Warning to Error. These features are unusable at runtime if **Meta Quest: Session** is not enabled, so Error is the appropriate severity level for the validation rules.
+- Changed the dependency version of XR Core Utilities from 2.4.0 to 2.5.1.
+
+### Removed
+
+- Removed a validation rule that warned you if your currently open scene did not have an `ARCameraManager` component while the **Meta Quest: Camera (Passthrough)** feature was enabled. Too often this warning was a false positive for valid project setups, so it wasn't helpful.
 
 ### Fixed
 
 - Fixed an issue with [BoundedPlane.nativePtr](xref:UnityEngine.XR.ARSubsystems.BoundedPlane.nativePtr), [XRBoundingBox.nativePtr](xref:UnityEngine.XR.ARSubsystems.XRBoundingBox.nativePtr), and [XRAnchor.nativePtr](xref:UnityEngine.XR.ARSubsystems.XRAnchor.nativePtr) so they now return a pointer to a struct with a version number and a pointer to the `XrSpace` handle of their respective trackable type. Refer to [Plane native pointer](xref:meta-openxr-planes#Native-pointer), [Bounding box native pointer](xref:meta-openxr-bounding-boxes#Native-pointer), and [Anchor native pointer](xref:meta-openxr-anchors#Native-pointer) for more information.
+- Fixed Android Manifest setup for builds so that if your app uses Bounding Boxes or Meshing but not Planes, your app's Android Manifest will now correctly declare the `com.oculus.permission.USE_SCENE` permission.
+- Fixed the **Meta Quest: Display Utilities** feature so that it works correctly even when **Meta Quest: Session** is disabled. ([MOXRB-70](https://issuetracker.unity3d.com/product/unity/issues/guid/MOXRB-70))
+- Fixed the **Meta Quest: Anchors** and **Meta Quest: Passthrough** features so they gracefully fail to create their subsystems if the OpenXR runtime does not support the required system properties.
 
 ## [2.0.0] - 2024-04-30
 

@@ -10,7 +10,7 @@ This page is a supplement to the AR Foundation [Meshing](xref:arfoundation-meshi
 Before your app can access meshes from Meta's OpenXR runtime, the user must first complete [Space Setup](xref:meta-openxr-device-setup#space-setup) on their device.
 
 > [!Important]
-> If Space Setup is not complete, AR Foundation cannot access mesh data from the device.
+> If Space Setup is not complete, AR Foundation can't access mesh data from the device.
 
 [!include[](../snippets/arf-docs-tip.md)]
 

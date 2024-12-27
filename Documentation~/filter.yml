@@ -1,4 +1,4 @@
 apiRules:
   - exclude:
-      uidRegex: Tests$
+      uidRegex: \.Tests$
       type: Namespace

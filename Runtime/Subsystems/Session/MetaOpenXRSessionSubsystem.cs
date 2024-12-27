@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using UnityEngine.XR.ARSubsystems;
 
@@ -28,6 +28,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// <returns><see langword="true"/> if the request was successful. Otherwise, <see langword="false"/>.</returns>
         public bool TryRequestSceneCapture()
         {
+            if (!OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_scene_capture))
+                return false;
+
             var success = MetaOpenXRProvider.TryRequestSceneCapture();
 
             if (!success)
@@ -165,9 +168,11 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             public static extern void UnityOpenXRMeta_Session_Stop();
 
             [DllImport(Constants.k_ARFoundationLibrary)]
+            [return: MarshalAs(UnmanagedType.U1)]
             public static extern bool UnityOpenXRMeta_Session_IsSupported();
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_SceneCapture_TryRequestSceneCapture")]
+            [return: MarshalAs(UnmanagedType.U1)]
             public static extern bool TryRequestSceneCapture();
         }
     }

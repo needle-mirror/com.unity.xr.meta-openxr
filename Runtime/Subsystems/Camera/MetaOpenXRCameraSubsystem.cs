@@ -44,14 +44,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         {
             protected override bool TryInitialize()
             {
-                if (OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_passthrough) &&
-                    OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_composition_layer_alpha_blend))
-                {
-                    NativeApi.UnityMetaQuest_Passthrough_Construct();
-                    return true;
-                }
-
-                return false;
+                NativeApi.UnityMetaQuest_Passthrough_Construct();
+                return true;
             }
 
             /// <summary>

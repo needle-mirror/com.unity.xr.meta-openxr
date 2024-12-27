@@ -8,7 +8,9 @@
         "Unity.XR.OpenXR.Features.MetaQuestSupport",
         "Unity.XR.Management",
         "Unity.XR.Management.Editor",
-        "Unity.XR.ARFoundation"
+        "Unity.XR.ARFoundation",
+        "Unity.XR.CoreUtils.Editor",
+        "Unity.RenderPipelines.Universal.Runtime"
     ],
     "includePlatforms": [
         "Editor"
@@ -19,6 +21,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.render-pipelines.universal",
+            "expression": "7.0.0",
+            "define": "URP_7_OR_NEWER"
+        }
+    ],
     "noEngineReferences": false
 }

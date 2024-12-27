@@ -12,7 +12,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// </summary>
 #if UNITY_EDITOR
     [OpenXRFeature(UiName = "Meta Quest: Bounding Boxes",
-        BuildTargetGroups = new[] { BuildTargetGroup.Android },
+        BuildTargetGroups = new[] { BuildTargetGroup.Android, BuildTargetGroup.Standalone },
         Company = Constants.k_CompanyName,
         Desc = "AR Foundation bounding box support on Meta Quest devices",
         DocumentationLink = Constants.DocsUrls.k_BoundingBoxUrl,
@@ -21,7 +21,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         FeatureId = featureId,
         Version = "0.1.0")]
 #endif
-    public class ARBoundingBoxFeature : OpenXRFeature
+    public class ARBoundingBoxFeature : MetaOpenXRFeature
     {
         /// <summary>
         /// The feature id string. This is used to give the feature a well known id for reference.
@@ -66,7 +66,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// </summary>
         protected override void GetValidationChecks(List<ValidationRule> rules, BuildTargetGroup targetGroup)
         {
-            rules.AddRange(SharedValidationRules.EnableARSessionValidationRules(this));
+            rules.Add(ValidationRuleFactory.CreateARSessionValidationRule(this, targetGroup));
         }
 #endif
     }

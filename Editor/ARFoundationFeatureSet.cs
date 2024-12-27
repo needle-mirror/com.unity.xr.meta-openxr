@@ -15,6 +15,8 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
             MetaQuestFeature.featureId,
             DisplayUtilitiesFeature.featureId,
             ARMeshFeature.featureId,
+            BoundaryVisibilityFeature.featureId,
+            AROcclusionFeature.featureId,
         },
         DefaultFeatureIds = new []
         {
@@ -27,6 +29,8 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
             MetaQuestFeature.featureId,
             DisplayUtilitiesFeature.featureId,
             ARMeshFeature.featureId,
+            BoundaryVisibilityFeature.featureId,
+            AROcclusionFeature.featureId,
         },
         RequiredFeatureIds = new[]
         {
@@ -34,7 +38,7 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
         },
         UiName = "Meta Quest",
         FeatureSetId = featureSetId,
-        SupportedBuildTargets = new[] { BuildTargetGroup.Android }
+        SupportedBuildTargets = new[] { BuildTargetGroup.Android, BuildTargetGroup.Standalone }
     )]
     class MetaFeatureSet {
         const string featureSetId = "com.unity.openxr.featureset.meta";
