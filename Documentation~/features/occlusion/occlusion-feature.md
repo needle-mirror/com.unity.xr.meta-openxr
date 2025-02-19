@@ -45,12 +45,12 @@ If the device does not support hand removal, **Enable Hand Removal** has no effe
 ### Scripting API
 
 The Meta Quest Occlusion feature contains the following APIs that you can use to control hand removal:
-* [isHandRemovalSupported](xref:UnityEngine.XR.OpenXR.Features.Meta.AROcclusionFeature.isHandRemovalSupported)
-* [isHandRemovalEnabled](xref:UnityEngine.XR.OpenXR.Features.Meta.AROcclusionFeature.isHandRemovalEnabled)
-* [TrySetHandRemovalEnabled](xref:UnityEngine.XR.OpenXR.Features.Meta.AROcclusionFeature.TrySetHandRemovalEnabled*)
+* [isHandRemovalSupported](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXROcclusionSubsystem.isHandRemovalSupported)
+* [isHandRemovalEnabled](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXROcclusionSubsystem.isHandRemovalEnabled)
+* [TrySetHandRemovalEnabled](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXROcclusionSubsystem.TrySetHandRemovalEnabled*)
 
-The following example code shows you how to get the Meta Quest Occlusion instance and enable hand removal at runtime:
+The following example code shows you how to get the Meta OpenXR occlusion subsystem and enable hand removal at runtime:
 
-[!code-cs[SetHandRemovalEnabled](../../../Tests/CodeSamples/OcclusionSamples.cs#SetHandRemovalEnabled)]
+[!code-cs[SetHandRemovalEnabled](../../../Tests/Runtime/CodeSamples/OcclusionSamples.cs#SetHandRemovalEnabled)]
 
 <!-- TODO: shaders -->

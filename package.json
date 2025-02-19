@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.meta-openxr",
   "displayName": "Unity OpenXR Meta",
-  "version": "2.1.0-pre.1",
+  "version": "2.1.0",
   "unity": "6000.0",
   "description": "Enables you to build mixed reality apps for Meta Quest devices by implementing support for Meta's OpenXR extensions.",
   "keywords": [
@@ -19,20 +19,20 @@
   ],
   "dependencies": {
     "com.unity.xr.openxr": "1.14.0",
-    "com.unity.xr.arfoundation": "6.1.0-pre.4",
+    "com.unity.xr.arfoundation": "6.1.0",
     "com.unity.xr.management": "4.4.0",
     "com.unity.xr.core-utils": "2.5.1"
   },
   "_upm": {
-    "changelog": "### Added\n\n- Added a validation rule to warn you that soft shadows can negatively affect performance for Meta Quest.\n- Added Scene setup documentation to clarify best practices for requesting Android system permissions.\n- Added support for running scenes in the editor via [Quest Link](xref:meta-openxr-link).\n- Added a public class [MetaOpenXRFeature](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRFeature) as the new base class for OpenXR features in this package.\n- Added the Meta Quest Boundary Visibility feature, which enables you to suppress the visibility of the boundary so users can move freely with Passthrough enabled. Refer to [Boundary visibility](xref:meta-openxr-boundary-visibility) for more information.\n- Added support for [Occlusion](xref:meta-openxr-occlusion).\n\n### Changed\n\n- Changed the **Meta Quest: Bounding boxes**, **Meta Quest: Anchors**, **Meta Quest: Meshing**, and **Meta Quest: Planes** features implementation to replace the use of `XR_FB_spatial_entity_query` and `XR_FB_spatial_entity_storage` with newer OpenXR extensions from Meta. This is a backwards-compatible change with no effect on your code.\n- Changed the **Meta Quest: Camera (Passthrough)** feature to no longer enable the `XR_FB_composition_layer_alpha_blend` OpenXR extension. This is a backwards-compatible change with no effect on your code.\n- Changed the severity level of validation rules for features that depend on **Meta Quest: Session** from Warning to Error. These features are unusable at runtime if **Meta Quest: Session** is not enabled, so Error is the appropriate severity level for the validation rules.\n- Changed the dependency version of XR Core Utilities from 2.4.0 to 2.5.1.\n\n### Removed\n\n- Removed a validation rule that warned you if your currently open scene did not have an `ARCameraManager` component while the **Meta Quest: Camera (Passthrough)** feature was enabled. Too often this warning was a false positive for valid project setups, so it wasn't helpful.\n\n### Fixed\n\n- Fixed an issue with [BoundedPlane.nativePtr](xref:UnityEngine.XR.ARSubsystems.BoundedPlane.nativePtr), [XRBoundingBox.nativePtr](xref:UnityEngine.XR.ARSubsystems.XRBoundingBox.nativePtr), and [XRAnchor.nativePtr](xref:UnityEngine.XR.ARSubsystems.XRAnchor.nativePtr) so they now return a pointer to a struct with a version number and a pointer to the `XrSpace` handle of their respective trackable type. Refer to [Plane native pointer](xref:meta-openxr-planes#Native-pointer), [Bounding box native pointer](xref:meta-openxr-bounding-boxes#Native-pointer), and [Anchor native pointer](xref:meta-openxr-anchors#Native-pointer) for more information.\n- Fixed Android Manifest setup for builds so that if your app uses Bounding Boxes or Meshing but not Planes, your app's Android Manifest will now correctly declare the `com.oculus.permission.USE_SCENE` permission.\n- Fixed the **Meta Quest: Display Utilities** feature so that it works correctly even when **Meta Quest: Session** is disabled. ([MOXRB-70](https://issuetracker.unity3d.com/product/unity/issues/guid/MOXRB-70))\n- Fixed the **Meta Quest: Anchors** and **Meta Quest: Passthrough** features so they gracefully fail to create their subsystems if the OpenXR runtime does not support the required system properties."
+    "changelog": "### Added\n\n- Added support for DirectX 12 and DirectX 11 to the Meta Quest Occlusion feature.\n\n### Fixed\n\n- Fixed the `MetaOpenXRAnchorSubsystem` so that it correctly cancels Awaitables when the subsystem is destroyed.\n- Fixed `MetaOpenXRPlaneSubsystem`, `MetaOpenXRBoundingBoxSubsystem`, and `ARMeshFeature` so that when doffing and re-donning the headset, trackables are no longer reported as removed during the brief time while the headset is re-establishing tracking."
   },
   "upmCi": {
-    "footprint": "087560342b90aeaaef5a31ec68df954c0b2934c8"
+    "footprint": "d8a222e4fc018edfb2c61c3012bfcaf4a14ff882"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.meta-openxr@2.1/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/xr.sdk.meta-openxr.git",
     "type": "git",
-    "revision": "b9b52beb212e1d8ed3f488eeb5adac561fdb4e47"
+    "revision": "b51421cb7e5adafbcd7d28782715f09d6343aa31"
   }
 }

@@ -71,7 +71,42 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
             public override void Stop() { }
 
-            public override void Destroy() => NativeApi.Destroy();
+            public override void Destroy()
+            {
+                foreach (var completionSource in s_AddAsyncPendingRequests.Values)
+                {
+                    completionSource.SetCanceled();
+                    completionSource.Reset();
+                    s_AddAsyncCompletionSources.Release(completionSource);
+                }
+                s_AddAsyncPendingRequests.Clear();
+
+                foreach (var completionSource in s_SaveAsyncPendingRequests.Values)
+                {
+                    completionSource.SetCanceled();
+                    completionSource.Reset();
+                    s_SaveAsyncCompletionSources.Release(completionSource);
+                }
+                s_SaveAsyncPendingRequests.Clear();
+
+                foreach (var completionSource in s_LoadAsyncPendingRequests.Values)
+                {
+                    completionSource.SetCanceled();
+                    completionSource.Reset();
+                    s_LoadAsyncCompletionSources.Release(completionSource);
+                }
+                s_LoadAsyncPendingRequests.Clear();
+
+                foreach (var completionSource in s_EraseAsyncPendingRequests.Values)
+                {
+                    completionSource.SetCanceled();
+                    completionSource.Reset();
+                    s_EraseAsyncCompletionSources.Release(completionSource);
+                }
+                s_EraseAsyncPendingRequests.Clear();
+
+                NativeApi.Destroy();
+            }
 
             public override unsafe TrackableChanges<XRAnchor> GetChanges(XRAnchor defaultAnchor, Allocator allocator)
             {

@@ -8,6 +8,17 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2025-02-19
+
+### Added
+
+- Added support for DirectX 12 and DirectX 11 to the Meta Quest Occlusion feature.
+
+### Fixed
+
+- Fixed the `MetaOpenXRAnchorSubsystem` so that it correctly cancels Awaitables when the subsystem is destroyed.
+- Fixed `MetaOpenXRPlaneSubsystem`, `MetaOpenXRBoundingBoxSubsystem`, and `ARMeshFeature` so that when doffing and re-donning the headset, trackables are no longer reported as removed during the brief time while the headset is re-establishing tracking.
+
 ## [2.1.0-pre.1] - 2024-12-27
 
 ### Added

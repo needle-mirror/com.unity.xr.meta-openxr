@@ -2,6 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using UnityEngine.Rendering;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.XR.OpenXR.NativeTypes;
@@ -42,7 +43,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// <remarks>
         /// This value is always `false` while the subsystem is not yet running.
         /// </remarks>
-        public bool isHandRemovalEnabled => running && ((MetaOpenXROcclusionProvider)provider).m_EnableHandRemoval;
+        public bool isHandRemovalEnabled => running && ((MetaOpenXROcclusionProvider)provider).isHandRemovalEnabled;
 
         /// <summary>
         /// Attempts to set whether hand removal is enabled. Enable hand removal if your project uses a separate
@@ -59,7 +60,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
         class MetaOpenXROcclusionProvider : Provider
         {
-            internal bool m_EnableHandRemoval;
+            internal bool isHandRemovalEnabled { get; private set; }
 
             const string k_EnvironmentDepthTextureName = "_EnvironmentDepthTexture";
             int m_EnvironmentDepthTextureId;
@@ -106,13 +107,13 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 // If this method is called before then, just save the requested value and wait until Start.
                 if (!running)
                 {
-                    m_EnableHandRemoval = enableHandRemoval;
+                    isHandRemovalEnabled = enableHandRemoval;
                     return XrResult.Success;
                 }
 
                 var result = NativeApi.SetHandRemovalEnabled(enableHandRemoval);
                 if (result.IsSuccess())
-                    m_EnableHandRemoval = enableHandRemoval;
+                    isHandRemovalEnabled = enableHandRemoval;
 
                 return result;
             }
@@ -127,7 +128,12 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
             XRResultStatus TryStart()
             {
-                var result = NativeApi.Start(m_EnableHandRemoval);
+                var result = NativeApi.TryStart(SystemInfo.graphicsDeviceType, isHandRemovalEnabled);
+                if (result.IsSuccess())
+                {
+                    m_PermissionDenied = false;
+                    return result;
+                }
                 if (result.statusCode == StatusCode.ProviderUninitialized)
                 {
                     Debug.LogError(Constants.k_ErrorProviderUninitialized);
@@ -141,9 +147,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 {
                     Debug.LogError($"Occlusion subsystem failed to start with error: {(XrResult)result.nativeStatusCode}");
                 }
-                else if (result.IsSuccess())
+                else if (result.IsError())
                 {
-                    m_PermissionDenied = false;
+                    Debug.LogError("Occlusion subsystem failed to start. Check logs for more information.");
                 }
 
                 return result;
@@ -156,6 +162,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
                 NativeApi.Stop();
             }
+
             public override void Destroy()
             {
                 if (m_PermissionDenied)
@@ -256,8 +263,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_Occlusion_Create")]
                 internal static extern void Create();
 
-                [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_Occlusion_Start")]
-                internal static extern XRResultStatus Start([MarshalAs(UnmanagedType.U1)]bool enableHandRemoval);
+                [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_Occlusion_TryStart")]
+                internal static extern XRResultStatus TryStart(
+                    GraphicsDeviceType graphisAPI, [MarshalAs(UnmanagedType.U1)]bool enableHandRemoval);
 
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_Occlusion_TrySetHandRemovalEnabled")]
                 internal static extern XrResult SetHandRemovalEnabled([MarshalAs(UnmanagedType.U1)]bool enableHandRemoval);

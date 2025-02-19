@@ -63,14 +63,6 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// <seealso href="xref:openxr-features#enabling-openxr-spec-extension-strings">Enabling OpenXR spec extension strings</seealso>
         protected override bool OnInstanceCreate(ulong xrInstance)
         {
-#if UNITY_EDITOR_WIN
-            var graphicsApis = PlayerSettings.GetGraphicsAPIs(BuildTarget.StandaloneWindows64);
-            if (graphicsApis.Length < 1 || graphicsApis[0] != GraphicsDeviceType.Vulkan)
-            {
-                Debug.LogError($"<b>{displayName}</b> is only supported with the Vulkan graphics API, but your current graphics API is {graphicsApis[0]}. Occlusion is disabled.");
-                return false;
-            }
-#endif
             var handRemovalSupported = IsCapabilitySupported(SystemCapability.HandRemoval, xrInstance);
             if (m_EnableHandRemoval && !handRemovalSupported)
             {
@@ -128,16 +120,15 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         {
             rules.Add(ValidationRuleFactory.CreateARSessionValidationRule(this, targetGroup));
 
+            if (targetGroup != BuildTargetGroup.Android)
+                return;
+
             rules.Add(new ValidationRule(this)
             {
                 message = $"<b>{displayName}</b> requires that your graphics API is set to Vulkan.",
                 checkPredicate = () =>
                 {
-                    var buildTarget = BuildTarget.Android;
-                    if (targetGroup == BuildTargetGroup.Standalone)
-                        buildTarget = BuildTarget.StandaloneWindows64;
-
-                    var graphicsApis = PlayerSettings.GetGraphicsAPIs(buildTarget);
+                    var graphicsApis = PlayerSettings.GetGraphicsAPIs(BuildTarget.Android);
                     return graphicsApis.Length > 0 && graphicsApis[0] == GraphicsDeviceType.Vulkan;
                 },
                 fixItAutomatic = true,
@@ -145,16 +136,12 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                     " Under <b>Graphics APIs</b>, add <b>Vulkan</b> as the topmost API in the list.",
                 fixIt = () =>
                 {
-                    var buildTarget = BuildTarget.Android;
-                    if (targetGroup == BuildTargetGroup.Standalone)
-                        buildTarget = BuildTarget.StandaloneWindows64;
-
-                    var currentGraphicsApis = PlayerSettings.GetGraphicsAPIs(buildTarget);
+                    var currentGraphicsApis = PlayerSettings.GetGraphicsAPIs(BuildTarget.Android);
                     int apiLength = currentGraphicsApis.Length;
                     apiLength += Array.Exists(currentGraphicsApis, element => element == GraphicsDeviceType.Vulkan) ? 0 : 1;
 
                     // Copy the user's graphics APIs into a new array where Vulkan is the first element
-                    GraphicsDeviceType[] correctGraphicsApis = new GraphicsDeviceType[apiLength];
+                    var correctGraphicsApis = new GraphicsDeviceType[apiLength];
                     correctGraphicsApis[0] = GraphicsDeviceType.Vulkan;
                     var dstIndex = 1;
                     for (var srcIndex = 0; srcIndex < currentGraphicsApis.Length; ++srcIndex)
@@ -165,10 +152,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                             ++dstIndex;
                         }
                     }
-                    PlayerSettings.SetGraphicsAPIs(buildTarget, correctGraphicsApis);
-
-                    if (buildTarget == BuildTarget.StandaloneWindows64)
-                        PlayerSettings.SetUseDefaultGraphicsAPIs(buildTarget, false);
+                    PlayerSettings.SetGraphicsAPIs(BuildTarget.Android, correctGraphicsApis);
                 },
                 error = true,
             });
