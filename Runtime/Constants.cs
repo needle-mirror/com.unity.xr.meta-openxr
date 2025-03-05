@@ -31,7 +31,6 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
         internal static class OpenXRExtensions
         {
-            internal const string k_XR_FB_composition_layer_alpha_blend = "XR_FB_composition_layer_alpha_blend";
             internal const string k_XR_FB_display_refresh_rate = "XR_FB_display_refresh_rate";
             internal const string k_XR_FB_passthrough = "XR_FB_passthrough";
             internal const string k_XR_FB_spatial_entity = "XR_FB_spatial_entity";

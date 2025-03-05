@@ -72,7 +72,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 {
                     id = k_SubsystemId,
                     providerType = typeof(MetaOpenXRAnchorProvider),
-                    subsystemTypeOverride = null,
+                    subsystemTypeOverride = typeof(MetaOpenXRAnchorSubsystem),
                     supportsTrackableAttachments = false,
                 };
 

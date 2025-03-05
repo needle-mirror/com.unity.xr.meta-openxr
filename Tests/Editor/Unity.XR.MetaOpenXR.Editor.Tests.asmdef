@@ -1,12 +1,11 @@
 {
-    "name": "Unity.XR.MetaOpenXR.Tests.Editor",
+    "name": "Unity.XR.MetaOpenXR.Editor.Tests",
     "rootNamespace": "UnityEditor.XR.OpenXR.Features.Meta.Tests",
     "references": [
         "Unity.XR.MetaOpenXR",
-        "Unity.XR.MetaOpenXR.Editor"
-    ],
-    "optionalUnityReferences": [
-        "TestAssemblies"
+        "Unity.XR.MetaOpenXR.Editor",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
     ],
     "includePlatforms": [
         "Editor"

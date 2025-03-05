@@ -19,7 +19,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// </summary>
 #if UNITY_EDITOR
     [OpenXRFeature(UiName = "Meta Quest: AR Camera (Passthrough)",
-        BuildTargetGroups = new[] { BuildTargetGroup.Android },
+        BuildTargetGroups = new[] { BuildTargetGroup.Android, BuildTargetGroup.Standalone },
         Company = Constants.k_CompanyName,
         Desc = "AR Foundation camera support on Meta Quest devices",
         DocumentationLink = Constants.DocsUrls.k_CameraUrl,
@@ -40,9 +40,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// For more information, refer to
         /// <see href="https://docs.unity3d.com/Packages/com.unity.xr.openxr@1.6/manual/features.html#enabling-openxr-spec-extension-strings"/>.
         /// </summary>
-        const string k_OpenXRRequestedExtensions =
-            Constants.OpenXRExtensions.k_XR_FB_passthrough + " " +
-            Constants.OpenXRExtensions.k_XR_FB_composition_layer_alpha_blend;
+        const string k_OpenXRRequestedExtensions = Constants.OpenXRExtensions.k_XR_FB_passthrough;
 
         static List<XRCameraSubsystemDescriptor> s_CameraDescriptors = new();
 

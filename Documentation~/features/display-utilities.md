@@ -28,4 +28,4 @@ Once enabled, Meta Quest Display Utilities adds additional capabilities to Unity
 
 The code sample below demonstrates how to use these extension methods:
 
-[!code-cs[request_display_refreshRate](../../Tests/CodeSamples/MetaQuestDisplayUtilitiesSample.cs#request_display_refreshRate)]
+[!code-cs[request_display_refreshRate](../../Tests/Runtime/CodeSamples/MetaQuestDisplayUtilitiesSample.cs#request_display_refreshRate)]

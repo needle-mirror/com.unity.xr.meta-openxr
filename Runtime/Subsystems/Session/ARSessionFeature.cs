@@ -14,7 +14,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// </summary>
 #if UNITY_EDITOR
     [OpenXRFeature(UiName = "Meta Quest: AR Session",
-        BuildTargetGroups = new[] { BuildTargetGroup.Android },
+        BuildTargetGroups = new[] { BuildTargetGroup.Android, BuildTargetGroup.Standalone },
         Company = Constants.k_CompanyName,
         Desc = "AR Foundation support on Meta Quest devices. Required as a dependency of any other AR feature.",
         DocumentationLink = Constants.DocsUrls.k_SessionUrl,
@@ -131,7 +131,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// <param name="xrSpace">Handle of the xrSpace</param>
         protected override void OnAppSpaceChange(ulong xrSpace) => NativeApi.UnityOpenXRMeta_OnAppSpaceChange(xrSpace);
 
-        static class NativeApi
+        internal static class NativeApi
         {
             [DllImport(Constants.k_ARFoundationLibrary)]
             public static extern IntPtr UnityOpenXRMeta_InterceptXrGetInstanceProcAddr(IntPtr func);

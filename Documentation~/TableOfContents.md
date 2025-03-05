@@ -1,6 +1,7 @@
 * [Introduction](xref:meta-openxr-manual)
 * [Device setup](xref:meta-openxr-device-setup)
 * [Project setup](xref:meta-openxr-project-setup)
+* [Meta Quest Link](xref:meta-openxr-link)
 * [Architecture](xref:meta-openxr-architecture)
 * [Features](xref:meta-openxr-features)
   * [Display utilities](xref:meta-openxr-display-utilities)

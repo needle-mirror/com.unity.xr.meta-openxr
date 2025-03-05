@@ -28,6 +28,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// <returns><see langword="true"/> if the request was successful. Otherwise, <see langword="false"/>.</returns>
         public bool TryRequestSceneCapture()
         {
+            if (!OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_scene_capture))
+                return false;
+
             var success = MetaOpenXRProvider.TryRequestSceneCapture();
 
             if (!success)

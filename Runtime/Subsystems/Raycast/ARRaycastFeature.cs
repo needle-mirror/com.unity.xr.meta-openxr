@@ -12,7 +12,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// </summary>
 #if UNITY_EDITOR
     [OpenXRFeature(UiName = "Meta Quest: AR Raycasts",
-        BuildTargetGroups = new[] { BuildTargetGroup.Android },
+        BuildTargetGroups = new[] { BuildTargetGroup.Android, BuildTargetGroup.Standalone },
         Company = Constants.k_CompanyName,
         Desc = "AR Foundation raycast support on Meta Quest devices",
         DocumentationLink = Constants.DocsUrls.k_RaycastsUrl,

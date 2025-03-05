@@ -8,6 +8,21 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2025-03-05
+
+### Added
+
+- Added support for running scenes in the editor via [Quest Link](xref:meta-openxr-project-setup#quest-link).
+
+### Changed
+
+- Changed the **Meta Quest: Camera (Passthrough)** feature to no longer enable the `XR_FB_composition_layer_alpha_blend` OpenXR extension. This is a backwards-compatible change with no effect on your code.
+
+### Fixed
+
+- Fixed the **Meta Quest: Display Utilities** feature so that it works correctly even when **Meta Quest: Session** is disabled. ([MOXRB-70](https://issuetracker.unity3d.com/product/unity/issues/guid/MOXRB-70))
+- Fixed the `MetaOpenXRAnchorSubsystem` so that it correctly registers its `subsystemTypeOverride`, allowing you to typecast instances of `XRAnchorSubsystem` to `MetaOpenXRAnchorSubsystem`.
+
 ## [1.0.2] - 2024-10-10
 
 ### Changed

@@ -18,65 +18,11 @@ To enable the features in this package, go to **Project Settings** > **XR Plug-i
 
 Refer to [Device setup](xref:meta-openxr-device-setup) and [Project setup](xref:meta-openxr-project-setup), respectively, for more detailed information about how to set up your Meta Quest device and Unity project to use this package.
 
+Refer to [Meta Quest Link](xref:meta-openxr-link) to use Meta Quest Link with Play mode in the Unity Editor.
+
 ## Features
 
-This package defines the following OpenXR Features:
-
-<table>
-  <tr>
-    <td colspan="2"><strong>Feature</strong></td>
-    <td><strong>Description</strong>
-  </tr>
-  <tr>
-    <td colspan="2"><a href="features/display-utilities.md">Display Utilities</a></td>
-    <td>Get the supported display refresh rates for the device and request a display refresh rate.</td>
-  </tr>
-  <tr>
-    <td colspan="2"><a href="features/ar-features.md">AR Features</a></td>
-    <td>AR Features implement AR Foundation interfaces.</td>
-  </tr>
-  <tr>
-    <td></td>
-    <td><a href="features/session.md">Session</a></td>
-    <td>Enable, disable, and configure AR on the target platform.</td>
-  </tr>
-  <tr>
-    <td></td>
-    <td><a href="features/camera.md">Camera</a></td>
-    <td>Render images from device cameras and perform light estimation.</td>
-  </tr>
-  <tr>
-    <td></td>
-    <td><a href="features/planes.md">Planes</a></td>
-    <td>Use Scene Model data to track flat surfaces.</td>
-  </tr>
-  <tr>
-    <td></td>
-    <td><a href="features/anchors.md">Anchors</a></td>
-    <td>Track arbitrary points in space.</td>
-  </tr>
-  <tr>
-    <td></td>
-    <td><a href="features/raycasts.md">Raycasts</a></td>
-    <td>Cast rays against tracked items.</td>
-  </tr>
-</table>
-
-### Unsupported AR features
-
-This package does not implement the following AR features:
-
-| Feature | Description |
-| :------ | :---------- |
-| [Image tracking](xref:arfoundation-image-tracking) | Detect and track 2D images. |
-| [Object tracking](xref:arfoundation-object-tracking) | Detect and track 3D objects. |
-| [Face tracking](xref:arfoundation-face-tracking) | Detect and track human faces. |
-| [Body tracking](xref:arfoundation-body-tracking) | Detect and track a human body. |
-| [Point clouds](xref:arfoundation-point-clouds) | Detect and track feature points. |
-| [Meshing](xref:arfoundation-meshing) | Generate meshes of the environment. |
-| [Environment probes](xref:arfoundation-environment-probes) | Generate cubemaps of the environment. |
-| [Occlusion](xref:arfoundation-occlusion) | Occlude AR content with physical objects and perform human segmentation. |
-| [Participants](xref:arfoundation-participant-tracking) | Track other devices in a shared AR session. |
+[!include[](snippets/features-table.md)]
 
 ## A quick primer on OpenXR
 
