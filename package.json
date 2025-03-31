@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.meta-openxr",
   "displayName": "Unity OpenXR Meta",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "unity": "2022.3",
   "unityRelease": "0f1",
   "description": "Enables you to build mixed reality apps for Meta Quest devices by implementing support for Meta's OpenXR extensions.",
@@ -23,15 +23,15 @@
     "com.unity.xr.arfoundation": "5.1.0"
   },
   "_upm": {
-    "changelog": "### Added\n\n- Added support for running scenes in the editor via [Quest Link](xref:meta-openxr-project-setup#quest-link).\n\n### Changed\n\n- Changed the **Meta Quest: Camera (Passthrough)** feature to no longer enable the `XR_FB_composition_layer_alpha_blend` OpenXR extension. This is a backwards-compatible change with no effect on your code.\n\n### Fixed\n\n- Fixed the **Meta Quest: Display Utilities** feature so that it works correctly even when **Meta Quest: Session** is disabled. ([MOXRB-70](https://issuetracker.unity3d.com/product/unity/issues/guid/MOXRB-70))\n- Fixed the `MetaOpenXRAnchorSubsystem` so that it correctly registers its `subsystemTypeOverride`, allowing you to typecast instances of `XRAnchorSubsystem` to `MetaOpenXRAnchorSubsystem`."
+    "changelog": "### Changed\n\n- Recompiled the native plug-in with support for [16 KB page sizes](https://developer.android.com/guide/practices/page-sizes) on Android 15 or newer.\n\n### Fixed\n\n- Fixed and issue where enabling both the **Meta Quest: AR Session** and **Meta Quest: Display Utilities** OpenXR features would cause the app to unexpectedly quit."
   },
   "upmCi": {
-    "footprint": "3e2c234221f36fa802300028565e41557c284d2c"
+    "footprint": "644c46d29a711e3665ade45971457679b5055eeb"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.meta-openxr@1.0/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/xr.sdk.meta-openxr.git",
     "type": "git",
-    "revision": "c8588e84c066606106e04a1a6e18f374ffba2ffc"
+    "revision": "1c78685887b03ce0adf8959dc7bbd8b7803503f4"
   }
 }

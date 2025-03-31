@@ -8,6 +8,16 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2025-03-31
+
+### Changed
+
+- Recompiled the native plug-in with support for [16 KB page sizes](https://developer.android.com/guide/practices/page-sizes) on Android 15 or newer.
+
+### Fixed
+
+- Fixed and issue where enabling both the **Meta Quest: AR Session** and **Meta Quest: Display Utilities** OpenXR features would cause the app to unexpectedly quit.
+
 ## [1.0.3] - 2025-03-05
 
 ### Added
