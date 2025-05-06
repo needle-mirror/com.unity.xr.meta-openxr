@@ -95,7 +95,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             => NativeApi.UnityOpenXRMeta_OpenXRLifeCycle_OnSessionDestroy(xrSession);
 
         protected override void OnInstanceDestroy(ulong xrInstance)
-            => NativeApi.UnityOpenXRMeta_OpenXRLifeCycle_OnInstanceDestroy(xrInstance);
+        {
+            SystemCapabilityUtils.ClearCachedCapabilityInfo();
+            NativeApi.UnityOpenXRMeta_OpenXRLifeCycle_OnInstanceDestroy(xrInstance);
+        }
 
         static class NativeApi
         {

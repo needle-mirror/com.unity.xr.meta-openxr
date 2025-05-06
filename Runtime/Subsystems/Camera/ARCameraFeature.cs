@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using Unity.XR.CoreUtils;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.XR.ARFoundation;
-using Unity.XR.CoreUtils;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.XR.OpenXR.Features;
@@ -70,7 +70,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         }
 
         /// <summary>
-        /// Instantiates Meta OpenXR Camera subsystem instances, but does not start it.
+        /// Instantiates OpenXR Meta Camera subsystem instances, but does not start it.
         /// (Start/Stop is typically handled by AR Foundation managers.)
         /// </summary>
         protected override void OnSubsystemCreate()

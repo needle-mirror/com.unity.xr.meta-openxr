@@ -5,9 +5,9 @@ using Unity.Collections.LowLevel.Unsafe;
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
     /// <summary>
-    /// Meta OpenXR extension methods for the <see cref="XRDisplaySubsystem"/>.
+    /// OpenXR Meta extension methods for the <see cref="XRDisplaySubsystem"/>.
     /// > [!IMPORTANT]
-    /// > These extension methods require that you enable the **Meta OpenXR Display Utilities** feature in
+    /// > These extension methods require that you enable the Meta Quest Display Utilities feature in
     /// > **Project Settings** > **XR Plug-in Management** > **OpenXR**. If the display utilities feature is
     /// > not enabled, all extension methods will return <see langword="false"/>.
     /// </summary>
@@ -15,7 +15,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     public static class MetaOpenXRDisplaySubsystemExtensions
     {
         const string k_FeatureNotEnabledError =
-            "To use Meta OpenXR display uitilities, you must enable the Meta OpenXR Display Utilities feature " +
+            "To use OpenXR Meta display uitilities, you must enable the Meta Quest Display Utilities feature " +
             "in Project Settings > XR Plug-in Management > OpenXR.";
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// <returns><see langword="true"/> if <paramref name="refreshRates"/> was successfully written. Otherwise, <see langword="false"/>.</returns>
         /// <remarks>
         /// > [!IMPORTANT]
-        /// > This extension method requires that you enable the **Meta OpenXR Display Utilities** feature in
+        /// > This extension method requires that you enable the Meta Quest Display Utilities feature in
         /// > **Project Settings** > **XR Plug-in Management** > **OpenXR**. If the display utilities feature is
         /// > not enabled, this method will always return <see langword="false"/>.
         /// </remarks>
@@ -72,7 +72,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// <returns><see langword="true"/> if the request was successfully created. Otherwise, <see langword="false"/>.</returns>
         /// <remarks>
         /// > [!IMPORTANT]
-        /// > This extension method requires that you enable the **Meta OpenXR Display Utilities** feature in
+        /// > This extension method requires that you enable the Meta Quest Display Utilities feature in
         /// > **Project Settings** > **XR Plug-in Management** > **OpenXR**. If the display utilities feature is
         /// > not enabled, this method will always return <see langword="false"/>.
         /// </remarks>

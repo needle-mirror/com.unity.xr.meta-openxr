@@ -1,6 +1,12 @@
-using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Unity.XR.CompositionLayers;
+using Unity.XR.CompositionLayers.Layers;
+using Unity.XR.CompositionLayers.Services;
 using UnityEngine.XR.ARSubsystems;
+using UnityEngine.XR.OpenXR.CompositionLayers;
+using UnityEngine.XR.OpenXR.NativeTypes.Meta;
+using UnityEngine.XR.OpenXR.NativeTypes;
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
@@ -38,48 +44,83 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             };
 
             XRCameraSubsystemDescriptor.Register(cameraSubsystemCinfo);
+
+            var layerHandler = new MetaOpenXRPassthroughLayer();
+            OpenXRLayerProvider.RegisterLayerHandler(typeof(PassthroughLayerData), layerHandler);
         }
 
         class MetaOpenXRProvider : Provider
         {
-            protected override bool TryInitialize()
-            {
-                NativeApi.UnityMetaQuest_Passthrough_Construct();
-                return true;
-            }
-
             /// <summary>
             /// Start the camera functionality.
             /// </summary>
-            public override void Start() => NativeApi.UnityMetaQuest_Passthrough_Start();
-
-            /// <summary>
-            /// Stop the camera functionality.
-            /// </summary>
-            public override void Stop() => NativeApi.UnityMetaQuest_Passthrough_Stop();
-
-            /// <summary>
-            /// Destroy any resources required for the camera functionality.
-            /// </summary>
-            public override void Destroy() => NativeApi.UnityMetaQuest_Passthrough_Destruct();
-
-            /// <summary>
-            /// Container to wrap the native Meta OpenXR camera APIs.
-            /// </summary>
-            static class NativeApi
+            public override void Start()
             {
-                [DllImport(Constants.k_ARFoundationLibrary)]
-                public static extern void UnityMetaQuest_Passthrough_Construct();
+                if (!IsPassthroughLayerActive())
+                    CreatePassthroughLayer();
 
-                [DllImport(Constants.k_ARFoundationLibrary)]
-                public static extern void UnityMetaQuest_Passthrough_Destruct();
-
-                [DllImport(Constants.k_ARFoundationLibrary)]
-                public static extern void UnityMetaQuest_Passthrough_Start();
-
-                [DllImport(Constants.k_ARFoundationLibrary)]
-                public static extern void UnityMetaQuest_Passthrough_Stop();
+                var defaultLayer = FindCompositionLayerType<DefaultLayerData>(CompositionLayerManager.Instance.CompositionLayers);
+                defaultLayer.LayerData.BlendType = BlendType.Premultiply;
             }
+
+            static bool IsPassthroughLayerActive()
+            {
+                var compositionLayerManager = CompositionLayerManager.Instance;
+                if (compositionLayerManager == null)
+                    return false;
+
+                var layer = FindCompositionLayerType<PassthroughLayerData>(compositionLayerManager.CompositionLayers);
+                return layer != null;
+            }
+
+            static void CreatePassthroughLayer()
+            {
+                var passthroughDescriptor = CompositionLayerUtils.GetLayerDescriptor(typeof(PassthroughLayerData));
+                var passthroughGameObject = new GameObject("Passthrough");
+                var compositionLayerComponent = passthroughGameObject.AddComponent<CompositionLayer>();
+                var passthroughLayerData = CompositionLayerUtils.CreateLayerData(typeof(PassthroughLayerData));
+                compositionLayerComponent.ChangeLayerDataType(passthroughLayerData);
+                foreach (var extension in passthroughDescriptor.SuggestedExtensions)
+                {
+                    if (extension.IsSubclassOf(typeof(MonoBehaviour)))
+                        passthroughGameObject.AddComponent(extension);
+                }
+                compositionLayerComponent.TryChangeLayerOrder(compositionLayerComponent.Order, CompositionLayerManager.GetFirstUnusedLayer(false));
+            }
+
+            static CompositionLayer FindCompositionLayerType<T>(IReadOnlyCollection<CompositionLayer> layers)
+            {
+                foreach (var layer in layers)
+                {
+                    if (layer != null && layer.LayerData.GetType() == typeof(T))
+                        return layer;
+                }
+
+                return null;
+            }
+        }
+
+        internal static class NativeApi
+        {
+            [DllImport(Constants.k_ARFoundationLibrary)]
+            public static extern XrResult UnityMetaQuest_xrCreatePassthroughFB(
+                ulong session, in XrPassthroughCreateInfoFB createInfo, out ulong passthroughHandle);
+
+            [DllImport(Constants.k_ARFoundationLibrary)]
+            public static extern XrResult UnityMetaQuest_xrCreatePassthroughLayerFB(
+                ulong session, in XrPassthroughLayerCreateInfoFB createInfo, out ulong passthroughLayerHandle);
+
+            [DllImport(Constants.k_ARFoundationLibrary)]
+            public static extern XrResult UnityMetaQuest_xrPassthroughStartFB(ulong passthroughHandle);
+
+            [DllImport(Constants.k_ARFoundationLibrary)]
+            public static extern XrResult UnityMetaQuest_xrPassthroughPauseFB(ulong passthroughHandle);
+
+            [DllImport(Constants.k_ARFoundationLibrary)]
+            public static extern XrResult UnityMetaQuest_xrDestroyPassthroughLayerFB(ulong passthroughLayerHandle);
+
+            [DllImport(Constants.k_ARFoundationLibrary)]
+            public static extern XrResult UnityMetaQuest_xrDestroyPassthroughFB(ulong passthroughHandle);
         }
     }
 }

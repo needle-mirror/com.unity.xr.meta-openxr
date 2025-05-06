@@ -13,7 +13,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// Enables AR Foundation anchor support via OpenXR for Meta Quest devices.
     /// </summary>
 #if UNITY_EDITOR
-    [OpenXRFeature(UiName = displayName,
+    [OpenXRFeature(UiName = k_DisplayName,
         BuildTargetGroups = new[] { BuildTargetGroup.Android, BuildTargetGroup.Standalone },
         Company = Constants.k_CompanyName,
         Desc = "AR Foundation anchor support on Meta Quest devices",
@@ -25,7 +25,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 #endif
     public class ARAnchorFeature : MetaOpenXRFeature
     {
-        internal const string displayName = "Meta Quest: Anchors";
+        const string k_DisplayName = "Meta Quest: Anchors";
 
         /// <summary>
         /// The feature id string. This is used to give the feature a well known id for reference.
@@ -39,7 +39,12 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// </summary>
         /// <seeaslo href="https://developer.oculus.com/documentation/native/android/mobile-scene-api-ref/"/>
         const string k_OpenXRRequestedExtensions =
-            k_XR_FB_spatial_entity + " " + k_XR_META_spatial_entity_discovery + " " + k_XR_META_spatial_entity_persistence;
+            k_XR_FB_spatial_entity + " " +
+            k_XR_META_spatial_entity_discovery + " " +
+            k_XR_META_spatial_entity_persistence + " " +
+            k_XR_META_spatial_entity_sharing + " " +
+            k_XR_META_spatial_entity_group_sharing + " " +
+            k_XR_FB_spatial_entity_query;
 
         static List<XRAnchorSubsystemDescriptor> s_AnchorDescriptors = new();
 
@@ -59,17 +64,17 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// <seealso href="xref:openxr-features#enabling-openxr-spec-extension-strings">Enabling OpenXR spec extension strings</seealso>
         protected override bool OnInstanceCreate(ulong xrInstance)
         {
+            InitializeCapabilityInfo(SystemCapability.SpaceDiscovery, xrInstance);
+            InitializeCapabilityInfo(SystemCapability.SpacePersistence, xrInstance);
+            InitializeCapabilityInfo(SystemCapability.SharedAnchors, xrInstance);
+
             return
                 OpenXRUtils.IsExtensionEnabled(k_XR_FB_spatial_entity) &&
-                OpenXRUtils.IsExtensionEnabled(k_XR_META_spatial_entity_discovery) &&
-                OpenXRUtils.IsExtensionEnabled(k_XR_META_spatial_entity_persistence) &&
-                IsCapabilitySupported(SystemCapability.SpatialEntity, xrInstance, displayName, typeof(XRAnchorSubsystem)) &&
-                IsCapabilitySupported(SystemCapability.SpaceDiscovery, xrInstance, displayName, typeof(XRAnchorSubsystem)) &&
-                IsCapabilitySupported(SystemCapability.SpacePersistence, xrInstance, displayName, typeof(XRAnchorSubsystem));
+                IsCapabilitySupported(SystemCapability.SpatialEntity, xrInstance, k_DisplayName, typeof(XRAnchorSubsystem));
         }
 
         /// <summary>
-        /// Instantiates Meta OpenXR Anchor subsystem instance, but does not start it.
+        /// Creates the <see cref="MetaOpenXRAnchorSubsystem"/>, but does not start it.
         /// (Start/Stop is typically handled by AR Foundation managers.)
         /// </summary>
         /// <remarks>

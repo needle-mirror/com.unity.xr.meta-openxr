@@ -10,7 +10,7 @@ using UnityEngine.Android;
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
     /// <summary>
-    /// The Meta-OpenXR implementation of <see cref="XRBoundingBoxSubsystem"/>, built with the Meta OpenXR Mobile SDK.
+    /// The OpenXR Meta implementation of <see cref="XRBoundingBoxSubsystem"/>, built with the OpenXR Meta Mobile SDK.
     /// Bounding boxes are provided based on bounded3d components present in your
     /// [Scene Model](https://developer.oculus.com/documentation/native/android/openxr-scene-overview#scene-model).
     /// </summary>
@@ -23,18 +23,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
         class MetaOpenXRBoundingBoxProvider : Provider
         {
-            /// <inheritdoc/>
             protected override bool TryInitialize()
             {
-                if (OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_spatial_entity) &&
-                    OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_META_spatial_entity_discovery) &&
-                    OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_scene))
-                {
-                    NativeApi.Create();
-                    return true;
-                }
-
-                return false;
+                NativeApi.Create();
+                return true;
             }
 
             public override void Start()
@@ -85,6 +77,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                     supportsClassification = true,
                 });
             }
+
             static class NativeApi
             {
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_BoundingBox_Create")]

@@ -10,13 +10,10 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
     class ModifyAndroidManifestMeta : OpenXRFeatureBuildHooks
     {
         public override int callbackOrder => 1;
-
         public override Type featureType => typeof(ARSessionFeature);
 
         protected override void OnPreprocessBuildExt(BuildReport report) { }
-
         protected override void OnPostGenerateGradleAndroidProjectExt(string path) { }
-
         protected override void OnPostprocessBuildExt(BuildReport report) { }
 
         protected override ManifestRequirement ProvideManifestRequirementExt()
@@ -28,7 +25,7 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
             if (arCameraFeature != null && arCameraFeature.enabled)
             {
                 elementsToAdd.Add(
-                    new ManifestElement()
+                    new ManifestElement
                     {
                         ElementPath = new List<string> { "manifest", "uses-feature" },
                         Attributes = new Dictionary<string, string>
@@ -44,12 +41,22 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
             if (arAnchorFeature != null && arAnchorFeature.enabled)
             {
                 elementsToAdd.Add(
-                    new ManifestElement()
+                    new ManifestElement
                     {
                         ElementPath = new List<string> { "manifest", "uses-permission" },
                         Attributes = new Dictionary<string, string>
                         {
                             { "name", "com.oculus.permission.USE_ANCHOR_API" },
+                        }
+                    }
+                );
+                elementsToAdd.Add(
+                    new ManifestElement
+                    {
+                        ElementPath = new List<string> { "manifest", "uses-permission" },
+                        Attributes = new Dictionary<string, string>
+                        {
+                            { "name", "com.oculus.permission.IMPORT_EXPORT_IOT_MAP_DATA" },
                         }
                     }
                 );
@@ -63,7 +70,7 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
                 arMeshFeature != null && arMeshFeature.enabled)
             {
                 elementsToAdd.Add(
-                    new ManifestElement()
+                    new ManifestElement
                     {
                         ElementPath = new List<string> { "manifest", "uses-permission" },
                         Attributes = new Dictionary<string, string>
@@ -84,6 +91,21 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
                         Attributes = new Dictionary<string, string>
                         {
                             { "name", "com.oculus.permission.BOUNDARY_VISIBILITY" },
+                        }
+                    }
+                );
+            }
+
+            var colocationDiscoveryFeature = androidOpenXRSettings.GetFeature<ColocationDiscoveryFeature>();
+            if (colocationDiscoveryFeature != null && colocationDiscoveryFeature.enabled)
+            {
+                elementsToAdd.Add(
+                    new ManifestElement
+                    {
+                        ElementPath = new List<string> { "manifest", "uses-permission" },
+                        Attributes = new Dictionary<string, string>
+                        {
+                            { "name", "com.oculus.permission.USE_COLOCATION_DISCOVERY_API" },
                         }
                     }
                 );

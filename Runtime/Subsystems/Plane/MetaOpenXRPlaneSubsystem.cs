@@ -11,7 +11,7 @@ using UnityEngine.Android;
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
     /// <summary>
-    /// The Meta-OpenXR implementation of <see cref="XRPlaneSubsystem"/>, built with the Meta OpenXR Mobile SDK.
+    /// The Meta-OpenXR implementation of <see cref="XRPlaneSubsystem"/>, built with the OpenXR Meta Mobile SDK.
     /// Planes are provided based on bounded2d components present in your
     /// [Scene Model](https://developer.oculus.com/documentation/native/android/openxr-scene-overview#scene-model).
     /// </summary>
@@ -48,15 +48,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
             protected override bool TryInitialize()
             {
-                if (OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_spatial_entity) &&
-                    OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_META_spatial_entity_discovery) &&
-                    OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_scene))
-                {
-                    NativeApi.Create();
-                    return true;
-                }
-
-                return false;
+                ARPlaneFeature arPlaneFeature = OpenXRSettings.Instance.GetFeature<ARPlaneFeature>();
+                NativeApi.Create(arPlaneFeature.planeProviderType);
+                return true;
             }
 
             /// <summary>
@@ -156,7 +150,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             static class NativeApi
             {
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_Plane_Create")]
-                public static extern void Create();
+                public static extern void Create(PlaneProviderType planeProviderType);
 
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_Plane_Start")]
                 public static extern void Start();

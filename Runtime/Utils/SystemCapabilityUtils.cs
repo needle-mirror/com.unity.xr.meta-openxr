@@ -16,7 +16,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             Passthrough,
             BoundaryVisibility,
             EnvironmentDepth,
-            HandRemoval
+            HandRemoval,
+            SharedAnchors,
+            ColocationDiscovery,
         }
 
         internal struct SystemCapabilityInfo
@@ -40,7 +42,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             }
         }
 
-        static readonly Dictionary<SystemCapability, SystemCapabilityInfo> s_InfosByCapability = new()
+        static List<SystemCapability> s_SystemCapabilities = new();
+        static Dictionary<SystemCapability, SystemCapabilityInfo> s_InfosByCapability = new()
         {
             { SystemCapability.SpaceDiscovery, new(k_XR_META_spatial_entity_discovery, NativeApi.GetIsSpaceDiscoverySupported) },
             { SystemCapability.SpacePersistence, new(k_XR_META_spatial_entity_persistence, NativeApi.GetIsSpacePersistenceSupported) },
@@ -49,7 +52,24 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             { SystemCapability.BoundaryVisibility, new(k_XR_META_boundary_visibility, NativeApi.GetIsBoundaryVisibilitySupported) },
             { SystemCapability.EnvironmentDepth, new(k_XR_META_environment_depth, NativeApi.GetIsEnvironmentDepthSupported) },
             { SystemCapability.HandRemoval, new(k_XR_META_environment_depth, NativeApi.GetIsHandRemovalSupported) },
+            { SystemCapability.SharedAnchors, new(k_XR_META_spatial_entity_group_sharing, NativeApi.GetIsSharedAnchorsSupported) },
+            { SystemCapability.ColocationDiscovery, new(k_XR_META_colocation_discovery, NativeApi.GetIsColocationDiscoverySupported) },
         };
+
+        static void ResetInfosByCapability()
+        {
+            s_SystemCapabilities.Clear();
+            foreach (var sysCap in s_InfosByCapability.Keys)
+            {
+                s_SystemCapabilities.Add(sysCap);
+            }
+
+            foreach (var sysCap in s_SystemCapabilities)
+            {
+                var capInfo = s_InfosByCapability[sysCap];
+                s_InfosByCapability[sysCap] = new(capInfo.extension, capInfo.getIsSupported);
+            }
+        }
 
         /// <summary>
         /// Get whether <paramref name="capability"/> is supported by the given OpenXR instance.
@@ -61,7 +81,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// <returns><see langword="true"/> if the capability is supported. Otherwise, <see langword="false"/>.</returns>
         internal static bool IsCapabilitySupported(SystemCapability capability, ulong xrInstance, string featureName = null, Type subsystemType = null)
         {
-            var info = GetCapabilityInfo(capability, xrInstance);
+            InitializeCapabilityInfo(capability, xrInstance);
+            var info = s_InfosByCapability[capability];
             if (info.isSupported == Supported.Supported)
                 return true;
 
@@ -73,18 +94,21 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             return false;
         }
 
-        static SystemCapabilityInfo GetCapabilityInfo(SystemCapability capability, ulong xrInstance)
+        internal static void InitializeCapabilityInfo(SystemCapability capability, ulong xrInstance)
         {
             // This never throws a KeyNotFoundException. Refer to SystemPropertiesUtilityTests.
             var info = s_InfosByCapability[capability];
-
             if (info.isSupported != Supported.Unknown)
-                return info;
+                return;
 
-            bool isSupported = info.getIsSupported(xrInstance);
+            var isSupported = info.getIsSupported(xrInstance);
             var updatedInfo = new SystemCapabilityInfo(info, isSupported);
             s_InfosByCapability[capability] = updatedInfo;
-            return updatedInfo;
+        }
+
+        internal static void ClearCachedCapabilityInfo()
+        {
+            ResetInfosByCapability();
         }
 
         internal static Dictionary<SystemCapability, SystemCapabilityInfo> GetCachedSystemCapabilities()
@@ -121,6 +145,14 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_SystemProperties_IsSpatialEntitySupported")]
             [return: MarshalAs(UnmanagedType.U1)]
             internal static extern bool GetIsSpatialEntitySupported(ulong xrInstance);
+
+            [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_SystemProperties_IsSharedAnchorsSupported")]
+            [return: MarshalAs(UnmanagedType.U1)]
+            internal static extern bool GetIsSharedAnchorsSupported(ulong xrInstance);
+
+            [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_SystemProperties_IsColocationDiscoverySupported")]
+            [return: MarshalAs(UnmanagedType.U1)]
+            internal static extern bool GetIsColocationDiscoverySupported(ulong xrInstance);
         }
     }
 }

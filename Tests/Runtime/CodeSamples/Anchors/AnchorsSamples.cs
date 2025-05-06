@@ -1,3 +1,4 @@
+using System;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.OpenXR.NativeTypes;
 

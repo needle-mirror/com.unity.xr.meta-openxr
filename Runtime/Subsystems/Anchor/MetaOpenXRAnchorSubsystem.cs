@@ -1,11 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
-using AOT;
 using Unity.Collections;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
+using SerializableGuid = UnityEngine.XR.ARSubsystems.SerializableGuid;
+using static UnityEngine.XR.OpenXR.Features.Meta.SystemCapabilityUtils;
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
@@ -18,52 +18,80 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     {
         internal const string k_SubsystemId = "Meta-Anchor";
 
+        /// <summary>
+        /// Get whether shared anchors is supported by the OpenXR runtime.
+        /// </summary>
+        /// <value>
+        /// * `Unknown` if the OpenXR instance has not yet been created.
+        /// * `Unsupported` if shared anchors is not supported.
+        /// * `Supported` if shared anchors is supported.
+        /// </value>
+        public Supported isSharedAnchorsSupported =>
+            GetCachedSystemCapabilities()[SystemCapability.SharedAnchors].isSupported;
+
+        /// <summary>
+        /// The group ID that anchors are shared with and loaded from.
+        /// </summary>
+        public SerializableGuid sharedAnchorsGroupId
+        {
+            get => ((MetaOpenXRAnchorProvider)provider).sharedAnchorsGroupId;
+            set => ((MetaOpenXRAnchorProvider)provider).sharedAnchorsGroupId = value;
+        }
+
+        /// <summary>
+        /// Attempts to share an anchor so that it can be loaded by colocated users of your app. Notify colocated
+        /// users of your app to load shared anchors from the <see cref="sharedAnchorsGroupId"/>. Once shared, anchors
+        /// cannot be unshared. Shared anchors remain shared for 30 days until they expire.
+        /// </summary>
+        /// <param name="anchorId">The `TrackableId` of the anchor you wish to share.</param>
+        /// <returns>The result of the async operation. You are responsible to <see langword="await"/> this result.</returns>
+        public Awaitable<XRResultStatus> TryShareAnchorAsync(TrackableId anchorId)
+        {
+            return ((MetaOpenXRAnchorProvider)provider).TryShareAnchorAsync(anchorId);
+        }
+
+        /// <summary>
+        /// Attempts to share a batch of anchors so that they can be loaded by colocated users of your app. Notify
+        /// colocated users of your app to load shared anchors from the <see cref="sharedAnchorsGroupId"/>. Once shared,
+        /// anchors cannot be unshared. Shared anchors remain shared for 30 days until they expire.
+        /// </summary>
+        /// <param name="anchorIds">The `TrackableId`s of the anchors you wish to share.</param>
+        /// <param name="allocator">The allocation strategy to use for the resulting `NativeArray`.</param>
+        /// <returns>The result of the async operation, containing a `NativeArray` of `XRShareAnchorResult`s
+        /// allocated with the given <paramref name="allocator"/> if the operation succeeded.
+        /// You are responsible to <see langword="await"/> this result.</returns>
+        public Awaitable<NativeArray<XRShareAnchorResult>> TryShareAnchorsAsync(
+            NativeArray<TrackableId> anchorIds, Allocator allocator)
+        {
+            return ((MetaOpenXRAnchorProvider)provider).TryShareAnchorsAsync(anchorIds, allocator);
+        }
+
+        /// <summary>
+        /// Attempts to load a batch of anchors that were shared with <see cref="sharedAnchorsGroupId"/>.
+        /// </summary>
+        /// <param name="allocator">The allocation strategy to use for the resulting `NativeArray`.</param>
+        /// <param name="incrementalResultsCallback">A callback method that will be called when any anchors are loaded.
+        /// This callback is invoked at least once if any anchors are successfully
+        /// loaded, and possibly multiple times before the async operation completes. Pass a `null` argument for this
+        /// parameter to ignore it.</param>
+        /// <returns>A `NativeArray` containing the complete set of <see cref="XRAnchor"/>s that were loaded with
+        /// <see cref="sharedAnchorsGroupId"/>. You are responsible to <see langword="await"/> this result.</returns>
+        /// <remarks>
+        /// If no anchors were shared to the <see cref="sharedAnchorsGroupId"/> then this method will return 0 anchors and
+        /// <see cref="XRResultStatus.IsSuccess">status.IsSuccess()</see> will be true.
+        /// </remarks>
+        public Awaitable<Result<NativeArray<XRAnchor>>> TryLoadAllSharedAnchorsAsync(
+            Allocator allocator, Action<NativeArray<XRAnchor>> incrementalResultsCallback)
+            => LoadAllSharedAnchors.TryLoadAllSharedAnchorsAsync(
+                sharedAnchorsGroupId, allocator, incrementalResultsCallback);
+
         class MetaOpenXRAnchorProvider : Provider
         {
-            static readonly Dictionary<Guid, AwaitableCompletionSource<Result<XRAnchor>>> s_AddAsyncPendingRequests = new();
-            static readonly Dictionary<TrackableId, AwaitableCompletionSource<Result<SerializableGuid>>> s_SaveAsyncPendingRequests = new();
-            static readonly Dictionary<SerializableGuid, AwaitableCompletionSource<Result<XRAnchor>>> s_LoadAsyncPendingRequests = new();
-            static readonly Dictionary<SerializableGuid, AwaitableCompletionSource<XRResultStatus>> s_EraseAsyncPendingRequests = new();
-
-            static readonly Pool.ObjectPool<AwaitableCompletionSource<Result<XRAnchor>>> s_AddAsyncCompletionSources = new(
-                    createFunc: () => new AwaitableCompletionSource<Result<XRAnchor>>(),
-                    actionOnGet: null,
-                    actionOnRelease: null,
-                    actionOnDestroy: null,
-                    collectionCheck: false,
-                    defaultCapacity: 8,
-                    maxSize: 1024);
-
-            static readonly Pool.ObjectPool<AwaitableCompletionSource<Result<SerializableGuid>>> s_SaveAsyncCompletionSources = new(
-                    createFunc: () => new AwaitableCompletionSource<Result<SerializableGuid>>(),
-                    actionOnGet: null,
-                    actionOnRelease: null,
-                    actionOnDestroy: null,
-                    collectionCheck: false,
-                    defaultCapacity: 8,
-                    maxSize: 1024);
-
-            static readonly Pool.ObjectPool<AwaitableCompletionSource<Result<XRAnchor>>> s_LoadAsyncCompletionSources = new(
-                createFunc: () => new AwaitableCompletionSource<Result<XRAnchor>>(),
-                actionOnGet: null,
-                actionOnRelease: null,
-                actionOnDestroy: null,
-                collectionCheck: false,
-                defaultCapacity: 8,
-                maxSize: 1024);
-
-            static readonly Pool.ObjectPool<AwaitableCompletionSource<XRResultStatus>> s_EraseAsyncCompletionSources = new(
-                createFunc: () => new AwaitableCompletionSource<XRResultStatus>(),
-                actionOnGet: null,
-                actionOnRelease: null,
-                actionOnDestroy: null,
-                collectionCheck: false,
-                defaultCapacity: 8,
-                maxSize: 1024);
+            internal SerializableGuid sharedAnchorsGroupId { get; set; }
 
             protected override bool TryInitialize()
             {
-                NativeApi.Create(s_AddAsyncCallback, s_SaveAsyncCallback, s_LoadAsyncCallback, s_EraseAsyncCallback);
+                NativeApi.Create(AddAnchor.addAsyncCallback);
                 return true;
             }
 
@@ -73,38 +101,16 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
             public override void Destroy()
             {
-                foreach (var completionSource in s_AddAsyncPendingRequests.Values)
-                {
-                    completionSource.SetCanceled();
-                    completionSource.Reset();
-                    s_AddAsyncCompletionSources.Release(completionSource);
-                }
-                s_AddAsyncPendingRequests.Clear();
-
-                foreach (var completionSource in s_SaveAsyncPendingRequests.Values)
-                {
-                    completionSource.SetCanceled();
-                    completionSource.Reset();
-                    s_SaveAsyncCompletionSources.Release(completionSource);
-                }
-                s_SaveAsyncPendingRequests.Clear();
-
-                foreach (var completionSource in s_LoadAsyncPendingRequests.Values)
-                {
-                    completionSource.SetCanceled();
-                    completionSource.Reset();
-                    s_LoadAsyncCompletionSources.Release(completionSource);
-                }
-                s_LoadAsyncPendingRequests.Clear();
-
-                foreach (var completionSource in s_EraseAsyncPendingRequests.Values)
-                {
-                    completionSource.SetCanceled();
-                    completionSource.Reset();
-                    s_EraseAsyncCompletionSources.Release(completionSource);
-                }
-                s_EraseAsyncPendingRequests.Clear();
-
+                AddAnchor.CancelAllRequests();
+                SingleSaveAnchor.CancelAllRequests();
+                BatchSaveAnchors.CancelAllRequests();
+                SingleLoadAnchor.CancelAllRequests();
+                BatchLoadAnchors.CancelAllRequests();
+                SingleEraseAnchor.CancelAllRequests();
+                BatchEraseAnchors.CancelAllRequests();
+                SingleShareAnchor.CancelAllRequests();
+                BatchShareAnchors.CancelAllRequests();
+                LoadAllSharedAnchors.CancelAllRequests();
                 NativeApi.Destroy();
             }
 
@@ -133,238 +139,49 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 }
             }
 
-            /// <summary>
-            /// Attempts to create an anchor at the given <paramref name="pose"/>.
-            /// </summary>
-            /// <param name="pose">The pose, in session space, of the anchor.</param>
-            /// <returns>The result of the async operation.</returns>
             public override Awaitable<Result<XRAnchor>> TryAddAnchorAsync(Pose pose)
-            {
-                var requestId = Guid.NewGuid();
-                var completionSource = s_AddAsyncCompletionSources.Get();
-                var wasAddedToMap = s_AddAsyncPendingRequests.TryAdd(requestId, completionSource);
+                => AddAnchor.TryAddAnchorAsync(pose);
 
-                if (!wasAddedToMap)
-                {
-                    var resultStatus = new XRResultStatus(XRResultStatus.StatusCode.UnknownError);
-                    var result = new Result<XRAnchor>(resultStatus, XRAnchor.defaultValue);
-                    return AwaitableUtils<Result<XRAnchor>>.FromResult(completionSource, result);
-                }
+            public override Awaitable<Result<SerializableGuid>> TrySaveAnchorAsync(
+                TrackableId anchorId, CancellationToken _ = default)
+                => SingleSaveAnchor.TrySaveAnchorAsync(anchorId);
 
-                var synchronousResultStatus = new XRResultStatus();
-                NativeApi.TryAddAnchorAsync(requestId, pose, ref synchronousResultStatus);
-
-                if (synchronousResultStatus.IsError())
-                {
-                    var result = new Result<XRAnchor>(synchronousResultStatus, XRAnchor.defaultValue);
-                    return AwaitableUtils<Result<XRAnchor>>.FromResult(completionSource, result);
-                }
-
-                return completionSource.Awaitable;
-            }
+            public override Awaitable<NativeArray<XRSaveAnchorResult>> TrySaveAnchorsAsync(
+                NativeArray<TrackableId> anchorIds,
+                Allocator allocator,
+                CancellationToken cancellationToken = default)
+                => BatchSaveAnchors.TrySaveAnchorsAsync(anchorIds, allocator);
 
             public override bool TryRemoveAnchor(TrackableId anchorId)
                 => NativeApi.TryRemoveAnchor(anchorId);
 
-            /// <summary>
-            /// Attempts to persistently save the given anchor so that it can be loaded in a future AR session. Use the
-            /// `SerializableGuid` returned by this method as an input parameter to <see cref="TryLoadAnchorAsync"/> or
-            /// <see cref="TryEraseAnchorAsync"/>.
-            /// </summary>
-            /// <param name="anchorId">The TrackableId of the anchor to save.</param>
-            /// <param name="cancellationToken">An optional `CancellationToken` that you can use to cancel the operation
-            /// in progress if the loaded provider <see cref="XRAnchorSubsystemDescriptor.supportsAsyncCancellation"/>.</param>
-            /// <returns>The result of the async operation, containing a new persistent anchor GUID if the operation
-            /// succeeded. You are responsible to <see langword="await"/> this result.</returns>
-            /// <seealso cref="XRAnchorSubsystemDescriptor.supportsSaveAnchor"/>
-            public override Awaitable<Result<SerializableGuid>> TrySaveAnchorAsync(
-                TrackableId anchorId, CancellationToken cancellationToken = default)
-            {
-                var completionSource = s_SaveAsyncCompletionSources.Get();
-                var wasAddedToMap = s_SaveAsyncPendingRequests.TryAdd(anchorId, completionSource);
-
-                if (!wasAddedToMap)
-                {
-                    Debug.LogError($"Cannot save anchor with trackableId [{anchorId}] while saving for it is already in progress!");
-                    var resultStatus = new XRResultStatus(XRResultStatus.StatusCode.UnknownError);
-                    var result = new Result<SerializableGuid>(resultStatus, default);
-                    return AwaitableUtils<Result<SerializableGuid>>.FromResult(completionSource, result);
-                }
-
-                var synchronousResultStatus = new XRResultStatus();
-                NativeApi.TrySaveAnchorAsync(anchorId, ref synchronousResultStatus);
-
-                if (synchronousResultStatus.IsError())
-                {
-                    var result = new Result<SerializableGuid>(synchronousResultStatus, default);
-                    return AwaitableUtils<Result<SerializableGuid>>.FromResult(completionSource, result);
-                }
-
-                return completionSource.Awaitable;
-            }
-
-            /// <summary>
-            /// Attempts to load an anchor given its persistent anchor GUID.
-            /// </summary>
-            /// <param name="savedAnchorGuid">A persistent anchor GUID created by <see cref="TrySaveAnchorAsync"/>.</param>
-            /// <param name="cancellationToken">An optional `CancellationToken` that you can use to cancel the operation
-            /// in progress if the loaded provider <see cref="XRAnchorSubsystemDescriptor.supportsAsyncCancellation"/>.</param>
-            /// <returns>The result of the async operation, containing the newly added anchor if the operation succeeded.
-            /// You are responsible to <see langword="await"/> this result.</returns>
-            /// <seealso cref="XRAnchorSubsystemDescriptor.supportsLoadAnchor"/>
             public override Awaitable<Result<XRAnchor>> TryLoadAnchorAsync(
                 SerializableGuid savedAnchorGuid, CancellationToken cancellationToken = default)
-            {
-                var completionSource = s_LoadAsyncCompletionSources.Get();
-                var wasAddedToMap = s_LoadAsyncPendingRequests.TryAdd(savedAnchorGuid, completionSource);
+                => SingleLoadAnchor.TryLoadAnchorAsync(savedAnchorGuid);
 
-                if (!wasAddedToMap)
-                {
-                    Debug.LogError($"Cannot load persistent anchor GUID [{savedAnchorGuid}] while loading for it is already in progress!");
-                    var resultStatus = new XRResultStatus(XRResultStatus.StatusCode.UnknownError);
-                    var result = new Result<XRAnchor>(resultStatus, XRAnchor.defaultValue);
-                    return AwaitableUtils<Result<XRAnchor>>.FromResult(completionSource, result);
-                }
+            public override Awaitable<NativeArray<XRLoadAnchorResult>> TryLoadAnchorsAsync(
+                NativeArray<SerializableGuid> savedAnchorGuids,
+                Allocator allocator,
+                Action<NativeArray<XRLoadAnchorResult>> incrementalResultsCallback,
+                CancellationToken cancellationToken = default)
+                => BatchLoadAnchors.TryLoadAnchorsAsync(savedAnchorGuids, allocator, incrementalResultsCallback);
 
-                var synchronousResultStatus = new XRResultStatus();
-                NativeApi.TryLoadAnchorAsync(savedAnchorGuid, ref synchronousResultStatus);
-
-                if (synchronousResultStatus.IsError())
-                {
-                    var result = new Result<XRAnchor>(synchronousResultStatus, XRAnchor.defaultValue);
-                    return AwaitableUtils<Result<XRAnchor>>.FromResult(completionSource, result);
-                }
-
-                return completionSource.Awaitable;
-            }
-
-            /// <summary>
-            /// Attempts to erase the persistent saved data associated with an anchor given its persistent anchor GUID.
-            /// </summary>
-            /// <param name="savedAnchorGuid">A persistent anchor GUID created by <see cref="TrySaveAnchorAsync"/>.</param>
-            /// <param name="cancellationToken">An optional `CancellationToken` that you can use to cancel the operation
-            /// in progress if the loaded provider <see cref="XRAnchorSubsystemDescriptor.supportsAsyncCancellation"/>.</param>
-            /// <returns>The result of the async operation. You are responsible to <see langword="await"/> this result.</returns>
-            /// <seealso cref="XRAnchorSubsystemDescriptor.supportsEraseAnchor"/>
             public override Awaitable<XRResultStatus> TryEraseAnchorAsync(
                 SerializableGuid savedAnchorGuid, CancellationToken cancellationToken = default)
-            {
-                var completionSource = s_EraseAsyncCompletionSources.Get();
-                var wasAddedToMap = s_EraseAsyncPendingRequests.TryAdd(savedAnchorGuid, completionSource);
+                => SingleEraseAnchor.TryEraseAnchorAsync(savedAnchorGuid);
 
-                if (!wasAddedToMap)
-                {
-                    Debug.LogError($"Cannot erase persistent anchor GUID [{savedAnchorGuid}] while erasing for it is already in progress!");
-                    var resultStatus = new XRResultStatus(XRResultStatus.StatusCode.UnknownError);
-                    return AwaitableUtils<XRResultStatus>.FromResult(completionSource, resultStatus);
-                }
+            public override Awaitable<NativeArray<XREraseAnchorResult>> TryEraseAnchorsAsync(
+                NativeArray<SerializableGuid> savedAnchorGuids,
+                Allocator allocator,
+                CancellationToken cancellationToken = default)
+                => BatchEraseAnchors.TryEraseAnchorsAsync(savedAnchorGuids, allocator);
 
-                var synchronousResultStatus = new XRResultStatus();
-                NativeApi.TryEraseAnchorAsync(savedAnchorGuid, ref synchronousResultStatus);
+            public Awaitable<XRResultStatus> TryShareAnchorAsync(TrackableId anchorId)
+                => SingleShareAnchor.TryShareAnchorAsync(anchorId, sharedAnchorsGroupId);
 
-                if (synchronousResultStatus.IsError())
-                {
-                    return AwaitableUtils<XRResultStatus>.FromResult(completionSource, synchronousResultStatus);
-                }
-
-                return completionSource.Awaitable;
-            }
-
-            /// <summary>
-            /// Function pointer marshalled to native API to call when <see cref="TryAddAnchorAsync"/> is complete.
-            /// </summary>
-            static readonly IntPtr s_AddAsyncCallback = Marshal.GetFunctionPointerForDelegate((AddAsyncDelegate)OnAddAsyncComplete);
-
-            /// <summary>
-            /// Function pointer marshalled to native API to call when <see cref="TrySaveAnchorAsync"/> is complete.
-            /// </summary>
-            static readonly IntPtr s_SaveAsyncCallback = Marshal.GetFunctionPointerForDelegate((SaveAsyncDelegate)OnSaveAsyncComplete);
-
-            /// <summary>
-            /// Function pointer marshalled to native API to call when <see cref="TryLoadAnchorAsync"/> is complete.
-            /// </summary>
-            static readonly IntPtr s_LoadAsyncCallback = Marshal.GetFunctionPointerForDelegate((LoadAsyncDelegate)OnLoadAsyncComplete);
-
-            /// <summary>
-            /// Function pointer marshalled to native API to call when <see cref="TryEraseAnchorAsync"/> is complete.
-            /// </summary>
-            static readonly IntPtr s_EraseAsyncCallback = Marshal.GetFunctionPointerForDelegate((EraseAsyncDelegate)OnEraseAsyncComplete);
-
-            /// <summary>
-            /// Delegate method type for <see cref="MetaOpenXRAnchorProvider.s_AddAsyncCallback"/>.
-            /// </summary>
-            delegate void AddAsyncDelegate(Guid requestId, XRResultStatus resultStatus, XRAnchor anchor);
-
-            /// <summary>
-            /// Delegate method type for <see cref="MetaOpenXRAnchorProvider.s_SaveAsyncCallback"/>.
-            /// </summary>
-            delegate void SaveAsyncDelegate(TrackableId anchorId, XRResultStatus resultStatus);
-
-            /// <summary>
-            /// Delegate method type for <see cref="MetaOpenXRAnchorProvider.s_LoadAsyncCallback"/>.
-            /// </summary>
-            delegate void LoadAsyncDelegate(XRAnchor anchor, XRResultStatus resultStatus);
-
-            /// <summary>
-            /// Delegate method type for <see cref="MetaOpenXRAnchorProvider.s_EraseAsyncCallback"/>.
-            /// </summary>
-            delegate void EraseAsyncDelegate(SerializableGuid savedAnchorGuid, XRResultStatus resultStatus);
-
-            [MonoPInvokeCallback(typeof(AddAsyncDelegate))]
-            static void OnAddAsyncComplete(Guid requestId, XRResultStatus resultStatus, XRAnchor anchor)
-            {
-                if (!s_AddAsyncPendingRequests.Remove(requestId, out var completionSource))
-                {
-                    Debug.LogError($"An unknown error occurred during a system callback for {nameof(TryAddAnchorAsync)}.");
-                    return;
-                }
-
-                completionSource.SetResult(new Result<XRAnchor>(resultStatus, anchor));
-                completionSource.Reset();
-                s_AddAsyncCompletionSources.Release(completionSource);
-            }
-
-            [MonoPInvokeCallback(typeof(SaveAsyncDelegate))]
-            static void OnSaveAsyncComplete(TrackableId anchorId, XRResultStatus resultStatus)
-            {
-                if (!s_SaveAsyncPendingRequests.Remove(anchorId, out var completionSource))
-                {
-                    Debug.LogError($"An unknown error occurred during a system callback for {nameof(TrySaveAnchorAsync)}.");
-                    return;
-                }
-
-                completionSource.SetResult(new Result<SerializableGuid>(resultStatus, anchorId));
-                completionSource.Reset();
-                s_SaveAsyncCompletionSources.Release(completionSource);
-            }
-
-            [MonoPInvokeCallback(typeof(LoadAsyncDelegate))]
-            static void OnLoadAsyncComplete(XRAnchor anchor, XRResultStatus resultStatus)
-            {
-                if (!s_LoadAsyncPendingRequests.Remove(anchor.trackableId, out var completionSource))
-                {
-                    Debug.LogError($"An unknown error occurred during a system callback for {nameof(TryLoadAnchorAsync)}.");
-                    return;
-                }
-
-                completionSource.SetResult(new Result<XRAnchor>(resultStatus, anchor));
-                completionSource.Reset();
-                s_LoadAsyncCompletionSources.Release(completionSource);
-            }
-
-            [MonoPInvokeCallback(typeof(EraseAsyncDelegate))]
-            static void OnEraseAsyncComplete(SerializableGuid savedAnchorGuid, XRResultStatus resultStatus)
-            {
-                if (!s_EraseAsyncPendingRequests.Remove(savedAnchorGuid, out var completionSource))
-                {
-                    Debug.LogError($"An unknown error occurred during a system callback for {nameof(TryEraseAnchorAsync)}.");
-                    return;
-                }
-
-                completionSource.SetResult(resultStatus);
-                completionSource.Reset();
-                s_EraseAsyncCompletionSources.Release(completionSource);
-            }
+            public Awaitable<NativeArray<XRShareAnchorResult>> TryShareAnchorsAsync(
+                NativeArray<TrackableId> anchorIds, Allocator allocator)
+                => BatchShareAnchors.TryShareAnchorsAsync(anchorIds, sharedAnchorsGroupId, allocator);
 
             [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
             static void RegisterDescriptor()
@@ -373,7 +190,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 {
                     id = k_SubsystemId,
                     providerType = typeof(MetaOpenXRAnchorProvider),
-                    subsystemTypeOverride = null,
+                    subsystemTypeOverride = typeof(MetaOpenXRAnchorSubsystem),
                     supportsTrackableAttachments = false,
                     supportsSynchronousAdd = false,
                     supportsSaveAnchor = true,
@@ -385,44 +202,37 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
                 XRAnchorSubsystemDescriptor.Register(anchorSubsystemCinfo);
             }
+        }
 
-            static unsafe class NativeApi
-            {
-                [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_Create")]
-                public static extern void Create(
-                    IntPtr tryAddAnchorAsyncCallback,
-                    IntPtr trySaveAnchorAsyncCallback,
-                    IntPtr tryLoadAnchorAsyncCallback,
-                    IntPtr tryEraseAnchorAsyncCallback);
+        internal static unsafe class NativeApi
+        {
+            [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_Create")]
+            internal static extern void Create(IntPtr tryAddAnchorAsyncCallback);
 
-                [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_Destroy")]
-                public static extern void Destroy();
+            [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_Destroy")]
+            internal static extern void Destroy();
 
-                [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchors_AcquireChanges")]
-                public static extern void AcquireChanges(
-                    ref void* addedPtr, ref int addedCount,
-                    ref void* updatedPtr, ref int updatedCount,
-                    ref void* removedPtr, ref int removedCount,
-                    ref int elementSize);
+            [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchors_AcquireChanges")]
+            internal static extern void AcquireChanges(
+                ref void* addedPtr, ref int addedCount,
+                ref void* updatedPtr, ref int updatedCount,
+                ref void* removedPtr, ref int removedCount,
+                ref int elementSize);
 
-                [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_ReleaseChanges")]
-                public static extern void ReleaseChanges();
+            [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_ReleaseChanges")]
+            internal static extern void ReleaseChanges();
 
-                [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TryAddAnchorAsync")]
-                public static extern void TryAddAnchorAsync(Guid requestId, Pose pose, ref XRResultStatus synchronousResultStatus);
+            [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TryRemoveAnchor")]
+            internal static extern bool TryRemoveAnchor(TrackableId anchorId);
 
-                [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TryRemoveAnchor")]
-                public static extern bool TryRemoveAnchor(TrackableId anchorId);
-
-                [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TrySaveAnchorAsync")]
-                public static extern void TrySaveAnchorAsync(TrackableId anchorId, ref XRResultStatus synchronousResultStatus);
-
-                [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TryLoadAnchorAsync")]
-                public static extern void TryLoadAnchorAsync(SerializableGuid anchorSaveId, ref XRResultStatus synchronousResultStatus);
-
-                [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TryEraseAnchorAsync")]
-                public static extern void TryEraseAnchorAsync(SerializableGuid anchorSaveId, ref XRResultStatus synchronousResultStatus);
-            }
+            [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TryShareAnchorsAsync")]
+            [return: MarshalAs(UnmanagedType.U1)]
+            internal static extern bool TryShareAnchorsAsync(
+                SerializableGuid requestId,
+                TrackableId* anchorsToShare,
+                uint numAnchorsToShare,
+                SerializableGuid groupId,
+                IntPtr shareCompletedCallback);
         }
     }
 }

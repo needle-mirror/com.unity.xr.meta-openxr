@@ -76,7 +76,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         }
 
         /// <summary>
-        /// Instantiates Meta OpenXR Occlusion subsystem instance, but does not start it.
+        /// Creates the <see cref="MetaOpenXROcclusionSubsystem"/>, but does not start it.
         /// (Start/Stop is typically handled by AR Foundation managers.)
         /// </summary>
         protected override void OnSubsystemCreate()
@@ -87,7 +87,6 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
             // We must use SubsystemManager to get the occlusion subsystem because the OpenXRLoader is not yet
             // considered the active loader until all subsystems are successfully created.
-            bool metaOcclusionSubsystemIsLoaded = false;
             SubsystemManager.GetSubsystems(m_OcclusionSubsystems);
             foreach (var s in m_OcclusionSubsystems)
             {
@@ -95,13 +94,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 {
                     // always succeeds if the subsystem isn't yet started
                     metaOcclusionSubsystem.TrySetHandRemovalEnabled(m_EnableHandRemoval);
-                    metaOcclusionSubsystemIsLoaded = true;
                     break;
                 }
             }
-
-            if (!metaOcclusionSubsystemIsLoaded)
-                Debug.LogError($"{nameof(MetaOpenXROcclusionSubsystem)} failed to load.");
 
             // This list is only needed for the purposes of this API call to subsystem manager
             m_OcclusionSubsystems.Clear();

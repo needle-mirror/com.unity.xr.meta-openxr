@@ -10,7 +10,9 @@
         "Unity.XR.Management.Editor",
         "Unity.XR.ARFoundation",
         "Unity.XR.CoreUtils.Editor",
-        "Unity.RenderPipelines.Universal.Runtime"
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.XR.CompositionLayers.Editor",
+        "Unity.XR.CompositionLayers"
     ],
     "includePlatforms": [
         "Editor"

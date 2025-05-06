@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using UnityEngine.XR.ARSubsystems;
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
@@ -14,6 +15,20 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             var awaitable = completionSource.Awaitable;
             completionSource.SetResult(result);
             completionSource.Reset();
+            return awaitable;
+        }
+    }
+
+    static class AwaitableUtils
+    {
+        static AwaitableCompletionSource<XRResultStatus> s_CompletionSource = new();
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static Awaitable<XRResultStatus> CompletedAwaitable(XRResultStatus resultStatus)
+        {
+            var awaitable = s_CompletionSource.Awaitable;
+            s_CompletionSource.SetResult(resultStatus);
+            s_CompletionSource.Reset();
             return awaitable;
         }
     }

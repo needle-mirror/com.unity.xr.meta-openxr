@@ -1,7 +1,7 @@
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
     /// <summary>
-    /// Represents the visibility of the Meta OpenXR runtime's boundary.
+    /// Represents the visibility of the OpenXR Meta runtime's boundary.
     /// </summary>
     /// <remarks>
     /// Blittable to the native type `XrBoundaryVisibilityMETA`.

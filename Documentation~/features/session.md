@@ -9,7 +9,7 @@ This page is a supplement to the AR Foundation [Session](xref:arfoundation-sessi
 
 ## Scene capture
 
-Unlike other AR platforms, Meta OpenXR does not dynamically detect trackables at runtime. Instead, Meta's OpenXR runtime queries the device's Space Setup data and returns information stored in its [Scene Model](https://developer.oculus.com/documentation/native/android/openxr-scene-overview#scene-model). In the Meta OpenXR API, this Space Setup process is referred to as _scene capture_.
+Unlike other AR platforms, Meta's OpenXR runtime doesn't dynamically detect trackables at runtime. Instead, Meta's OpenXR runtime queries the device's Space Setup data and returns information stored in its [Scene Model](https://developer.oculus.com/documentation/native/android/openxr-scene-overview#scene-model). In Meta's OpenXR API, the Space Setup process is referred to as _scene capture_, so this package uses the term "scene capture" as well.
 
 During scene capture, the device presents an interface where users can label surfaces and objects in their environment such as walls and furniture. When scene capture is complete, the Scene Model is saved to the device and persists across applications and sessions.
 

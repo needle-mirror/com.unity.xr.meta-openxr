@@ -9,16 +9,14 @@ This page is a supplement to the AR Foundation [Ray casts](xref:arfoundation-ray
 
 ## Ray cast architecture
 
-Meta OpenXR defines an empty implementation of AR Foundation's [XRRaycastSubsystem.Provider](xref:UnityEngine.XR.ARSubsystems.XRRaycastSubsystem.Provider). This implementation doesn't provide any OpenXR functionality. The empty ray cast provider enables a fallback Unity-world-space ray cast implementation in AR Foundation's [ARRaycastManager](xref:UnityEngine.XR.ARFoundation.ARRaycastManager).
+This package defines an empty implementation of AR Foundation's [XRRaycastSubsystem.Provider](xref:UnityEngine.XR.ARSubsystems.XRRaycastSubsystem.Provider). This implementation doesn't provide any OpenXR functionality. The empty ray cast provider enables a fallback Unity-world-space ray cast implementation in AR Foundation's [ARRaycastManager](xref:UnityEngine.XR.ARFoundation.ARRaycastManager).
 
 >[!IMPORTANT]
 > If your app uses AR ray casts, you should use the [ARRaycastManager](xref:UnityEngine.XR.ARFoundation.ARRaycastManager) APIs. Don't access `MetaOpenXRRaycastSubsystem` directly.
 
-The following sections outline the features Meta OpenXR supports using the `ARRaycastManager`.
-
 ## Optional feature support
 
-Meta OpenXR implements the following optional features of AR Foundation's [XRRaycastSubsystem](xref:UnityEngine.XR.ARSubsystems.XRRaycastSubsystem):
+This package implements the following optional features of AR Foundation's [XRRaycastSubsystem](xref:UnityEngine.XR.ARSubsystems.XRRaycastSubsystem):
 
 | Feature                    | Descriptor Property | Supported |
 | :------------------------- | :------------------ | :-------: |
@@ -28,7 +26,7 @@ Meta OpenXR implements the following optional features of AR Foundation's [XRRay
 
 ### Supported trackables
 
-Meta OpenXR supports ray casting against the following [trackable types](xref:UnityEngine.XR.ARSubsystems.TrackableType):
+This package supports ray casting against the following [trackable types](xref:UnityEngine.XR.ARSubsystems.TrackableType):
 
 | TrackableType           | Supported |
 | :---------------------- | :-------: |

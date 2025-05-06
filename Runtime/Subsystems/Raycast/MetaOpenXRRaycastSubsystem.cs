@@ -3,7 +3,7 @@ using UnityEngine.XR.ARSubsystems;
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
     /// <summary>
-    /// Meta-OpenXR implementation of <see cref="XRRaycastSubsystem"/>. This implementation does not
+    /// OpenXR Meta implementation of <see cref="XRRaycastSubsystem"/>. This implementation does not
     /// perform provider-based raycast, but is implemented to allow
     /// [ARRaycastManager](xref:UnityEngine.XR.ARFoundation.ARRaycastManager) to execute the fallback path.
     /// </summary>

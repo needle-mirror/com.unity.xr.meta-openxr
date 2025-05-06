@@ -1,28 +1,28 @@
 ---
 uid: meta-openxr-whats-new
 ---
-# What's new in version 2.1
+# What's new in version 2.2
 
 This release includes the following significant changes:
 
 ## New features
 
-### Meta Quest Link
+### Composition layers
 
-- Added support for Quest Link. Refer to [Meta Quest Link](xref:meta-openxr-link) for more information.
+- Re-implemented the Meta Quest Camera (Passthrough) feature using the XR Composition Layers package, allowing you more customization options for how Passthrough images are composited into your app. If you choose not to customize your app's composition layers, the `MetaOpenXRCameraSubsystem` will create the required components at runtime for you. Refer to [Composition layers](xref:meta-openxr-camera#composition-layers) for more information.
 
-### Occlusion
+### Shared Anchors
 
-- Added support for occlusion through AR Foundation's occlusion subsystem. Refer to [Occlusion](xref:meta-openxr-occlusion) for more information.
+- Added support for [Shared anchors](xref:meta-openxr-anchors#shared-anchors).
 
-### Boundary visibility
+### Colocation Discovery
 
-- Added the Meta Quest Boundary Visibility feature, which enables you to suppress the visibility of the boundary so users can move freely with Passthrough enabled. Refer to [Boundary visibility](xref:meta-openxr-boundary-visibility) for more information.
+- Added support for [Colocation Discovery](xref:meta-openxr-colocation-discovery) to share small messages between colocated users. Use colocation discovery to enable colocated users of the same app to join a networked session.
 
-### Other API additions
+## Improvements
 
-- Added a public class [MetaOpenXRFeature](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRFeature) as the new base class for OpenXR features in this package.
+### Automatically hide the boundary
 
-## Changes
+- Added a setting to the Meta Quest Boundary Visibility feature that allows you to automatically suppress boundary visibility without writing any code. Refer to [Suppress boundary visibility automatically](xref:meta-openxr-boundary-visibility#suppress-automatically) for details.
 
-- Added a validation rule to warn you that soft shadows can negatively affect performance for Meta Quest.
+For a full list of changes in this version including backwards-compatible bugfixes, refer to the package [changelog](xref:meta-openxr-changelog).

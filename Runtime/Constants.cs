@@ -7,7 +7,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// </summary>
         internal const string k_CompanyName = "Unity Technologies";
         internal const string k_PackageName = "com.unity.xr.meta-openxr";
-        internal const string k_MajorMinorVersion = "2.1";
+        internal const string k_MajorMinorVersion = "2.2";
 
         internal const string k_ARFoundationLibrary = "libUnityARFoundationMeta";
         internal const string k_AssemblyName = "Unity.XR.MetaOpenXR";
@@ -34,7 +34,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             internal const string k_RaycastsUrl = k_DocumentationFeatureBaseUrl + "raycasts.html";
             internal const string k_SessionUrl = k_DocumentationFeatureBaseUrl + "session.html";
             internal const string k_MeshUrl = k_DocumentationFeatureBaseUrl + "meshing.html";
-            internal const string k_OcclusionUrl = k_DocumentationBaseUrl + "occlusion.html";
+            internal const string k_OcclusionUrl = k_DocumentationFeatureBaseUrl + "occlusion.html";
+            internal const string k_ColocationDiscoveryUrl = k_DocumentationFeatureBaseUrl + "colocation-discovery.html";
         }
 
         internal static class OpenXRExtensions
@@ -42,6 +43,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             internal const string k_XR_FB_display_refresh_rate = "XR_FB_display_refresh_rate";
             internal const string k_XR_FB_passthrough = "XR_FB_passthrough";
             internal const string k_XR_FB_spatial_entity = "XR_FB_spatial_entity";
+            internal const string k_XR_FB_spatial_entity_container = "XR_FB_spatial_entity_container";
             internal const string k_XR_FB_scene = "XR_FB_scene";
             internal const string k_XR_FB_scene_capture = "XR_FB_scene_capture";
             internal const string k_XR_META_boundary_visibility = "XR_META_boundary_visibility";
@@ -49,6 +51,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             internal const string k_XR_META_spatial_entity_discovery = "XR_META_spatial_entity_discovery";
             internal const string k_XR_META_spatial_entity_mesh = "XR_META_spatial_entity_mesh";
             internal const string k_XR_META_spatial_entity_persistence = "XR_META_spatial_entity_persistence";
+            internal const string k_XR_META_spatial_entity_sharing = "XR_META_spatial_entity_sharing";
+            internal const string k_XR_META_spatial_entity_group_sharing = "XR_META_spatial_entity_group_sharing";
+            internal const string k_XR_FB_spatial_entity_query = "XR_FB_spatial_entity_query";
+            internal const string k_XR_META_colocation_discovery = "XR_META_colocation_discovery";
         }
     }
 }

@@ -43,6 +43,18 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
         static BoundaryVisibilityFeature s_Instance;
 
+        [SerializeField, Tooltip("If enabled, this feature will attempt to suppress boundary visibility immediately after XR is initialized.")]
+        bool m_SuppressVisibility;
+
+        /// <summary>
+        /// Invoked whenever the OpenXR Meta runtime's boundary visibility has changed.
+        /// Visibility may change in response to <see cref="TryRequestBoundaryVisibility"/> or at
+        /// the discretion of Meta's OpenXR runtime, such as if your app fully obscures the
+        /// physical environment.
+        /// </summary>
+        /// <value>The new boundary visibility.</value>
+        public event EventHandler<XrBoundaryVisibility> boundaryVisibilityChanged;
+
         /// <summary>
         /// Get the current boundary visibility.
         /// </summary>
@@ -77,17 +89,37 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
             s_Instance = this;
             NativeApi.Create(s_BoundaryVisibilityCallback);
+
+            if (m_SuppressVisibility)
+                SuppressVisibilityFireAndForget();
+
             return true;
         }
 
-        /// <summary>
-        /// Invoked whenever the Meta OpenXR runtime's boundary visibility has changed.
-        /// Visibility may change in response to <see cref="TryRequestBoundaryVisibility"/> or at
-        /// the discretion of Meta's OpenXR runtime, such as if your app fully obscures the
-        /// physical environment.
-        /// </summary>
-        /// <value>The new boundary visibility.</value>
-        public event EventHandler<XrBoundaryVisibility> boundaryVisibilityChanged;
+        async void SuppressVisibilityFireAndForget()
+        {
+            try
+            {
+                XrResult result = XrResult.Success;
+
+                // Allow up to ~12 seconds of attempts.
+                // Suppression cannot succeed until splash screen is hidden and passthrough is visible.
+                for (uint retryCount = 120; retryCount > 0; retryCount--)
+                {
+                    result = TryRequestBoundaryVisibility(XrBoundaryVisibility.VisibilitySuppressed);
+                    if (result.IsUnqualifiedSuccess())
+                        return;
+
+                    await Awaitable.WaitForSecondsAsync(.1f);
+                }
+
+                Debug.LogError($"Boundary Visibility Feature timed out and was unable to suppress boundary visibility. Result code: {result}");
+            }
+            catch (OperationCanceledException)
+            {
+                // do nothing
+            }
+        }
 
         /// <summary>
         /// Attempts to request a change to the current boundary visibility. If the request returns
