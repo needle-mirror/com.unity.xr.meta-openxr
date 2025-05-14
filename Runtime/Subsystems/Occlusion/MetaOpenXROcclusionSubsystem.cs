@@ -12,7 +12,7 @@ using static UnityEngine.XR.OpenXR.Features.Meta.SystemCapabilityUtils;
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
     /// <summary>
-    /// The Meta OpenXR implementation of <see cref="XROcclusionSubsystem"/>.
+    /// The OpenXR Meta implementation of <see cref="XROcclusionSubsystem"/>.
     /// </summary>
     [Preserve]
     public sealed class MetaOpenXROcclusionSubsystem : XROcclusionSubsystem

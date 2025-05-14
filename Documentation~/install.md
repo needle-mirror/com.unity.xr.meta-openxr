@@ -1,19 +1,23 @@
 ---
 uid: meta-openxr-install
 ---
-# Install Meta OpenXR
+# Install Unity OpenXR: Meta
 
 Unity OpenXR: Meta is an official Unity package available from the [Package Manager](https://docs.unity3d.com/6000.0/Documentation/Manual/upm-ui.html). To understand how to install a package via the Package Manager, refer to [Install a UPM package from a registry](https://docs.unity3d.com/6000.0/Documentation/Manual/upm-ui-install.html).
+
+> [!NOTE]
+> If your project targets the Meta Quest build platform, Unity automatically installs this package for you. To learn how to select the build platform, refer to [Add the Meta Quest build platform](xref:meta-openxr-project-settings#build-platform).
 
 ## Dependencies
 
 To use Unity OpenXR: Meta 2.1, your project must meet the following requirements:
 
-* Unity 6 (6000.0)
-* AR Foundation 6.1.0-pre.4 or newer
+* Unity 6 (6000.0 or newer)
+* [Android Build Support](xref:um-android-install-dependencies) module
+* AR Foundation 6.1.0 or newer
 * OpenXR Plug-in 1.14.0 or newer
 
-The Package Manager will automatically install these dependencies if you don't already have them installed.
+The Package Manager automatically installs required package dependencies if you don't already have them installed.
 
 > [!NOTE]
 > You can visit the Unity Forum for more information on the [Unity 6 New Naming Convention](https://discussions.unity.com/t/unity-6-new-naming-convention/942214).

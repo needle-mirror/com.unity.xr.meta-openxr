@@ -3,7 +3,7 @@ uid: meta-openxr-scene-setup
 ---
 # Set up your scene
 
-To set up your scene for Meta OpenXR, first follow the standard AR Foundation [Scene setup](xref:arfoundation-scene-setup) instructions. The following sections detail additional setup steps specific to projects that target Meta's OpenXR runtime.
+To set up your scene to use Unity OpenXR: Meta, first follow the standard AR Foundation [Scene setup](xref:arfoundation-scene-setup) instructions. The following sections detail additional setup steps specific to projects that target Meta's OpenXR runtime.
 
 ## Configure input actions
 

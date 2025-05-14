@@ -40,27 +40,12 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
                 );
             }
 
-            var arAnchorFeature = androidOpenXRSettings.GetFeature<ARAnchorFeature>();
-            if (arAnchorFeature != null && arAnchorFeature.enabled)
-            {
-                elementsToAdd.Add(
-                    new ManifestElement()
-                    {
-                        ElementPath = new List<string> { "manifest", "uses-permission" },
-                        Attributes = new Dictionary<string, string>
-                        {
-                            { "name", "com.oculus.permission.USE_ANCHOR_API" },
-                        }
-                    }
-                );
-            }
-
             var arPlaneFeature = androidOpenXRSettings.GetFeature<ARPlaneFeature>();
             var arBoundingBoxFeature = androidOpenXRSettings.GetFeature<ARBoundingBoxFeature>();
             var arMeshFeature = androidOpenXRSettings.GetFeature<ARMeshFeature>();
-            if ((arPlaneFeature != null && arPlaneFeature.enabled) ||
-                (arBoundingBoxFeature != null && arBoundingBoxFeature.enabled) ||
-                arMeshFeature != null && arMeshFeature.enabled)
+            if ((arPlaneFeature != null && arPlaneFeature.enabled)
+                || (arBoundingBoxFeature != null && arBoundingBoxFeature.enabled)
+                || (arMeshFeature != null && arMeshFeature.enabled))
             {
                 elementsToAdd.Add(
                     new ManifestElement()
@@ -69,6 +54,25 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
                         Attributes = new Dictionary<string, string>
                         {
                             { "name", "com.oculus.permission.USE_SCENE" },
+                        }
+                    }
+                );
+            }
+
+            // USE_ANCHOR_API is required for any feature that uses XR_FB_spatial_entity
+            var arAnchorFeature = androidOpenXRSettings.GetFeature<ARAnchorFeature>();
+            if ((arAnchorFeature != null && arAnchorFeature.enabled)
+                || (arPlaneFeature != null && arPlaneFeature.enabled)
+                || (arBoundingBoxFeature != null && arBoundingBoxFeature.enabled)
+                || (arMeshFeature != null && arMeshFeature.enabled))
+            {
+                elementsToAdd.Add(
+                    new ManifestElement
+                    {
+                        ElementPath = new List<string> { "manifest", "uses-permission" },
+                        Attributes = new Dictionary<string, string>
+                        {
+                            { "name", "com.oculus.permission.USE_ANCHOR_API" },
                         }
                     }
                 );

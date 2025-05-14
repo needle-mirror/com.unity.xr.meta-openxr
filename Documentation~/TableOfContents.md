@@ -1,6 +1,6 @@
 * [Introduction](xref:meta-openxr-manual)
 * [What's new](xref:meta-openxr-whats-new)
-* [Install Meta OpenXR](xref:meta-openxr-install)
+* [Install OpenXR Meta](xref:meta-openxr-install)
 * [Get started](xref:meta-openxr-get-started)
   * [Set up device](xref:meta-openxr-device-setup)
   * [Configure project settings](xref:meta-openxr-project-settings)

@@ -23,18 +23,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
         class MetaOpenXRBoundingBoxProvider : Provider
         {
-            /// <inheritdoc/>
             protected override bool TryInitialize()
             {
-                if (OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_spatial_entity) &&
-                    OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_META_spatial_entity_discovery) &&
-                    OpenXRRuntime.IsExtensionEnabled(Constants.OpenXRExtensions.k_XR_FB_scene))
-                {
-                    NativeApi.Create();
-                    return true;
-                }
-
-                return false;
+                NativeApi.Create();
+                return true;
             }
 
             public override void Start()

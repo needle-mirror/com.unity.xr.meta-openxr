@@ -45,7 +45,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         }
 
         /// <summary>
-        /// Instantiates Meta OpenXR Session subsystem instance, but does not start it.
+        /// Creates the <see cref="MetaOpenXRSessionSubsystem"/>, but does not start it.
         /// (Start/Stop is typically handled by AR Foundation managers.)
         /// </summary>
         protected override void OnSubsystemCreate()

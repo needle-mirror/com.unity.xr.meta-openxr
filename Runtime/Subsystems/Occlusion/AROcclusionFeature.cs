@@ -76,7 +76,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         }
 
         /// <summary>
-        /// Instantiates Meta OpenXR Occlusion subsystem instance, but does not start it.
+        /// Creates the <see cref="MetaOpenXROcclusionSubsystem"/>, but does not start it.
         /// (Start/Stop is typically handled by AR Foundation managers.)
         /// </summary>
         protected override void OnSubsystemCreate()

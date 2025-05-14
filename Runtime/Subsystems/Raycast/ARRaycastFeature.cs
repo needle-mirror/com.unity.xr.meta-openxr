@@ -31,7 +31,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         static List<XRRaycastSubsystemDescriptor> s_RaycastDescriptors = new();
 
         /// <summary>
-        /// Instantiates Meta OpenXR raycast subsystem instances, but does not start it.
+        /// Creates the <see cref="MetaOpenXRRaycastSubsystem"/>, but does not start it.
         /// (Start/Stop is typically handled by AR Foundation managers.)
         /// </summary>
         protected override void OnSubsystemCreate()

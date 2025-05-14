@@ -34,7 +34,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             internal const string k_RaycastsUrl = k_DocumentationFeatureBaseUrl + "raycasts.html";
             internal const string k_SessionUrl = k_DocumentationFeatureBaseUrl + "session.html";
             internal const string k_MeshUrl = k_DocumentationFeatureBaseUrl + "meshing.html";
-            internal const string k_OcclusionUrl = k_DocumentationBaseUrl + "occlusion.html";
+            internal const string k_OcclusionUrl = k_DocumentationFeatureBaseUrl + "occlusion.html";
         }
 
         internal static class OpenXRExtensions

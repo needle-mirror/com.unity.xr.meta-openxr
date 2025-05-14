@@ -49,7 +49,7 @@ The Meta Quest Occlusion feature contains the following APIs that you can use to
 * [isHandRemovalEnabled](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXROcclusionSubsystem.isHandRemovalEnabled)
 * [TrySetHandRemovalEnabled](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXROcclusionSubsystem.TrySetHandRemovalEnabled*)
 
-The following example code shows you how to get the Meta OpenXR occlusion subsystem and enable hand removal at runtime:
+The following example code shows you how to get the `MetaOpenXROcclusionSubsystem` and enable hand removal at runtime:
 
 [!code-cs[SetHandRemovalEnabled](../../../Tests/Runtime/CodeSamples/OcclusionSamples.cs#SetHandRemovalEnabled)]
 

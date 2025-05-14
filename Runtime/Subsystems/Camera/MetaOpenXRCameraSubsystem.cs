@@ -5,7 +5,7 @@ using UnityEngine.XR.ARSubsystems;
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
     /// <summary>
-    /// The Meta-OpenXR implementation of the <see cref="XRCameraSubsystem"/>.
+    /// The OpenXR Meta implementation of the <see cref="XRCameraSubsystem"/>.
     /// Do not create this directly. Use the <see cref="SubsystemManager"/> instead.
     /// </summary>
     public sealed class MetaOpenXRCameraSubsystem : XRCameraSubsystem
@@ -63,9 +63,6 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             /// </summary>
             public override void Destroy() => NativeApi.UnityMetaQuest_Passthrough_Destruct();
 
-            /// <summary>
-            /// Container to wrap the native Meta OpenXR camera APIs.
-            /// </summary>
             static class NativeApi
             {
                 [DllImport(Constants.k_ARFoundationLibrary)]

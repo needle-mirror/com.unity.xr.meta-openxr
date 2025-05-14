@@ -8,6 +8,23 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.1.1] - 2025-05-14
+
+### Changed
+
+- Recompiled the native plug-in with support for [16 KB page sizes](https://developer.android.com/guide/practices/page-sizes) on Android 15 or newer.
+- Changed the `MetaOpenXRPlaneSubystem` so that it doesn't log any errors if `xrGetSpaceBoundingBox2DFB` fails. There is a known issue in Meta Quest software version v74 and newer that causes this API repeatedly fail in some cases.
+
+### Fixed
+
+- Fixed the Android manifest build logic so that `com.oculus.permission.USE_ANCHOR_API` is correctly applied if you enable Planes, Bounding Boxes, or Meshes, but not Anchors.
+- Fixed the `MetaOpenXRAnchorSubsystem` so that it correctly registers its `subsystemTypeOverride`, allowing you to typecast instances of `XRAnchorSubsystem` to `MetaOpenXRAnchorSubsystem`.
+- Fixed `MetaOpenXRAnchorSubsystem` so that loading persistent anchors now correctly assigns their `nativePtr`.
+- Fixed the following features: Meta Quest Bounding Boxes, Meta Quest Display Utilities, Meta Quest Meshing, and Meta Quest Planes, so that they disable themselves and do not attempt to create any relevant subsystems if the OpenXR runtime does not support the required capabilities.
+- Fixed an issue where Space Discovery and Space Persistence were required to enable the Meta Quest Anchors feature.
+- Fixed the native plug-in so that it correctly deletes cached OpenXR function pointers after the OpenXR session ends.
+- Fixed meshing subsystem not working with Meta Quest Link.
+
 ## [2.1.0] - 2025-02-19
 
 ### Added

@@ -61,7 +61,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// <returns><see langword="true"/> if the capability is supported. Otherwise, <see langword="false"/>.</returns>
         internal static bool IsCapabilitySupported(SystemCapability capability, ulong xrInstance, string featureName = null, Type subsystemType = null)
         {
-            var info = GetCapabilityInfo(capability, xrInstance);
+            InitializeCapabilityInfo(capability, xrInstance);
+            var info = s_InfosByCapability[capability];
             if (info.isSupported == Supported.Supported)
                 return true;
 
@@ -73,18 +74,16 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             return false;
         }
 
-        static SystemCapabilityInfo GetCapabilityInfo(SystemCapability capability, ulong xrInstance)
+        internal static void InitializeCapabilityInfo(SystemCapability capability, ulong xrInstance)
         {
             // This never throws a KeyNotFoundException. Refer to SystemPropertiesUtilityTests.
             var info = s_InfosByCapability[capability];
-
             if (info.isSupported != Supported.Unknown)
-                return info;
+                return;
 
-            bool isSupported = info.getIsSupported(xrInstance);
+            var isSupported = info.getIsSupported(xrInstance);
             var updatedInfo = new SystemCapabilityInfo(info, isSupported);
             s_InfosByCapability[capability] = updatedInfo;
-            return updatedInfo;
         }
 
         internal static Dictionary<SystemCapability, SystemCapabilityInfo> GetCachedSystemCapabilities()

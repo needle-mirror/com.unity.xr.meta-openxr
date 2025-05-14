@@ -11,7 +11,7 @@ This page is a supplement to the AR Foundation [Bounding box detection](xref:arf
 
 Before your app can access bounding boxes from Meta's OpenXR runtime, the user must first complete [Space Setup](xref:meta-openxr-device-setup#space-setup) on their device.
 
-Meta's OpenXR runtime does not dynamically discover bounding boxes at runtime. Instead, this provider queries the device's Space Setup data and returns all bounding box components that are stored in its [Scene Model](https://developer.oculus.com/documentation/native/android/openxr-scene-overview#scene-model). Some entities in the Scene Model, such as Tables or Lamps, include bounding boxes, while others do not.
+Meta's OpenXR runtime doesn't dynamically discover bounding boxes at runtime. Instead, this provider queries the device's Space Setup data and returns all bounding box components that are stored in its [Scene Model](https://developer.oculus.com/documentation/native/android/openxr-scene-overview#scene-model). Some entities in the Scene Model, such as Tables or Lamps, include bounding boxes, while others do not.
 
 > [!Important]
 > If Space Setup is not complete, the user's Scene Model will not contain any 3D bounding boxes. If your app requires bounding boxes, you can use [scene capture](xref:meta-openxr-session#scene-capture) to prompt the user to complete Space Setup.
@@ -22,7 +22,7 @@ Your app's user must grant an Android system permission before you can access bo
 
 ## Trackable ID
 
-Unlike other AR platforms, the [trackableId](xref:UnityEngine.XR.ARFoundation.ARTrackable`2.trackableId) property of any [ARBoundingBox](xref:UnityEngine.XR.ARFoundation.ARBoundingBox) from the Meta OpenXR platform persists across multiple sessions in the same space setup. This allows you to, for instance, save the `trackableId` of a user's bed to persist a virtual pet sleeping on the bed each time the user runs your app.
+Unlike other AR platforms, the [trackableId](xref:UnityEngine.XR.ARFoundation.ARTrackable`2.trackableId) property of any [ARBoundingBox](xref:UnityEngine.XR.ARFoundation.ARBoundingBox) from Meta's OpenXR runtime persists across multiple sessions in the same space setup. This allows you to, for instance, save the `trackableId` of a user's bed to persist a virtual pet sleeping on the bed each time the user runs your app.
 
 ## Bounding box classifications
 

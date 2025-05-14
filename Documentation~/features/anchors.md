@@ -9,7 +9,7 @@ This page is a supplement to the AR Foundation [Anchors](xref:arfoundation-ancho
 
 ## Optional feature support
 
-Meta OpenXR implements the following optional features of AR Foundation's [XRAnchorSubsystem](xref:UnityEngine.XR.ARSubsystems.XRAnchorSubsystem):
+This package implements the following optional features of AR Foundation's [XRAnchorSubsystem](xref:UnityEngine.XR.ARSubsystems.XRAnchorSubsystem):
 
 | Feature | Descriptor Property | Supported |
 | :------ | :--------------- | :--------: |
