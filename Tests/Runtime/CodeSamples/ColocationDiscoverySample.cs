@@ -74,11 +74,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
         #region AdvertiseSerializableGuid
         async void AdvertiseSerializableGuid(
             ColocationDiscoveryFeature colocationDiscovery,
-            Guid guid)
+            SerializableGuid guid)
         {
-            var bytes = new NativeArray<byte>(16, Allocator.Temp);
-            guid.TryWriteBytes(bytes.AsSpan());
-
+            var bytes = guid.AsByteNativeArray();
             var result = await colocationDiscovery.TryStartAdvertisementAsync(
                 bytes.AsSpan());
 

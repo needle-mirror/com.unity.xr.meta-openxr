@@ -53,7 +53,7 @@ Colocation advertisement takes a `Span<byte>` message type to broadcast informat
 > [!NOTE]
 > The max size of an advertisement message is 1024 bytes.
 
-If you want to share a `SerializableGuid`, such as the [MetaOpenXRAnchorSubystem.sharedAnchorsGroupId](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRAnchorSubsystem.sharedAnchorsGroupId), you can get a `NativeArray<byte>` with writing the guid bytes to a `NativeArray` and pass it with `NativeArray.AsSpan()` as shown in the following code example:
+If you want to share a `SerializableGuid`, such as the [MetaOpenXRAnchorSubystem.sharedAnchorsGroupId](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRAnchorSubsystem.sharedAnchorsGroupId), you can get a `NativeArray<byte>` with [SerializableGuid.AsByteNativeArray](xref:UnityEngine.XR.ARSubsystems.SerializableGuid.AsByteNativeArray(Unity.Collections.Allocator)) and pass it with `NativeArray.AsSpan()` as shown in the following code example:
 
 [!code-cs[AdvertiseSerializableGuid](../../Tests/Runtime/CodeSamples/ColocationDiscoverySample.cs#AdvertiseSerializableGuid)]
 

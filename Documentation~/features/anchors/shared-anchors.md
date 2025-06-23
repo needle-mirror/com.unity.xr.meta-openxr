@@ -24,7 +24,8 @@ To set the group ID for your current session, generate a new `SerializableGuid` 
 [!code-cs[SetSharedAnchorsGroupId](../../../Tests/Runtime/CodeSamples/Anchors/SetSharedAnchorsGroupIdSample.cs#SetSharedAnchorsGroupId)]
 
 > [!NOTE]
-> If you do not set the group ID or set it to the `default` value, you might be sharing and loading anchors from a group that's used across multiple locations and sessions by unintended users.
+> [!IMPORTANT]
+> Set the group ID to a non-empty GUID, i.e. `new SerializableGuid(Guid.NewGuid())`, as Meta's OpenXR runtime doesn't allow sharing anchors to an empty group ID.
 
 <a id="share-group-id"></a>
 
@@ -37,7 +38,7 @@ Share your group ID with colocated users of your app so they can share and load 
 
 ## Share group IDs between devices
 
-AR Foundation doesn't provide a networking solution for messaging GUIDs between users on different devices. The [AR Foundation Samples GitHub repository](https://github.com/Unity-Technologies/arfoundation-samples/blob/main/Scripts/Runtime/Networking/SharedAnchorsNetworkMessenger.cs) contains example code that uses [Netcode for GameObjects](https://docs-multiplayer.unity3d.com/netcode/current/about/) to demonstrate one way to share GUIDs between devices to get you started.
+AR Foundation doesn't provide a networking solution for messaging GUIDs between users on different devices. The [AR Foundation Samples GitHub repository](https://github.com/Unity-Technologies/arfoundation-samples/blob/6.2/Assets/Scripts/Runtime/Networking/SharedAnchorsNetworkMessenger.cs) contains example code that uses [Netcode for GameObjects](https://docs-multiplayer.unity3d.com/netcode/current/about/) to demonstrate one way to share GUIDs between devices to get you started.
 
 ## Share anchor
 

@@ -13,7 +13,7 @@ On OpenXR platforms, the [XRResultStatus.nativeStatusCode](xref:UnityEngine.XR.A
 
 You can use the `XRResultStatus.nativeStatusCode` property to access the underlying `XrResult` value, as shown in the following example:
 
-[!code-cs[anchors_resultstatus_xrresult](../../../Tests/Runtime/CodeSamples/AnchorsSamples.cs#anchors_resultstatus_xrresult)]
+[!code-cs[anchors_resultstatus_xrresult](../../../Tests/Runtime/CodeSamples/Anchors/AnchorsSamples.cs#anchors_resultstatus_xrresult)]
 
 ## Persistent and shared anchor GUIDs
 

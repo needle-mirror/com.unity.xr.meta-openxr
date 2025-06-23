@@ -7,6 +7,7 @@ using UnityEngine.XR.ARSubsystems;
 using UnityEngine.XR.OpenXR.CompositionLayers;
 using UnityEngine.XR.OpenXR.NativeTypes.Meta;
 using UnityEngine.XR.OpenXR.NativeTypes;
+using Unity.XR.CoreUtils;
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
@@ -63,6 +64,12 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 defaultLayer.LayerData.BlendType = BlendType.Premultiply;
             }
 
+            public override void Stop()
+            {
+                if (IsPassthroughLayerActive())
+                    DestroyPassthroughLayer();
+            }
+
             static bool IsPassthroughLayerActive()
             {
                 var compositionLayerManager = CompositionLayerManager.Instance;
@@ -86,6 +93,16 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                         passthroughGameObject.AddComponent(extension);
                 }
                 compositionLayerComponent.TryChangeLayerOrder(compositionLayerComponent.Order, CompositionLayerManager.GetFirstUnusedLayer(false));
+            }
+
+            static void DestroyPassthroughLayer()
+            {
+                if (CompositionLayerManager.Instance == null)
+                    return;
+
+                var passthroughLayer = FindCompositionLayerType<PassthroughLayerData>(CompositionLayerManager.Instance.CompositionLayers);
+                if (passthroughLayer != null)
+                    UnityObjectUtils.Destroy(passthroughLayer.gameObject);
             }
 
             static CompositionLayer FindCompositionLayerType<T>(IReadOnlyCollection<CompositionLayer> layers)

@@ -8,6 +8,18 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2025-06-23
+
+### Changed
+
+- Changed the minimum version of the OpenXR Plug-in dependency from 1.14.0 to 1.15.0-pre.1.
+
+### Fixed
+
+- Fixed the Android manifest build logic so that `com.oculus.permission.USE_ANCHOR_API` is correctly applied if you enable Planes, Bounding Boxes, or Meshes, but not Anchors.
+- Fixed the `MetaOpenXRCameraSubsystem` so that it correctly destroys the `PassthroughLayerData` when it is stopped.
+- Fixed an issue where buonding boxes were not relocalizing while an app was resumed after being paused for scene capture or sleep.
+
 ## [2.2.0-pre.1] - 2025-05-06
 
 ### Added

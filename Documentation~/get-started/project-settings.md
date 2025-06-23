@@ -15,7 +15,7 @@ You must have the [Android Build Support](xref:um-android-install-dependencies) 
 
 ## Add the Meta Quest build platform
 
-Unity 6.1 introduced the Meta Quest build platform. You can use this build platform to configure settings for standalone Meta Quest headsets. When you select this build platform, Unity automatically installs the Unity OpenXR: Meta package.
+Unity 6.1 introduced the Meta Quest build platform. You can use this build platform to configure settings for standalone Meta Quest headsets.
 
 To add the Meta Quest build platform:
 

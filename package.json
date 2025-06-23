@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.meta-openxr",
   "displayName": "Unity OpenXR Meta",
-  "version": "2.2.0-pre.1",
+  "version": "2.2.0",
   "unity": "6000.0",
   "description": "Enables you to build mixed reality apps for Meta Quest devices by implementing support for Meta's OpenXR extensions.",
   "keywords": [
@@ -19,22 +19,22 @@
     "arfoundation"
   ],
   "dependencies": {
-    "com.unity.xr.openxr": "1.14.0",
-    "com.unity.xr.arfoundation": "6.2.0-pre.4",
+    "com.unity.xr.openxr": "1.15.0",
+    "com.unity.xr.arfoundation": "6.2.0",
     "com.unity.xr.compositionlayers": "2.0.0",
     "com.unity.xr.management": "4.4.0",
     "com.unity.xr.core-utils": "2.5.1"
   },
   "_upm": {
-    "changelog": "### Added\n\n- Added support for the new `BoundedPlane.parentId` and `XRBoundingBox.parentId` fields in AR Foundation 6.2. Support is implemented via the `XR_FB_spatial_entity_container` OpenXR extension.\n- Added a setting to the Meta Quest Boundary Visibility feature that allows you to automatically suppress boundary visibility without writing any code. Refer to [Suppress boundary visibility automatically](xref:meta-openxr-boundary-visibility#suppress-automatically) for details.\n- Added overrides for `XRAnchorSubsystem.TrySaveAnchorsAsync`, `XRAnchorSubsystem.TryLoadAnchorsAsync`, and `XRAnchorSubsystem.TryEraseAnchorsAsync` that improve performance when saving, loading, and erasing a batch of anchors on Meta Quest.\n- Added `PlaneProviderType` and `ARPlaneFeature.planeProviderType`. These APIs lay the groundwork for future work.\n- Added `XR_META_spatial_entity_sharing` and `XR_META_spatial_entity_group_sharing` OpenXR extensions to the **Meta Quest: Anchors** feature to support shared spatial anchors in a future update.\n- Added a new property [MetaOpenXRAnchorSubsystem.sharedAnchorsGroupId](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRAnchorSubsystem.sharedAnchorsGroupId) for setting the group Id that is used when sharing anchors.\n- Added android permission requirement `com.oculus.permission.IMPORT_EXPORT_IOT_MAP_DATA` to support shared anchors.\n- Added support for sharing and loading shared anchors between colocated users. Refer to [Shared Anchors](xref:meta-openxr-shared-anchors) docs for more info.\n- Added support for [Colocation Discovery](xref:meta-openxr-colocation-discovery) to discover physically colocated devices running the same app.\n\n### Changed\n\n- Recompiled the native plug-in with support for [16 KB page sizes](https://developer.android.com/guide/practices/page-sizes) on Android 15 or newer.\n- Re-implemented the Meta Quest Camera (Passthrough) feature using the XR Composition Layers package, allowing you more customization options for how Passthrough images are composited into your app. If you choose not to customize your app's composition layers, the `MetaOpenXRCameraSubsystem` will create the required components at runtime for you. Refer to [Composition layers](xref:meta-openxr-camera#composition-layers) for more information.\n- Changed the `MetaOpenXRPlaneSubystem` so that it doesn't log any errors if `xrGetSpaceBoundingBox2DFB` fails. There is a known issue in Meta Quest software version v74 and newer that causes this API repeatedly fail in some cases.\n\n### Fixed\n\n- Fixed the `MetaOpenXRAnchorSubsystem` so that it correctly registers its `subsystemTypeOverride`, allowing you to typecast instances of `XRAnchorSubsystem` to `MetaOpenXRAnchorSubsystem`.\n- Fixed meshing subsystem not working with Meta Quest Link.\n- Fixed an issue where Space Discovery and Space Persistence were required to enable the Meta Quest Anchors feature.\n- Fixed the `MetaOpenXRAnchorSubsystem` so that `TrySaveAnchorAsync`, `TryLoadAnchorsAsync`, and `TryEraseAnchorsAsync` no longer throws an exception when the scripting define `ENABLE_UNITY_COLLECTIONS_CHECKS` is present.\n- Fixed `MetaOpenXRAnchorSubsystem` so that loading persistent anchors now correctly assigns their `nativePtr`.\n- Fixed the following features: Meta Quest Bounding Boxes, Meta Quest Display Utilities, Meta Quest Meshing, and Meta Quest Planes, so that they disable themselves and do not attempt to create any relevant subsystems if the OpenXR runtime does not support the required capabilities.\n- Fixed the `MetaOpenXROcclusionSubsystem` so that it no longer logs an error if you create and destroy the subsystem without ever starting it."
+    "changelog": "### Changed\n\n- Changed the minimum version of the OpenXR Plug-in dependency from 1.14.0 to 1.15.0-pre.1.\n\n### Fixed\n\n- Fixed the Android manifest build logic so that `com.oculus.permission.USE_ANCHOR_API` is correctly applied if you enable Planes, Bounding Boxes, or Meshes, but not Anchors.\n- Fixed the `MetaOpenXRCameraSubsystem` so that it correctly destroys the `PassthroughLayerData` when it is stopped.\n- Fixed an issue where buonding boxes were not relocalizing while an app was resumed after being paused for scene capture or sleep."
   },
   "upmCi": {
-    "footprint": "e0f10c3516460e7f1044412cf84406f46da175a0"
+    "footprint": "2d70c03a735964b3c5ce09cf1a27eed134d9d1a1"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.meta-openxr@2.2/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/xr.sdk.meta-openxr.git",
     "type": "git",
-    "revision": "4310f2adb6a75f338cb3c9aae9c4c672a4644edd"
+    "revision": "c5544dd1cfc652ddbc37cd23bd0c9eb8fbfaa739"
   }
 }

@@ -11,7 +11,7 @@ AR Features implement [AR Foundation](xref:arfoundation-manual) interfaces. This
 | :------------- | :-------------- |
 | [Session](xref:meta-openxr-session) | Enable, disable, and configure AR on the target platform. |
 | [Camera](xref:meta-openxr-camera) | Render images from device cameras and perform light estimation. |
-| [Colocation discovery](xref:meta-openxr-colocation-discovery) | Share small messages between colocated devices running the same app. |
+| [Colocation discovery](xref:meta-openxr-colocation-discovery) | Discover physically colocated devices running the same app. |
 | [Planes](xref:meta-openxr-planes) | Use Scene Model data to track flat surfaces. |
 | [Bounding boxes](xref:meta-openxr-bounding-boxes) | Use Scene Model data to track bounding boxes of 3D objects. |
 | [Anchors](xref:meta-openxr-anchors) | Track arbitrary points in space. |
