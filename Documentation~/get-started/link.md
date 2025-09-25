@@ -27,3 +27,7 @@ Now when you enter Play mode, the current scene plays in both your headset and t
 Some Link features including Passthrough and spatial data are experimental. For these features to work, you must enable these features in the Meta Quest Link desktop app under **Settings** > **Beta**. Note that Passthrough video does not render in the **Game** view.
 
 ![Meta Quest Link desktop app is open to Settings, showing beta settings with experimental features enabled](../images/desktop-app-beta-settings.png)<br/>*The Meta Quest Link desktop app beta settings.*
+
+## Additional resources
+
+* [Troubleshoot issues with Meta Quest Link](https://www.meta.com/en-gb/help/quest/975178886590868/) (Meta documentation)

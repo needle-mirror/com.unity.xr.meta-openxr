@@ -45,13 +45,21 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             };
 
             XRCameraSubsystemDescriptor.Register(cameraSubsystemCinfo);
-
-            var layerHandler = new MetaOpenXRPassthroughLayer();
-            OpenXRLayerProvider.RegisterLayerHandler(typeof(PassthroughLayerData), layerHandler);
         }
 
         class MetaOpenXRProvider : Provider
         {
+            protected override bool TryInitialize()
+            {
+                OpenXRLayerProvider.Started += CreateAndRegisterLayerHandler;
+                return base.TryInitialize();
+            }
+
+            public override void Destroy()
+            {
+                OpenXRLayerProvider.Started -= CreateAndRegisterLayerHandler;
+            }
+
             /// <summary>
             /// Start the camera functionality.
             /// </summary>
@@ -68,6 +76,12 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             {
                 if (IsPassthroughLayerActive())
                     DestroyPassthroughLayer();
+            }
+
+            protected void CreateAndRegisterLayerHandler()
+            {
+                var layerHandler = new MetaOpenXRPassthroughLayer();
+                OpenXRLayerProvider.RegisterLayerHandler(typeof(PassthroughLayerData), layerHandler);
             }
 
             static bool IsPassthroughLayerActive()

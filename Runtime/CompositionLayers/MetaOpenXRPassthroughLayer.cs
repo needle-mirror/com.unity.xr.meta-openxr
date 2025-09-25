@@ -33,6 +33,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             SwapchainCreatedOutput swapchainOutput,
             out XrCompositionLayerPassthroughFB nativeLayer)
         {
+            // Remove any existing passthrough layer for this ID.
+            if (s_LayerIdsToPassthroughData.ContainsKey(layerInfo.Id))
+                RemoveLayer(layerInfo.Id);
+
             var session = OpenXRLayerUtility.GetXRSession();
 
             var passthroughCreateInfo = new XrPassthroughCreateInfoFB()

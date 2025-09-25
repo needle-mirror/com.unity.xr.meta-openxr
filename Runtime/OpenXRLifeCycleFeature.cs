@@ -57,6 +57,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         static bool TryRefreshEnabledStateForBuildTarget(BuildTargetGroup buildTarget, TypeCollection metaOpenXRFeatureTypes)
         {
             var settings = OpenXRSettings.GetSettingsForBuildTargetGroup(buildTarget);
+            if (settings == null)
+                return false;
+
             var lifeCycleFeature = settings.GetFeature<OpenXRLifeCycleFeature>();
             if (lifeCycleFeature == null)
                 return false;

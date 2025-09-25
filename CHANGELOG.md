@@ -8,6 +8,19 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.2.1] - 2025-09-25
+
+### Changed
+
+- Changed the minimum version of the XR Composition Layers dependency from 2.0.0 to 2.1.0, as 2.0.0 is no longer supported.
+
+### Fixed
+
+- Fixed a possible `NullReferenceException` when installing Unity OpenXR: Meta in a new project. ([MOXRB-151](https://issuetracker.unity3d.com/issues/installing-unity-openxr-meta-package-throws-nullreferenceexception-error))
+- Fixed the `MetaOpenXRPassthroughLayer` so that passthrough correctly displays when the app is resumed after being suspended for a system permission dialogue.
+- Fixed `MetaOpenXRPlaneSubsystem` so that it doesn't cause the app to unexpectedly quit if the subsystem is destroyed while hiding planes that don't match your chosen plane detection mode.
+- Fixed the MetaOpenXROcclusionSubsystem so that it destroys all native resources when stopped, reducing its resource consumption while not in use.
+
 ## [2.2.0] - 2025-06-23
 
 ### Changed
@@ -49,6 +62,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed `MetaOpenXRAnchorSubsystem` so that loading persistent anchors now correctly assigns their `nativePtr`.
 - Fixed the following features: Meta Quest Bounding Boxes, Meta Quest Display Utilities, Meta Quest Meshing, and Meta Quest Planes, so that they disable themselves and do not attempt to create any relevant subsystems if the OpenXR runtime does not support the required capabilities.
 - Fixed the `MetaOpenXROcclusionSubsystem` so that it no longer logs an error if you create and destroy the subsystem without ever starting it.
+- Fixed the native plug-in so that it correctly deletes cached OpenXR function pointers after the OpenXR session ends.
 
 ## [2.1.0] - 2025-02-19
 
