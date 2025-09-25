@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.meta-openxr",
   "displayName": "Unity OpenXR Meta",
-  "version": "2.2.0",
+  "version": "2.3.0-pre.2",
   "unity": "6000.0",
   "description": "Enables you to build mixed reality apps for Meta Quest devices by implementing support for Meta's OpenXR extensions.",
   "keywords": [
@@ -19,22 +19,22 @@
     "arfoundation"
   ],
   "dependencies": {
-    "com.unity.xr.openxr": "1.15.0",
-    "com.unity.xr.arfoundation": "6.2.0",
-    "com.unity.xr.compositionlayers": "2.0.0",
+    "com.unity.xr.openxr": "1.16.0-pre.1",
+    "com.unity.xr.arfoundation": "6.3.0-pre.2",
+    "com.unity.xr.compositionlayers": "2.1.0",
     "com.unity.xr.management": "4.4.0",
     "com.unity.xr.core-utils": "2.5.1"
   },
   "_upm": {
-    "changelog": "### Changed\n\n- Changed the minimum version of the OpenXR Plug-in dependency from 1.14.0 to 1.15.0-pre.1.\n\n### Fixed\n\n- Fixed the Android manifest build logic so that `com.oculus.permission.USE_ANCHOR_API` is correctly applied if you enable Planes, Bounding Boxes, or Meshes, but not Anchors.\n- Fixed the `MetaOpenXRCameraSubsystem` so that it correctly destroys the `PassthroughLayerData` when it is stopped.\n- Fixed an issue where buonding boxes were not relocalizing while an app was resumed after being paused for scene capture or sleep."
+    "changelog": "### Changed\n\n- Changed AR Foundation dependency version from 6.3.0-pre.1 to 6.3.0-pre.2.\n\n### Fixed\n\n- Fixed `MetaOpenXRPlaneSubsystem` so that it doesn't cause the app to unexpectedly quit if the subsystem is destroyed while hiding planes that don't match your chosen plane detection mode.\n- Fixed the MetaOpenXROcclusionSubsystem so that it destroys all native resources when stopped, reducing its resource consumption while not in use."
   },
   "upmCi": {
-    "footprint": "2d70c03a735964b3c5ce09cf1a27eed134d9d1a1"
+    "footprint": "86f17bb2282c67c6459272d7da211878dd3070ab"
   },
-  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.meta-openxr@2.2/manual/index.html",
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.meta-openxr@2.3/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/xr.sdk.meta-openxr.git",
     "type": "git",
-    "revision": "c5544dd1cfc652ddbc37cd23bd0c9eb8fbfaa739"
+    "revision": "e79e61fad2302ec1635b8bda2b71e1bb35677712"
   }
 }

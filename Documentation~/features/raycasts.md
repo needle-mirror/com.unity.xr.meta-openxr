@@ -7,13 +7,6 @@ This page is a supplement to the AR Foundation [Ray casts](xref:arfoundation-ray
 
 [!include[](../snippets/arf-docs-tip.md)]
 
-## Ray cast architecture
-
-This package defines an empty implementation of AR Foundation's [XRRaycastSubsystem.Provider](xref:UnityEngine.XR.ARSubsystems.XRRaycastSubsystem.Provider). This implementation doesn't provide any OpenXR functionality. The empty ray cast provider enables a fallback Unity-world-space ray cast implementation in AR Foundation's [ARRaycastManager](xref:UnityEngine.XR.ARFoundation.ARRaycastManager).
-
->[!IMPORTANT]
-> If your app uses AR ray casts, you should use the [ARRaycastManager](xref:UnityEngine.XR.ARFoundation.ARRaycastManager) APIs. Don't access `MetaOpenXRRaycastSubsystem` directly.
-
 ## Optional feature support
 
 This package implements the following optional features of AR Foundation's [XRRaycastSubsystem](xref:UnityEngine.XR.ARSubsystems.XRRaycastSubsystem):
@@ -24,22 +17,29 @@ This package implements the following optional features of AR Foundation's [XRRa
 | **World based raycast**    | [supportsWorldBasedRaycast](xref:UnityEngine.XR.ARSubsystems.XRRaycastSubsystemDescriptor.supportsWorldBasedRaycast)   | Yes |
 | **Tracked raycasts**       | [supportsTrackedRaycasts](xref:UnityEngine.XR.ARSubsystems.XRRaycastSubsystemDescriptor.supportsTrackedRaycasts) |  |
 
-### Supported trackables
+> [!NOTE]
+> Refer to AR Foundation [Ray cast platform support](xref:arfoundation-raycasts-platform-support) for more information on the optional features of the Raycast subsystem.
+
+## Supported trackables
 
 This package supports ray casting against the following [trackable types](xref:UnityEngine.XR.ARSubsystems.TrackableType):
 
 | TrackableType           | Supported |
 | :---------------------- | :-------: |
-| **BoundingBox**         |    Yes    |
-| **Depth**               |           |
+| **BoundingBox**         | Fallback  |
+| **Depth**               |    Yes    |
 | **Face**                |           |
 | **FeaturePoint**        |           |
 | **Image**               |           |
 | **Planes**              |           |
 | **PlaneEstimated**      |           |
-| **PlaneWithinBounds**   |    Yes    |
+| **PlaneWithinBounds**   | Fallback  |
 | **PlaneWithinInfinity** |           |
-| **PlaneWithinPolygon**  |           |
+| **PlaneWithinPolygon**  | Fallback  |
 
-> [!NOTE]
-> Refer to AR Foundation [Ray cast platform support](xref:arfoundation-raycasts-platform-support) for more information on the optional features of the Raycast subsystem.
+### Fallback ray casts
+
+Ray cast functionality in Unity OpenXR: Meta relies on both Meta's OpenXR runtime and AR Foundation's [Fallback ray casts](xref:arfoundation-raycasts-raycastmanager#fallback-ray-casts) implementation. Meta's OpenXR runtime supports ray casts against the **Depth** trackable type. AR Foundation additionally enables you to Unity-world-space ray cast against the **PlaneWithinPolygon**, **PlaneWithinBounds**, and **BoundingBox** trackable types.
+
+>[!IMPORTANT]
+> If your app uses AR ray casts, you should use the [ARRaycastManager](xref:UnityEngine.XR.ARFoundation.ARRaycastManager) APIs. Don't access `MetaOpenXRRaycastSubsystem` directly.

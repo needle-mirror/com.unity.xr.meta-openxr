@@ -17,6 +17,11 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
         internal const uint XR_FB_spatial_entity_SPEC_VERSION = 3;
 
         /// <summary>
+        /// Corresponds with 'XR_FB_scene_capture'
+        /// </summary>
+        internal const uint XR_FB_scene_capture_SPEC_VERSION = 1;
+
+        /// <summary>
         /// Corresponds with 'XR_FB_scene'
         /// </summary>
         internal const uint XR_FB_scene_SPEC_VERSION = 4;

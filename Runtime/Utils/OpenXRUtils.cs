@@ -15,7 +15,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool IsExtensionEnabled(string extension, string featureName = null, Type subsystemType = null)
         {
-            bool isExtensionEnabled = OpenXRRuntime.IsExtensionEnabled(extension);
+            var isExtensionEnabled = OpenXRRuntime.IsExtensionEnabled(extension);
             if (isExtensionEnabled)
                 return true;
 

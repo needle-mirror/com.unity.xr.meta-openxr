@@ -19,6 +19,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             HandRemoval,
             SharedAnchors,
             ColocationDiscovery,
+            EnvironmentRaycast,
         }
 
         internal struct SystemCapabilityInfo
@@ -54,6 +55,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             { SystemCapability.HandRemoval, new(k_XR_META_environment_depth, NativeApi.GetIsHandRemovalSupported) },
             { SystemCapability.SharedAnchors, new(k_XR_META_spatial_entity_group_sharing, NativeApi.GetIsSharedAnchorsSupported) },
             { SystemCapability.ColocationDiscovery, new(k_XR_META_colocation_discovery, NativeApi.GetIsColocationDiscoverySupported) },
+            { SystemCapability.EnvironmentRaycast, new(k_XR_META_environment_raycast, NativeApi.GetIsEnvironmentRaycastSupported) },
         };
 
         static void ResetInfosByCapability()
@@ -153,6 +155,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_SystemProperties_IsColocationDiscoverySupported")]
             [return: MarshalAs(UnmanagedType.U1)]
             internal static extern bool GetIsColocationDiscoverySupported(ulong xrInstance);
+
+            [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_SystemProperties_IsEnvironmentRaycastSupported")]
+            [return: MarshalAs(UnmanagedType.U1)]
+            internal static extern bool GetIsEnvironmentRaycastSupported(ulong xrInstance);
         }
     }
 }

@@ -8,6 +8,33 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.3.0-pre.2] - 2025-09-25
+
+### Changed
+
+- Changed AR Foundation dependency version from 6.3.0-pre.1 to 6.3.0-pre.2.
+
+### Fixed
+
+- Fixed `MetaOpenXRPlaneSubsystem` so that it doesn't cause the app to unexpectedly quit if the subsystem is destroyed while hiding planes that don't match your chosen plane detection mode.
+- Fixed the MetaOpenXROcclusionSubsystem so that it destroys all native resources when stopped, reducing its resource consumption while not in use.
+
+## [2.3.0-pre.1] - 2025-08-28
+
+### Added
+
+- Added support for Environment Raycasts when raycasting with TrackableType.Depth
+
+### Changed
+
+- Changed AR Foundation dependency version from 6.2.0 to 6.3.0-pre.1.
+- Changed the minimum version of the XR Composition Layers dependency from 2.0.0 to 2.1.0, as 2.0.0 is no longer supported.
+
+### Fixed
+
+- Fixed a possible `NullReferenceException` when installing Unity OpenXR: Meta in a new project. ([MOXRB-151](https://issuetracker.unity3d.com/issues/installing-unity-openxr-meta-package-throws-nullreferenceexception-error))
+- Fixed the `MetaOpenXRPassthroughLayer` so that passthrough correctly displays when the app is resumed after being suspended for a system permission dialogue.
+
 ## [2.2.0] - 2025-06-23
 
 ### Changed
@@ -33,6 +60,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added android permission requirement `com.oculus.permission.IMPORT_EXPORT_IOT_MAP_DATA` to support shared anchors.
 - Added support for sharing and loading shared anchors between colocated users. Refer to [Shared Anchors](xref:meta-openxr-shared-anchors) docs for more info.
 - Added support for [Colocation Discovery](xref:meta-openxr-colocation-discovery) to discover physically colocated devices running the same app.
+- Fixed the native plug-in so that it correctly deletes cached OpenXR function pointers after the OpenXR session ends.
 
 ### Changed
 

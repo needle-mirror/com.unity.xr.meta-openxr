@@ -1,3 +1,4 @@
+//#define VERBOSE_LOGGING
 using System.Collections.Generic;
 using Unity.XR.CompositionLayers.Layers;
 using Unity.XR.CompositionLayers.Services;
@@ -19,9 +20,11 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         }
 
         protected override bool CreateSwapchain(
-            CompositionLayerManager.LayerInfo layer,
-            out SwapchainCreateInfo swapchainCreateInfo)
+            CompositionLayerManager.LayerInfo layer, out SwapchainCreateInfo swapchainCreateInfo)
         {
+#if VERBOSE_LOGGING
+            Debug.Log("CreateSwapchain");
+#endif
             // Swapchain not needed for this layer, so we need to manually invoke OnCreatedSwapchain().
             swapchainCreateInfo = default;
             OnCreatedSwapchain(layer, default);
@@ -33,9 +36,16 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             SwapchainCreatedOutput swapchainOutput,
             out XrCompositionLayerPassthroughFB nativeLayer)
         {
+#if VERBOSE_LOGGING
+            Debug.Log("Enter CreateNativeLayer");
+#endif
+            // Remove any existing passthrough layer for this ID.
+            if (s_LayerIdsToPassthroughData.ContainsKey(layerInfo.Id))
+                RemoveLayer(layerInfo.Id);
+
             var session = OpenXRLayerUtility.GetXRSession();
 
-            var passthroughCreateInfo = new XrPassthroughCreateInfoFB()
+            var passthroughCreateInfo = new XrPassthroughCreateInfoFB
             {
                 type = XrFbStructType.XR_TYPE_PASSTHROUGH_CREATE_INFO_FB,
                 next = null,
@@ -92,12 +102,17 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                     passthroughLayerHandle = passthroughLayerHandle
                 };
             }
-
+#if VERBOSE_LOGGING
+            Debug.Log("CreateNativeLayer returned true");
+#endif
             return true;
         }
 
         protected override bool ModifyNativeLayer(CompositionLayerManager.LayerInfo layerInfo, ref XrCompositionLayerPassthroughFB nativeLayer)
         {
+#if VERBOSE_LOGGING
+            Debug.Log("ModifyNativeLayer");
+#endif
             if (!layerInfo.Layer.enabled)
             {
                 var passthroughData = s_LayerIdsToPassthroughData[layerInfo.Id];
@@ -123,6 +138,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             {
                 if (!passthroughData.passthroughStarted)
                 {
+#if VERBOSE_LOGGING
+                    Debug.Log("Calling xrPassthroughStartFB while checking active native layer");
+#endif
                     var result = MetaOpenXRCameraSubsystem.NativeApi.UnityMetaQuest_xrPassthroughStartFB(passthroughData.passthroughHandle);
                     var success = result == XrResult.Success;
                     if (success)
@@ -142,6 +160,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
         public override void RemoveLayer(int removedLayerId)
         {
+#if VERBOSE_LOGGING
+            Debug.Log("RemoveLayer");
+#endif
             if (s_LayerIdsToPassthroughData.TryGetValue(removedLayerId, out var passthroughData))
             {
                 MetaOpenXRCameraSubsystem.NativeApi.UnityMetaQuest_xrPassthroughPauseFB(passthroughData.passthroughHandle);

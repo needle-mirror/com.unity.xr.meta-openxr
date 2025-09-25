@@ -13,7 +13,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// Notifies the native plug-in of OpenXR life cycle events.
     /// </summary>
 #if UNITY_EDITOR
-    [OpenXRFeature(Hidden = true,
+    [OpenXRFeature(
+        Hidden = true,
         UiName = "",
         OpenxrExtensionStrings = "",
         Priority = int.MaxValue,
@@ -57,6 +58,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         static bool TryRefreshEnabledStateForBuildTarget(BuildTargetGroup buildTarget, TypeCollection metaOpenXRFeatureTypes)
         {
             var settings = OpenXRSettings.GetSettingsForBuildTargetGroup(buildTarget);
+            if (settings == null)
+                return false;
+
             var lifeCycleFeature = settings.GetFeature<OpenXRLifeCycleFeature>();
             if (lifeCycleFeature == null)
                 return false;

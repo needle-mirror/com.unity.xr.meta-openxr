@@ -1,3 +1,4 @@
+//#define VERBOSE_LOGGING
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Unity.XR.CompositionLayers;
@@ -45,13 +46,27 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             };
 
             XRCameraSubsystemDescriptor.Register(cameraSubsystemCinfo);
-
-            var layerHandler = new MetaOpenXRPassthroughLayer();
-            OpenXRLayerProvider.RegisterLayerHandler(typeof(PassthroughLayerData), layerHandler);
         }
 
         class MetaOpenXRProvider : Provider
         {
+            protected override bool TryInitialize()
+            {
+                OpenXRLayerProvider.Started += CreateAndRegisterLayerHandler;
+                return base.TryInitialize();
+            }
+
+            public override void Destroy()
+            {
+                OpenXRLayerProvider.Started -= CreateAndRegisterLayerHandler;
+            }
+
+            static void CreateAndRegisterLayerHandler()
+            {
+                var layerHandler = new MetaOpenXRPassthroughLayer();
+                OpenXRLayerProvider.RegisterLayerHandler(typeof(PassthroughLayerData), layerHandler);
+            }
+
             /// <summary>
             /// Start the camera functionality.
             /// </summary>
@@ -77,11 +92,17 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                     return false;
 
                 var layer = FindCompositionLayerType<PassthroughLayerData>(compositionLayerManager.CompositionLayers);
+#if VERBOSE_LOGGING
+                Debug.Log($"Is Passthrough Layer active: {layer != null}");
+#endif
                 return layer != null;
             }
 
             static void CreatePassthroughLayer()
             {
+#if VERBOSE_LOGGING
+                Debug.Log("CreatePassthroughLayer");
+#endif
                 var passthroughDescriptor = CompositionLayerUtils.GetLayerDescriptor(typeof(PassthroughLayerData));
                 var passthroughGameObject = new GameObject("Passthrough");
                 var compositionLayerComponent = passthroughGameObject.AddComponent<CompositionLayer>();
@@ -97,6 +118,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
             static void DestroyPassthroughLayer()
             {
+#if VERBOSE_LOGGING
+                Debug.Log("DestroyPassthroughLayer");
+#endif
                 if (CompositionLayerManager.Instance == null)
                     return;
 

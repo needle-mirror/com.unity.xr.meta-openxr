@@ -55,9 +55,11 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
             var arPlaneFeature = androidOpenXRSettings.GetFeature<ARPlaneFeature>();
             var arBoundingBoxFeature = androidOpenXRSettings.GetFeature<ARBoundingBoxFeature>();
             var arMeshFeature = androidOpenXRSettings.GetFeature<ARMeshFeature>();
+            var arRaycastFeature = androidOpenXRSettings.GetFeature<ARRaycastFeature>();
             if ((arPlaneFeature != null && arPlaneFeature.enabled)
                 || (arBoundingBoxFeature != null && arBoundingBoxFeature.enabled)
-                || (arMeshFeature != null && arMeshFeature.enabled))
+                || (arMeshFeature != null && arMeshFeature.enabled)
+                || (arRaycastFeature != null && arRaycastFeature.enabled))
             {
                 elementsToAdd.Add(
                     new ManifestElement
@@ -75,7 +77,8 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
             if ((arAnchorFeature != null && arAnchorFeature.enabled)
                 || (arPlaneFeature != null && arPlaneFeature.enabled)
                 || (arBoundingBoxFeature != null && arBoundingBoxFeature.enabled)
-                || (arMeshFeature != null && arMeshFeature.enabled))
+                || (arMeshFeature != null && arMeshFeature.enabled)
+                || (arRaycastFeature != null && arRaycastFeature.enabled))
             {
                 elementsToAdd.Add(
                     new ManifestElement

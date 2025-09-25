@@ -7,7 +7,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// </summary>
         internal const string k_CompanyName = "Unity Technologies";
         internal const string k_PackageName = "com.unity.xr.meta-openxr";
-        internal const string k_MajorMinorVersion = "2.2";
+        internal const string k_MajorMinorVersion = "2.3";
 
         internal const string k_ARFoundationLibrary = "libUnityARFoundationMeta";
         internal const string k_AssemblyName = "Unity.XR.MetaOpenXR";
@@ -48,6 +48,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             internal const string k_XR_FB_scene_capture = "XR_FB_scene_capture";
             internal const string k_XR_META_boundary_visibility = "XR_META_boundary_visibility";
             internal const string k_XR_META_environment_depth = "XR_META_environment_depth";
+            internal const string k_XR_META_environment_raycast = "XR_META_environment_raycast";
             internal const string k_XR_META_spatial_entity_discovery = "XR_META_spatial_entity_discovery";
             internal const string k_XR_META_spatial_entity_mesh = "XR_META_spatial_entity_mesh";
             internal const string k_XR_META_spatial_entity_persistence = "XR_META_spatial_entity_persistence";
@@ -55,6 +56,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             internal const string k_XR_META_spatial_entity_group_sharing = "XR_META_spatial_entity_group_sharing";
             internal const string k_XR_FB_spatial_entity_query = "XR_FB_spatial_entity_query";
             internal const string k_XR_META_colocation_discovery = "XR_META_colocation_discovery";
+            internal const string k_XR_EXT_future = "XR_EXT_future";
         }
     }
 }

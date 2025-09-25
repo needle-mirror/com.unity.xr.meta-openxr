@@ -15,6 +15,10 @@ You can also use [MetaOpenXRAnchorSubsystem.isSharedAnchorsSupported](xref:Unity
 
 [!code-cs[CheckIsSharedAnchorsSupported](../../../Tests/Runtime/CodeSamples/Anchors/CheckSharedAnchorsSupportSample.cs#CheckIsSharedAnchorsSupported)]
 
+### Check for Enhanced Spatial Services
+
+To use shared anchors, Meta's OpenXR runtime requires users of your app to enable [Enhanced Spatial Services](https://developers.meta.com/horizon/documentation/unity/unity-shared-spatial-anchors/#enhanced-spatial-services)(ESS). When [sharing](#share-anchor) or [loading](#load-shared-anchors) shared anchors without ESS enabled, those APIs will return an error with a native status code of `-1000169004` which corresponds to `XR_ERROR_SPACE_CLOUD_STORAGE_DISABLED_FB` in OpenXR. If ESS is not enabled, you should prompt users of your app with instructions on how to enable it.
+
 <a id="set-group-id"></a>
 
 ## Set the group ID
@@ -23,7 +27,6 @@ To set the group ID for your current session, generate a new `SerializableGuid` 
 
 [!code-cs[SetSharedAnchorsGroupId](../../../Tests/Runtime/CodeSamples/Anchors/SetSharedAnchorsGroupIdSample.cs#SetSharedAnchorsGroupId)]
 
-> [!NOTE]
 > [!IMPORTANT]
 > Set the group ID to a non-empty GUID, i.e. `new SerializableGuid(Guid.NewGuid())`, as Meta's OpenXR runtime doesn't allow sharing anchors to an empty group ID.
 
@@ -39,6 +42,8 @@ Share your group ID with colocated users of your app so they can share and load 
 ## Share group IDs between devices
 
 AR Foundation doesn't provide a networking solution for messaging GUIDs between users on different devices. The [AR Foundation Samples GitHub repository](https://github.com/Unity-Technologies/arfoundation-samples/blob/6.2/Assets/Scripts/Runtime/Networking/SharedAnchorsNetworkMessenger.cs) contains example code that uses [Netcode for GameObjects](https://docs-multiplayer.unity3d.com/netcode/current/about/) to demonstrate one way to share GUIDs between devices to get you started.
+
+<a id="share-anchor"></a>
 
 ## Share anchor
 
@@ -57,6 +62,8 @@ You can share a batch of anchors with the [ARAnchorManager.TryShareAnchorsAsync]
 [!code-cs[TryShareAnchorsAsync](../../../Tests/Runtime/CodeSamples/Anchors/BatchShareAnchorsSample.cs#TryShareAnchorsAsync)]
 
 Meta defines its OpenXR API such that the entire batch either succeeds or fails to share together. This means if one anchor fails to share, then all anchors will fail to share.
+
+<a id="load-shared-anchors"></a>
 
 ## Load shared anchors
 
