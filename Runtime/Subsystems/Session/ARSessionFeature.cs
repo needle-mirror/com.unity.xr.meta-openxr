@@ -131,7 +131,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// <param name="xrSpace">Handle of the xrSpace</param>
         protected override void OnAppSpaceChange(ulong xrSpace) => NativeApi.UnityOpenXRMeta_OnAppSpaceChange(xrSpace);
 
-        static class NativeApi
+        internal static class NativeApi
         {
             [DllImport(Constants.k_ARFoundationLibrary)]
             public static extern IntPtr UnityOpenXRMeta_InterceptXrGetInstanceProcAddr(IntPtr func);

@@ -36,4 +36,4 @@ The scene capture life cycle consists of four phases:
 
 Use [MetaOpenXRSessionSubsystem.TryRequestSceneCapture](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRSessionSubsystem.TryRequestSceneCapture) to initiate scene capture, as shown below:
 
-[!code-cs[meta_scene_capture](../../Tests/CodeSamples/MetaSceneCaptureSample.cs#meta_scene_capture)]
+[!code-cs[meta_scene_capture](../../Tests/Runtime/CodeSamples/MetaSceneCaptureSample.cs#meta_scene_capture)]

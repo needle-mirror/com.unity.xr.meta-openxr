@@ -81,7 +81,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 return false;
             }
 
-            public override void Start() => NativeApi.Start();
+            public override void Start() { }
 
             public override void Stop() { }
 
@@ -352,7 +352,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 {
                     id = k_SubsystemId,
                     providerType = typeof(MetaOpenXRAnchorProvider),
-                    subsystemTypeOverride = null,
+                    subsystemTypeOverride = typeof(MetaOpenXRAnchorSubsystem),
                     supportsTrackableAttachments = false,
                     supportsSynchronousAdd = false,
                     supportsSaveAnchor = true,
@@ -373,9 +373,6 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                     IntPtr trySaveAnchorAsyncCallback,
                     IntPtr tryLoadAnchorAsyncCallback,
                     IntPtr tryEraseAnchorAsyncCallback);
-
-                [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_Start")]
-                public static extern void Start();
 
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_Destroy")]
                 public static extern void Destroy();

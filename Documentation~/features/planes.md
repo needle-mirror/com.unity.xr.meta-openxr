@@ -62,9 +62,9 @@ typedef struct UnityXRNativePlane
 Cast the `void* planePtr` to an [XrSpace](https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#spaces) handle in C++ using the following example code:
 
 ```cpp
-// Marhshal the native plane data from the BoundedPlane.nativePtr in C#
+// Marshal the native plane data from the BoundedPlane.nativePtr in C#
 UnityXRNativePlane nativePlaneData;
-XrSpace* planeXrSpaceHandle = reinterpret_cast<XrSpace*>(&nativePlaneData.planePtr);
+XrSpace* planeXrSpaceHandle = static_cast<XrSpace*>(nativePlaneData.planePtr);
 ```
 
 To learn more about native pointers and their usage, refer to [Extending AR Foundation](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@6.0/manual/architecture/extensions.html).

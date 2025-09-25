@@ -5,6 +5,15 @@ uid: meta-openxr-architecture
 
 Unity OpenXR: Meta functions as both an OpenXR Feature Group and an AR Foundation [provider plug-in](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@6.0?subfolder=/manual/architecture/subsystems.html).
 
+## About OpenXR
+
+OpenXR is an open-source standard that defines an interface between XR apps and platform runtimes. The OpenXR specification contains two categories of features:
+
+* Core features: present on every platform
+* Extensions: optional and might not be implemented by some platforms.
+
+Unity's [OpenXR Plug-in](https://docs.unity3d.com/Packages/com.unity.xr.openxr@1.9) integrates core features, while this package integrates Meta-specific vendor extensions.
+
 ## OpenXR extensions
 
 Meta's OpenXR extensions can be found in the Khronos Group [OpenXR Specification](https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html).

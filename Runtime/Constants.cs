@@ -24,8 +24,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             internal const string k_DisplayUtilitiesUrl = k_DocumentationFeatureBaseUrl + "display-utilities.html";
             internal const string k_AnchorsUrl = k_DocumentationFeatureBaseUrl + "anchors.html";
             internal const string k_CameraUrl = k_DocumentationFeatureBaseUrl + "camera.html";
-            internal const string k_PlanesUrl = k_DocumentationFeatureBaseUrl + "plane-detection.html";
-            internal const string k_BoundingBoxUrl = k_DocumentationFeatureBaseUrl + "bounding-box-detection.html";
+            internal const string k_PlanesUrl = k_DocumentationFeatureBaseUrl + "planes.html";
+            internal const string k_BoundingBoxUrl = k_DocumentationFeatureBaseUrl + "bounding-boxes.html";
             internal const string k_RaycastsUrl = k_DocumentationFeatureBaseUrl + "raycasts.html";
             internal const string k_SessionUrl = k_DocumentationFeatureBaseUrl + "session.html";
             internal const string k_MeshUrl = k_DocumentationFeatureBaseUrl + "meshing.html";

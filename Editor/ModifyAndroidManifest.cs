@@ -7,23 +7,17 @@ using Unity.XR.Management.AndroidManifest.Editor;
 
 namespace UnityEditor.XR.OpenXR.Features.Meta
 {
-    internal class ModifyAndroidManifestMeta : OpenXRFeatureBuildHooks
+    class ModifyAndroidManifestMeta : OpenXRFeatureBuildHooks
     {
         public override int callbackOrder => 1;
 
         public override Type featureType => typeof(ARSessionFeature);
 
-        protected override void OnPreprocessBuildExt(BuildReport report)
-        {
-        }
+        protected override void OnPreprocessBuildExt(BuildReport report) { }
 
-        protected override void OnPostGenerateGradleAndroidProjectExt(string path)
-        {
-        }
+        protected override void OnPostGenerateGradleAndroidProjectExt(string path) { }
 
-        protected override void OnPostprocessBuildExt(BuildReport report)
-        {
-        }
+        protected override void OnPostprocessBuildExt(BuildReport report) { }
 
         protected override ManifestRequirement ProvideManifestRequirementExt()
         {
@@ -62,7 +56,11 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
             }
 
             var arPlaneFeature = androidOpenXRSettings.GetFeature<ARPlaneFeature>();
-            if (arPlaneFeature != null && arPlaneFeature.enabled)
+            var arBoundingBoxFeature = androidOpenXRSettings.GetFeature<ARBoundingBoxFeature>();
+            var arMeshFeature = androidOpenXRSettings.GetFeature<ARMeshFeature>();
+            if ((arPlaneFeature != null && arPlaneFeature.enabled) ||
+                (arBoundingBoxFeature != null && arBoundingBoxFeature.enabled) ||
+                arMeshFeature != null && arMeshFeature.enabled)
             {
                 elementsToAdd.Add(
                     new ManifestElement()
