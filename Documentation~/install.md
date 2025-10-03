@@ -11,9 +11,9 @@ To use Unity OpenXR: Meta 2.3, your project must meet the following requirements
 
 * Unity 6 (6000.0 or newer)
 * [Android Build Support](xref:um-android-install-dependencies) module
-* AR Foundation 6.3.0-pre.1 or newer
-* OpenXR Plug-in 1.15.0 or newer
-* XR Composition Layers 2.1.0 or newer
+* AR Foundation 6.3.0 or newer
+* OpenXR Plug-in 1.15.1 or newer
+* XR Composition Layers 2.1.1 or newer
 
 The Package Manager automatically installs required package dependencies if you don't already have them installed.
 

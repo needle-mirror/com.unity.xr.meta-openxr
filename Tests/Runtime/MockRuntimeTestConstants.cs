@@ -1,6 +1,6 @@
 namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
 {
-    internal class TestConstants
+    class TestConstants
     {
         internal const string k_XrFbSpatialEntityExtName = "XR_FB_spatial_entity";
         internal const string k_XrFbSceneExtName = "XR_FB_scene";

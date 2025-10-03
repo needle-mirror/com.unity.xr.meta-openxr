@@ -50,16 +50,20 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             var requestId = new SerializableGuid(Guid.NewGuid());
             s_PendingCompletionSourcesByRequestId.Add(requestId, completionSource);
 
-            bool doesProviderExist = NativeApi.TryShareAnchorsAsync(
+            var success = NativeApi.TryShareAnchorsAsync(
                 requestId,
                 (TrackableId*)anchorIds.GetUnsafePtr(),
                 (uint)anchorIds.Length,
                 groupId,
                 s_SingleShareCompletedCallback);
 
-            if (!doesProviderExist)
-                return AwaitableUtils<XRResultStatus>.FromResult(
+            if (!success)
+            {
+                s_PendingCompletionSourcesByRequestId.Remove(requestId);
+                awaitable = AwaitableUtils<XRResultStatus>.FromResult(
                     completionSource, new XRResultStatus(StatusCode.ProviderUninitialized));
+                s_CompletionSourcePool.Release(completionSource);
+            }
 
             return awaitable;
         }
@@ -82,7 +86,6 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             var result = shareResult.resultStatus;
             completionSource.SetResult(result);
             completionSource.Reset();
-
             s_CompletionSourcePool.Release(completionSource);
         }
     }

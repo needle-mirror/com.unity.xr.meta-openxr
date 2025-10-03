@@ -1,6 +1,6 @@
 namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
 {
-    internal class Constants
+    class Constants
     {
         /// <summary>
         /// The size of the native XrEventDataBuffer struct that holds all event types.

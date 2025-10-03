@@ -4,20 +4,23 @@ using System.Runtime.InteropServices;
 using AOT;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using UnityEngine.Assertions;
 using UnityEngine.Pool;
 using UnityEngine.XR.ARSubsystems;
+using static UnityEngine.XR.ARSubsystems.XRResultStatus;
+using static UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRAnchorSubsystem;
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
     static class BatchSaveAnchors
     {
-        struct SaveRequest
+        struct SaveOperation
         {
             public AwaitableCompletionSource<NativeArray<XRSaveAnchorResult>> completionSource;
             public Allocator allocator;
         }
 
-        static readonly Dictionary<SerializableGuid, SaveRequest> s_PendingRequestsByRequestId = new();
+        static readonly Dictionary<SerializableGuid, SaveOperation> s_PendingOpsByRequestId = new();
 
         static readonly ObjectPool<AwaitableCompletionSource<NativeArray<XRSaveAnchorResult>>> s_CompletionSourcePool =
             ObjectPoolCreateUtil.Create<AwaitableCompletionSource<NativeArray<XRSaveAnchorResult>>>(defaultCapacity: 2);
@@ -25,102 +28,81 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         unsafe delegate void BatchSaveAsyncDelegate(
             SerializableGuid requestId, void* resultsPtr, int sizeOfResult, int numResults);
 
-        static readonly unsafe IntPtr s_BatchSaveAsyncCallback =
+        static readonly unsafe IntPtr s_CompletedCallback =
             Marshal.GetFunctionPointerForDelegate((BatchSaveAsyncDelegate)OnBatchSaveAsyncComplete);
 
         internal static void CancelAllRequests()
         {
-            foreach (var saveRequest in s_PendingRequestsByRequestId.Values)
+            foreach (var operation in s_PendingOpsByRequestId.Values)
             {
-                var completionSource = saveRequest.completionSource;
-                completionSource.SetCanceled();
-                completionSource.Reset();
-                s_CompletionSourcePool.Release(completionSource);
+                operation.completionSource.SetCanceled();
+                operation.completionSource.Reset();
+                s_CompletionSourcePool.Release(operation.completionSource);
             }
-            s_PendingRequestsByRequestId.Clear();
+            s_PendingOpsByRequestId.Clear();
         }
 
-        internal static Awaitable<NativeArray<XRSaveAnchorResult>> TrySaveAnchorsAsync(
+        internal static unsafe Awaitable<NativeArray<XRSaveAnchorResult>> TrySaveAnchorsAsync(
             NativeArray<TrackableId> anchorIds, Allocator allocator)
         {
-            if (!anchorIds.IsCreated)
-                throw new ArgumentException(nameof(anchorIds));
+            var completionSource = s_CompletionSourcePool.Get();
+            var awaitable = completionSource.Awaitable;
 
             if (anchorIds.Length == 0)
-                return default;
+            {
+                awaitable = AwaitableUtils<NativeArray<XRSaveAnchorResult>>.FromResult(
+                    completionSource, new NativeArray<XRSaveAnchorResult>(0, allocator));
 
-            var completionSource = s_CompletionSourcePool.Get();
-            var saveRequest = new SaveRequest
+                s_CompletionSourcePool.Release(completionSource);
+                return awaitable;
+            }
+
+            var operation = new SaveOperation
             {
                 completionSource = completionSource,
                 allocator = allocator,
             };
 
             var requestId = new SerializableGuid(Guid.NewGuid());
-            s_PendingRequestsByRequestId.Add(requestId, saveRequest);
+            s_PendingOpsByRequestId.Add(requestId, operation);
 
-            var synchronousResultStatus = new XRResultStatus();
-            unsafe
-            {
-                NativeApi.TrySaveAnchorsAsync(
-                    requestId,
-                    anchorIds.GetUnsafePtr(),
-                    (uint)anchorIds.Length,
-                    s_BatchSaveAsyncCallback,
-                    ref synchronousResultStatus);
-            }
+            // only fails if provider isn't initialized
+            var success = NativeApi.TrySaveAnchorsAsync(
+                requestId, anchorIds.GetUnsafePtr(), (uint)anchorIds.Length, s_CompletedCallback);
 
-            if (synchronousResultStatus.IsError())
+            if (!success)
             {
-                var failedSaveResults = new NativeArray<XRSaveAnchorResult>(anchorIds.Length, allocator);
-                for (var i = 0; i < anchorIds.Length; i += 1)
+                s_PendingOpsByRequestId.Remove(requestId);
+                var results = new NativeArray<XRSaveAnchorResult>(anchorIds.Length, allocator);
+                for (var i = 0; i < anchorIds.Length; ++i)
                 {
-                    var failedSaveResult = new XRSaveAnchorResult
-                    {
-                        resultStatus = synchronousResultStatus,
-                        trackableId = anchorIds[i],
-                        savedAnchorGuid = default,
-                    };
-
-                    failedSaveResults[i] = failedSaveResult;
+                    results[i] = new XRSaveAnchorResult(
+                        new XRResultStatus(StatusCode.ProviderUninitialized), anchorIds[i], default);
                 }
 
-                s_PendingRequestsByRequestId.Remove(requestId);
-                return AwaitableUtils<NativeArray<XRSaveAnchorResult>>.FromResult(completionSource, failedSaveResults);
+                awaitable = AwaitableUtils<NativeArray<XRSaveAnchorResult>>.FromResult(completionSource, results);
+                s_CompletionSourcePool.Release(completionSource);
             }
 
-            return completionSource.Awaitable;
+            return awaitable;
         }
 
         [MonoPInvokeCallback(typeof(BatchSaveAsyncDelegate))]
         static unsafe void OnBatchSaveAsyncComplete(
             SerializableGuid requestId, void* resultsPtr, int sizeOfResult, int numResults)
         {
-            if (!s_PendingRequestsByRequestId.Remove(requestId, out var saveRequest))
-            {
-                Debug.LogError($"An unknown error occurred during a system callback for {nameof(TrySaveAnchorsAsync)}.");
-                return;
-            }
+            Assert.IsTrue(s_PendingOpsByRequestId.ContainsKey(requestId));
+            s_PendingOpsByRequestId.Remove(requestId, out var operation);
+
+            Assert.IsTrue(resultsPtr != null);
+            Assert.IsTrue(sizeOfResult > 0);
 
             var saveResults = NativeCopyUtility.PtrToNativeArrayWithDefault(
-                XRSaveAnchorResult.defaultValue, resultsPtr, sizeOfResult, numResults, saveRequest.allocator);
+                XRSaveAnchorResult.defaultValue, resultsPtr, sizeOfResult, numResults, operation.allocator);
 
-            var completionSource = saveRequest.completionSource;
-            completionSource.SetResult(saveResults);
-            completionSource.Reset();
-            s_CompletionSourcePool.Release(completionSource);
-        }
-
-        static unsafe class NativeApi
-        {
-            // TrySaveAnchorsAsync shared with SingleSaveAnchor.cs
-            [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TrySaveAnchorsAsync")]
-            public static extern void TrySaveAnchorsAsync(
-                SerializableGuid requestId,
-                void* anchorIdsToSave,
-                uint anchorIdsToSaveCount,
-                IntPtr trySaveAnchorAsyncCallback,
-                ref XRResultStatus synchronousResultStatus);
+            operation.completionSource.SetResult(saveResults);
+            operation.completionSource.Reset();
+            s_CompletionSourcePool.Release(operation.completionSource);
         }
     }
 }

@@ -1,24 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Threading;
 using AOT;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using UnityEngine.Assertions;
 using UnityEngine.Pool;
 using UnityEngine.XR.ARSubsystems;
+using static UnityEngine.XR.ARSubsystems.XRResultStatus;
+using static UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRAnchorSubsystem;
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
     static class SingleEraseAnchor
     {
-        struct EraseRequest
-        {
-            public AwaitableCompletionSource<XRResultStatus> completionSource;
-            public NativeArray<SerializableGuid> anchorIdsToErase;
-        }
-
-        static readonly Dictionary<SerializableGuid, EraseRequest> s_PendingRequestsByRequestId = new();
+        static readonly Dictionary<SerializableGuid, AwaitableCompletionSource<XRResultStatus>>
+            s_PendingCompletionSourcesByRequestId = new();
 
         static readonly ObjectPool<AwaitableCompletionSource<XRResultStatus>> s_CompletionSourcePool =
             ObjectPoolCreateUtil.Create<AwaitableCompletionSource<XRResultStatus>>();
@@ -31,89 +28,61 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
         internal static void CancelAllRequests()
         {
-            foreach (var eraseRequest in s_PendingRequestsByRequestId.Values)
+            foreach (var completionSource in s_PendingCompletionSourcesByRequestId.Values)
             {
-                var completionSource = eraseRequest.completionSource;
                 completionSource.SetCanceled();
                 completionSource.Reset();
                 s_CompletionSourcePool.Release(completionSource);
             }
-            s_PendingRequestsByRequestId.Clear();
+            s_PendingCompletionSourcesByRequestId.Clear();
         }
 
-        internal static Awaitable<XRResultStatus> TryEraseAnchorAsync(
-            SerializableGuid savedAnchorGuid)
+        internal static unsafe Awaitable<XRResultStatus> TryEraseAnchorAsync(SerializableGuid savedAnchorGuid)
         {
             var completionSource = s_CompletionSourcePool.Get();
-            var eraseRequest = new EraseRequest
-            {
-                completionSource = completionSource,
-                anchorIdsToErase = new NativeArray<SerializableGuid>(1, Allocator.Persistent)
-                {
-                    [0] = savedAnchorGuid
-                }
-            };
+            var awaitable = completionSource.Awaitable;
 
             var requestId = new SerializableGuid(Guid.NewGuid());
-            s_PendingRequestsByRequestId.Add(requestId, eraseRequest);
+            s_PendingCompletionSourcesByRequestId.Add(requestId, completionSource);
 
-            var synchronousResultStatus = new XRResultStatus();
-            unsafe
+            var anchorIdsToErase = new NativeArray<SerializableGuid>(1, Allocator.Temp)
             {
-                NativeApi.TryEraseAnchorsAsync(
-                    requestId,
-                    eraseRequest.anchorIdsToErase.GetUnsafePtr(),
-                    (uint)eraseRequest.anchorIdsToErase.Length,
-                    s_SingleEraseAsyncCallback,
-                    ref synchronousResultStatus);
+                [0] = savedAnchorGuid
+            };
+
+            // only fails if provider isn't initialized
+            var success = NativeApi.TryEraseAnchorsAsync(
+                requestId, anchorIdsToErase.GetUnsafePtr(), 1, s_SingleEraseAsyncCallback);
+
+            if (!success)
+            {
+                s_PendingCompletionSourcesByRequestId.Remove(requestId);
+                awaitable = AwaitableUtils<XRResultStatus>.FromResult(
+                    completionSource, new XRResultStatus(StatusCode.ProviderUninitialized));
+                s_CompletionSourcePool.Release(completionSource);
             }
 
-            if (synchronousResultStatus.IsError())
-            {
-                eraseRequest.anchorIdsToErase.Dispose();
-                s_PendingRequestsByRequestId.Remove(requestId);
-                return AwaitableUtils<XRResultStatus>.FromResult(completionSource, synchronousResultStatus);
-            }
-
-            return completionSource.Awaitable;
+            return awaitable;
         }
 
         [MonoPInvokeCallback(typeof(SingleEraseAsyncDelegate))]
         static unsafe void OnSingleEraseAsyncComplete(
             SerializableGuid requestId, void* resultsPtr, int sizeOfResult, int numResults)
         {
-            if (!s_PendingRequestsByRequestId.Remove(requestId, out var eraseRequest))
-            {
-                Debug.LogError($"An unknown error occurred during a system callback for {nameof(TryEraseAnchorAsync)}.");
-                return;
-            }
+            Assert.IsTrue(s_PendingCompletionSourcesByRequestId.ContainsKey(requestId));
+            s_PendingCompletionSourcesByRequestId.Remove(requestId, out var completionSource);
+
+            Assert.IsTrue(resultsPtr != null);
+            Assert.IsTrue(sizeOfResult > 0);
+            Assert.AreEqual(numResults, 1);
 
             var eraseResult = XREraseAnchorResult.defaultValue;
-            if (resultsPtr != null)
-                UnsafeUtility.MemCpyStride(
-                    &eraseResult, sizeof(XREraseAnchorResult), resultsPtr, sizeOfResult, sizeOfResult, numResults);
-            else
-                Debug.LogError(
-                    $"An unknown error occurred when retrieving data for anchor {eraseRequest.anchorIdsToErase[0].ToString()}.");
+            UnsafeUtility.MemCpyStride(
+                &eraseResult, sizeof(XREraseAnchorResult), resultsPtr, sizeOfResult, sizeOfResult, numResults);
 
-            eraseRequest.anchorIdsToErase.Dispose();
-
-            var completionSource = eraseRequest.completionSource;
             completionSource.SetResult(new XRResultStatus(eraseResult.resultStatus));
             completionSource.Reset();
             s_CompletionSourcePool.Release(completionSource);
-        }
-
-        static unsafe class NativeApi
-        {
-            // TryEraseAnchorsAsync shared with BatchEraseAnchors.cs
-            [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TryEraseAnchorsAsync")]
-            public static extern void TryEraseAnchorsAsync(
-                SerializableGuid requestId,
-                void* anchorIdsToErase,
-                uint anchorIdsToEraseCount,
-                IntPtr tryEraseAnchorAsyncCallback,
-                ref XRResultStatus synchronousResultStatus);
         }
     }
 }

@@ -1,4 +1,4 @@
-#if !UNITY_STANDALONE_LINUX
+#if OPENXR_PLUGIN_1_16_0_PRE_2_OR_NEWER
 using System;
 using System.Runtime.InteropServices;
 using NUnit.Framework;

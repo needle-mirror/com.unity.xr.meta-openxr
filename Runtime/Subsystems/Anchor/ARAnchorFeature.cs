@@ -83,8 +83,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         protected override void OnSubsystemCreate()
         {
             CreateSubsystem<XRAnchorSubsystemDescriptor, XRAnchorSubsystem>(
-                s_AnchorDescriptors,
-                MetaOpenXRAnchorSubsystem.k_SubsystemId);
+                s_AnchorDescriptors, MetaOpenXRAnchorSubsystem.k_SubsystemId);
         }
 
         /// <summary>

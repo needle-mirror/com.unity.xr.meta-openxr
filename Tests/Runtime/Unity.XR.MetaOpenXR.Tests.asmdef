@@ -25,6 +25,12 @@
     "defineConstraints": [
         "UNITY_INCLUDE_TESTS"
     ],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.xr.openxr",
+            "expression": "1.16.0-pre.2",
+            "define": "OPENXR_PLUGIN_1_16_0_PRE_2_OR_NEWER"
+        }
+    ],
     "noEngineReferences": false
 }

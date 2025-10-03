@@ -6,111 +6,109 @@ using Unity.Collections;
 using UnityEngine.Assertions;
 using UnityEngine.Pool;
 using UnityEngine.XR.ARSubsystems;
+using static UnityEngine.XR.ARSubsystems.XRResultStatus;
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
     static class LoadAllSharedAnchors
     {
-        struct LoadRequest
+        struct LoadOperation
         {
-            public AwaitableCompletionSource<Result<NativeArray<XRAnchor>>> completionSource;
-            public Allocator allocator;
-            public Action<NativeArray<XRAnchor>> incrementalResultsCallback;
+            internal AwaitableCompletionSource<Result<NativeArray<XRAnchor>>> completionSource;
+            internal Allocator allocator;
+            internal Action<NativeArray<XRAnchor>> incrementalCallback;
         }
 
-        static readonly Dictionary<SerializableGuid, LoadRequest> s_RequestsByRequestId = new();
+        static readonly Dictionary<SerializableGuid, LoadOperation> s_PendingOpsByRequestId = new();
 
         static readonly ObjectPool<AwaitableCompletionSource<Result<NativeArray<XRAnchor>>>> s_CompletionSourcePool =
             ObjectPoolCreateUtil.Create<AwaitableCompletionSource<Result<NativeArray<XRAnchor>>>>(defaultCapacity: 2);
 
-        unsafe delegate void LoadAsyncDelegate(
-            SerializableGuid requestId, void* resultsPtr, int sizeOfResult, int numResults);
+        unsafe delegate void LoadCompletedDelegate(
+            SerializableGuid requestId,
+            XRResultStatus resultStatus,
+            void* resultsPtr,
+            int sizeOfResult,
+            int numResults);
 
-        static readonly unsafe IntPtr s_BatchLoadAsyncCallback =
-            Marshal.GetFunctionPointerForDelegate((LoadAsyncDelegate)OnBatchLoadAsyncComplete);
+        static readonly unsafe IntPtr s_CompletedCallback =
+            Marshal.GetFunctionPointerForDelegate((LoadCompletedDelegate)OnBatchLoadAsyncComplete);
 
         unsafe delegate void IncrementalResultsDelegate(
-            SerializableGuid requestId, void* resultsPtr, int sizeOfResult, int resultsCount);
+            SerializableGuid requestId, XRAnchor* resultsPtr, int sizeOfResult, int numResults);
 
-        static readonly unsafe IntPtr s_IncrementalLoadResultsCallback =
+        static readonly unsafe IntPtr s_IncrementalCallback =
             Marshal.GetFunctionPointerForDelegate((IncrementalResultsDelegate)OnIncrementalLoadResultsAvailable);
 
         internal static void CancelAllRequests()
         {
-            foreach (var loadRequest in s_RequestsByRequestId.Values)
+            foreach (var operation in s_PendingOpsByRequestId.Values)
             {
-                var completionSource = loadRequest.completionSource;
-                completionSource.SetCanceled();
-                completionSource.Reset();
-                s_CompletionSourcePool.Release(completionSource);
+                operation.completionSource.SetCanceled();
+                operation.completionSource.Reset();
+                s_CompletionSourcePool.Release(operation.completionSource);
             }
-            s_RequestsByRequestId.Clear();
+            s_PendingOpsByRequestId.Clear();
         }
 
         internal static Awaitable<Result<NativeArray<XRAnchor>>> TryLoadAllSharedAnchorsAsync(
-            SerializableGuid groupId, Allocator allocator, Action<NativeArray<XRAnchor>> incrementalResultsCallback)
+            SerializableGuid groupId, Allocator allocator, Action<NativeArray<XRAnchor>> incrementalCallback)
         {
             var completionSource = s_CompletionSourcePool.Get();
-            var loadRequest = new LoadRequest
+            var awaitable = completionSource.Awaitable;
+
+            var operation = new LoadOperation
             {
                 completionSource = completionSource,
                 allocator = allocator,
-                incrementalResultsCallback = incrementalResultsCallback,
+                incrementalCallback = incrementalCallback,
             };
 
             var requestId = new SerializableGuid(Guid.NewGuid());
-            s_RequestsByRequestId.Add(requestId, loadRequest);
+            s_PendingOpsByRequestId.Add(requestId, operation);
 
-            var synchronousResultStatus = new XRResultStatus();
-            NativeApi.TryLoadAllSharedAnchorsAsync(
-                requestId,
-                groupId,
-                s_IncrementalLoadResultsCallback,
-                s_BatchLoadAsyncCallback,
-                ref synchronousResultStatus);
-
-            if (synchronousResultStatus.IsError())
+            // only fails if provider isn't initialized
+            if (!NativeApi.TryLoadAllSharedAnchorsAsync(requestId, groupId, s_IncrementalCallback, s_CompletedCallback))
             {
-                var failedLoadResults = new NativeArray<XRAnchor>(0, allocator);
-
-                s_RequestsByRequestId.Remove(requestId);
+                s_PendingOpsByRequestId.Remove(requestId);
+                var emptyResults = new NativeArray<XRAnchor>(0, allocator);
                 var result = new Result<NativeArray<XRAnchor>>(
-                    new XRResultStatus(synchronousResultStatus), failedLoadResults);
+                    new XRResultStatus(StatusCode.ProviderUninitialized), emptyResults);
 
-                return AwaitableUtils<Result<NativeArray<XRAnchor>>>.FromResult(completionSource, result);
+                awaitable = AwaitableUtils<Result<NativeArray<XRAnchor>>>.FromResult(completionSource, result);
+                s_CompletionSourcePool.Release(completionSource);
             }
 
-            return completionSource.Awaitable;
+            return awaitable;
         }
 
         [MonoPInvokeCallback(typeof(IncrementalResultsDelegate))]
         static unsafe void OnIncrementalLoadResultsAvailable(
-            SerializableGuid requestId, void* resultsPtr, int sizeOfResult, int numResults)
+            SerializableGuid requestId, XRAnchor* resultsPtr, int sizeOfResult, int numResults)
         {
-            Assert.IsTrue(s_RequestsByRequestId.ContainsKey(requestId));
+            Assert.IsTrue(s_PendingOpsByRequestId.ContainsKey(requestId));
             Assert.IsTrue(resultsPtr != null);
             Assert.IsTrue(sizeOfResult > 0);
             Assert.IsTrue(numResults > 0);
 
-            var request = s_RequestsByRequestId[requestId];
-
-            if (request.incrementalResultsCallback == null)
+            var operation = s_PendingOpsByRequestId[requestId];
+            if (operation.incrementalCallback == null)
                 return;
 
             var results = NativeCopyUtility.PtrToNativeArrayWithDefault(
                 XRAnchor.defaultValue, resultsPtr, sizeOfResult, numResults, Allocator.Temp);
 
-            request.incrementalResultsCallback.Invoke(results);
+            operation.incrementalCallback.Invoke(results);
         }
 
-        [MonoPInvokeCallback(typeof(LoadAsyncDelegate))]
+        [MonoPInvokeCallback(typeof(LoadCompletedDelegate))]
         static unsafe void OnBatchLoadAsyncComplete(
-            SerializableGuid requestId, void* resultsPtr, int sizeOfResult, int numResults)
+            SerializableGuid requestId, XRResultStatus resultStatus, void* resultsPtr, int sizeOfResult, int numResults)
         {
-            Assert.IsTrue(s_RequestsByRequestId.ContainsKey(requestId));
+            Assert.IsTrue(s_PendingOpsByRequestId.ContainsKey(requestId));
             Assert.IsTrue(sizeOfResult > 0);
 
-            s_RequestsByRequestId.Remove(requestId, out var request);
+            s_PendingOpsByRequestId.Remove(requestId, out var operation);
 
             Result<NativeArray<XRAnchor>> result = default;
             if (resultsPtr == null)
@@ -121,27 +119,25 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             {
                 Assert.IsTrue(numResults > 0);
                 var results = NativeCopyUtility.PtrToNativeArrayWithDefault(
-                    XRAnchor.defaultValue, resultsPtr, sizeOfResult, numResults, request.allocator);
+                    XRAnchor.defaultValue, resultsPtr, sizeOfResult, numResults, operation.allocator);
 
-                result = new Result<NativeArray<XRAnchor>>(
-                    new XRResultStatus(XRResultStatus.StatusCode.UnqualifiedSuccess), results);
+                result = new Result<NativeArray<XRAnchor>>(resultStatus, results);
             }
 
-            var completionSource = request.completionSource;
-            completionSource.SetResult(result);
-            completionSource.Reset();
-            s_CompletionSourcePool.Release(completionSource);
+            operation.completionSource.SetResult(result);
+            operation.completionSource.Reset();
+            s_CompletionSourcePool.Release(operation.completionSource);
         }
 
         static class NativeApi
         {
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TryLoadAllSharedAnchorsAsync")]
-            public static extern void TryLoadAllSharedAnchorsAsync(
+            [return: MarshalAs(UnmanagedType.U1)]
+            internal static extern bool TryLoadAllSharedAnchorsAsync(
                 SerializableGuid requestId,
                 SerializableGuid groupId,
-                IntPtr incrementalResultsCallback,
-                IntPtr tryLoadSharedAnchorAsyncCallback,
-                ref XRResultStatus synchronousResultStatus);
+                IntPtr incrementalCallback,
+                IntPtr completedCallback);
         }
     }
 }

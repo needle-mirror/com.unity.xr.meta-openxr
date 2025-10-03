@@ -4,124 +4,105 @@ using System.Runtime.InteropServices;
 using AOT;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using UnityEngine.Assertions;
 using UnityEngine.Pool;
 using UnityEngine.XR.ARSubsystems;
+using static UnityEngine.XR.ARSubsystems.XRResultStatus;
+using static UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRAnchorSubsystem;
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
     static class BatchEraseAnchors
     {
-        struct EraseRequest
+        struct EraseOperation
         {
-            public AwaitableCompletionSource<NativeArray<XREraseAnchorResult>> completionSource;
-            public Allocator allocator;
+            internal AwaitableCompletionSource<NativeArray<XREraseAnchorResult>> completionSource;
+            internal Allocator allocator;
         }
 
-        static readonly Dictionary<SerializableGuid, EraseRequest> s_PendingRequestsByRequestId = new();
+        static readonly Dictionary<SerializableGuid, EraseOperation> s_PendingOpsByRequestId = new();
 
         static readonly ObjectPool<AwaitableCompletionSource<NativeArray<XREraseAnchorResult>>> s_CompletionSourcePool =
             ObjectPoolCreateUtil.Create<AwaitableCompletionSource<NativeArray<XREraseAnchorResult>>>(defaultCapacity: 2);
 
         unsafe delegate void BatchEraseAsyncDelegate(
-            SerializableGuid requestId, void* saveAnchorResultsPtr, int sizeOfResult, int numResults);
+            SerializableGuid requestId, void* resultsPtr, int sizeOfResult, int numResults);
 
-        static readonly unsafe IntPtr s_BatchEraseAsyncCallback =
+        static readonly unsafe IntPtr s_CompletedCallback =
             Marshal.GetFunctionPointerForDelegate((BatchEraseAsyncDelegate)OnBatchEraseAsyncComplete);
 
         internal static void CancelAllRequests()
         {
-            foreach (var eraseRequest in s_PendingRequestsByRequestId.Values)
+            foreach (var operation in s_PendingOpsByRequestId.Values)
             {
-                var completionSource = eraseRequest.completionSource;
-                completionSource.SetCanceled();
-                completionSource.Reset();
-                s_CompletionSourcePool.Release(completionSource);
+                operation.completionSource.SetCanceled();
+                operation.completionSource.Reset();
+                s_CompletionSourcePool.Release(operation.completionSource);
             }
-            s_PendingRequestsByRequestId.Clear();
+            s_PendingOpsByRequestId.Clear();
         }
 
-        internal static Awaitable<NativeArray<XREraseAnchorResult>> TryEraseAnchorsAsync(
-            NativeArray<SerializableGuid> savedAnchorGuids,
-            Allocator allocator)
+        internal static unsafe Awaitable<NativeArray<XREraseAnchorResult>> TryEraseAnchorsAsync(
+            NativeArray<SerializableGuid> savedAnchorGuids, Allocator allocator)
         {
-            if (!savedAnchorGuids.IsCreated)
-                throw new ArgumentException(nameof(savedAnchorGuids));
+            var completionSource = s_CompletionSourcePool.Get();
+            var awaitable = completionSource.Awaitable;
 
             if (savedAnchorGuids.Length == 0)
-                return default;
+            {
+                awaitable = AwaitableUtils<NativeArray<XREraseAnchorResult>>.FromResult(
+                    completionSource, new NativeArray<XREraseAnchorResult>(0, allocator));
 
-            var completionSource = s_CompletionSourcePool.Get();
-            var eraseRequest = new EraseRequest
+                s_CompletionSourcePool.Release(completionSource);
+                return awaitable;
+            }
+
+            var eraseRequest = new EraseOperation
             {
                 completionSource = completionSource,
                 allocator = allocator,
             };
 
             var requestId = new SerializableGuid(Guid.NewGuid());
-            s_PendingRequestsByRequestId.Add(requestId, eraseRequest);
+            s_PendingOpsByRequestId.Add(requestId, eraseRequest);
 
-            var synchronousResultStatus = new XRResultStatus();
-            unsafe
+            // only fails if provider isn't initialized
+            var success = NativeApi.TryEraseAnchorsAsync(
+                requestId, savedAnchorGuids.GetUnsafePtr(), (uint)savedAnchorGuids.Length, s_CompletedCallback);
+
+            if (!success)
             {
-                NativeApi.TryEraseAnchorsAsync(
-                    requestId,
-                    savedAnchorGuids.GetUnsafePtr(),
-                    (uint)savedAnchorGuids.Length,
-                    s_BatchEraseAsyncCallback,
-                    ref synchronousResultStatus);
-            }
-
-            if (synchronousResultStatus.IsError())
-            {
-                var failedResults = new NativeArray<XREraseAnchorResult>(savedAnchorGuids.Length, allocator);
-
-                for (var i = 0; i < savedAnchorGuids.Length; i += 1)
+                s_PendingOpsByRequestId.Remove(requestId);
+                var results = new NativeArray<XREraseAnchorResult>(savedAnchorGuids.Length, allocator);
+                for (var i = 0; i < savedAnchorGuids.Length; ++i)
                 {
-                    var failedEraseResult = new XREraseAnchorResult
-                    {
-                        resultStatus = synchronousResultStatus,
-                        savedAnchorGuid = savedAnchorGuids[i],
-                    };
-
-                    failedResults[i] = failedEraseResult;
+                    results[i] = new XREraseAnchorResult(
+                        new XRResultStatus(StatusCode.ProviderUninitialized), savedAnchorGuids[i]);
                 }
 
-                s_PendingRequestsByRequestId.Remove(requestId);
-                return AwaitableUtils<NativeArray<XREraseAnchorResult>>.FromResult(completionSource, failedResults);
+                awaitable = AwaitableUtils<NativeArray<XREraseAnchorResult>>.FromResult(completionSource, results);
+                s_CompletionSourcePool.Release(completionSource);
             }
 
-            return completionSource.Awaitable;
+            return awaitable;
         }
 
         [MonoPInvokeCallback(typeof(BatchEraseAsyncDelegate))]
         static unsafe void OnBatchEraseAsyncComplete(
             SerializableGuid requestId, void* resultsPtr, int sizeOfResult, int numResults)
         {
-            if (!s_PendingRequestsByRequestId.Remove(requestId, out var eraseRequest))
-            {
-                Debug.LogError($"An unknown error occurred during a system callback for {nameof(TryEraseAnchorsAsync)}.");
-                return;
-            }
+            Assert.IsTrue(s_PendingOpsByRequestId.ContainsKey(requestId));
+            s_PendingOpsByRequestId.Remove(requestId, out var operation);
+
+            Assert.IsTrue(resultsPtr != null);
+            Assert.IsTrue(sizeOfResult > 0);
 
             var eraseResults = NativeCopyUtility.PtrToNativeArrayWithDefault(
-                XREraseAnchorResult.defaultValue, resultsPtr, sizeOfResult, numResults, eraseRequest.allocator);
+                XREraseAnchorResult.defaultValue, resultsPtr, sizeOfResult, numResults, operation.allocator);
 
-            var completionSource = eraseRequest.completionSource;
-            completionSource.SetResult(eraseResults);
-            completionSource.Reset();
-            s_CompletionSourcePool.Release(completionSource);
-        }
-
-        static unsafe class NativeApi
-        {
-            // TryEraseAnchorsAsync shared with SingleEraseAnchor.cs
-            [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TryEraseAnchorsAsync")]
-            public static extern void TryEraseAnchorsAsync(
-                SerializableGuid requestId,
-                void* anchorIdsToErase,
-                uint anchorIdsToEraseCount,
-                IntPtr tryEraseAnchorAsyncCallback,
-                ref XRResultStatus synchronousResultStatus);
+            operation.completionSource.SetResult(eraseResults);
+            operation.completionSource.Reset();
+            s_CompletionSourcePool.Release(operation.completionSource);
         }
     }
 }

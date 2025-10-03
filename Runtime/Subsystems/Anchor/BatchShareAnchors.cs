@@ -4,39 +4,23 @@ using System.Runtime.InteropServices;
 using AOT;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using UnityEngine.Assertions;
 using UnityEngine.Pool;
 using UnityEngine.XR.ARSubsystems;
 using static UnityEngine.XR.ARSubsystems.XRResultStatus;
 using static UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRAnchorSubsystem;
-using Assert = UnityEngine.Assertions.Assert;
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
     static class BatchShareAnchors
     {
-        class BatchShareOperation : IReleasable
+        struct ShareOperation
         {
             internal AwaitableCompletionSource<NativeArray<XRShareAnchorResult>> completionSource;
             internal Allocator allocator;
-            internal int numExpectedResults;
-
-            public BatchShareOperation()
-            {
-                Release();
-            }
-
-            public void Release()
-            {
-                completionSource = null;
-                allocator = Allocator.None;
-                numExpectedResults = 0;
-            }
         }
 
-        static readonly ObjectPool<BatchShareOperation> s_OperationPool =
-            ObjectPoolCreateUtil.CreateWithReleaseTrigger<BatchShareOperation>(defaultCapacity: 2);
-
-        static readonly Dictionary<SerializableGuid, BatchShareOperation> s_PendingOpsByRequestId = new();
+        static readonly Dictionary<SerializableGuid, ShareOperation> s_PendingOpsByRequestId = new();
 
         static readonly ObjectPool<AwaitableCompletionSource<NativeArray<XRShareAnchorResult>>> s_CompletionSourcePool =
             ObjectPoolCreateUtil.Create<AwaitableCompletionSource<NativeArray<XRShareAnchorResult>>>();
@@ -44,18 +28,16 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         unsafe delegate void BatchShareCompletedDelegate(
             SerializableGuid requestId, XRShareAnchorResult* resultsPtr, int sizeOfResult, int numResults);
 
-        static readonly unsafe IntPtr s_BatchShareCompletedCallback =
+        static readonly unsafe IntPtr s_CompletedCallback =
             Marshal.GetFunctionPointerForDelegate((BatchShareCompletedDelegate)OnBatchShareAsyncComplete);
 
         internal static void CancelAllRequests()
         {
-            foreach (var op in s_PendingOpsByRequestId.Values)
+            foreach (var operation in s_PendingOpsByRequestId.Values)
             {
-                var completionSource = op.completionSource;
-                completionSource.SetCanceled();
-                completionSource.Reset();
-                s_CompletionSourcePool.Release(completionSource);
-                s_OperationPool.Release(op);
+                operation.completionSource.SetCanceled();
+                operation.completionSource.Reset();
+                s_CompletionSourcePool.Release(operation.completionSource);
             }
             s_PendingOpsByRequestId.Clear();
         }
@@ -75,41 +57,36 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 return awaitable;
             }
 
-            var operation = s_OperationPool.Get();
-            operation.completionSource = completionSource;
+            var operation = new ShareOperation
+            {
+                completionSource = completionSource,
+                allocator = allocator,
+            };
 
             var requestId = new SerializableGuid(Guid.NewGuid());
             s_PendingOpsByRequestId.Add(requestId, operation);
 
-            bool doesProviderExist = NativeApi.TryShareAnchorsAsync(
+            var success = NativeApi.TryShareAnchorsAsync(
                 requestId,
-                (TrackableId*)anchorIds.GetUnsafePtr(),
+                anchorIds.GetUnsafePtr(),
                 (uint)anchorIds.Length,
                 groupId,
-                s_BatchShareCompletedCallback);
+                s_CompletedCallback);
 
-            if (!doesProviderExist)
+            // only fails if provider isn't initialized
+            if (!success)
             {
                 s_PendingOpsByRequestId.Remove(requestId);
-                return FailWithProviderUninitialized(operation, anchorIds, allocator);
+                var results = new NativeArray<XRShareAnchorResult>(anchorIds.Length, allocator);
+                for (var i = 0; i < anchorIds.Length; ++i)
+                {
+                    results[i] = new XRShareAnchorResult(new XRResultStatus(StatusCode.ProviderUninitialized), anchorIds[i]);
+                }
+
+                awaitable = AwaitableUtils<NativeArray<XRShareAnchorResult>>.FromResult(completionSource, results);
+                s_CompletionSourcePool.Release(completionSource);
             }
 
-            return awaitable;
-        }
-
-        static Awaitable<NativeArray<XRShareAnchorResult>> FailWithProviderUninitialized(
-            BatchShareOperation operation, NativeArray<TrackableId> anchorIds, Allocator allocator)
-        {
-            var completionSource = operation.completionSource;
-            var results = new NativeArray<XRShareAnchorResult>(anchorIds.Length, allocator);
-            for (var i = 0; i < anchorIds.Length; ++i)
-            {
-                results[i] = new XRShareAnchorResult(new XRResultStatus(StatusCode.ProviderUninitialized), anchorIds[i]);
-            }
-
-            var awaitable = AwaitableUtils<NativeArray<XRShareAnchorResult>>.FromResult(completionSource, results);
-            s_CompletionSourcePool.Release(completionSource);
-            s_OperationPool.Release(operation);
             return awaitable;
         }
 
@@ -120,9 +97,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             Assert.IsTrue(s_PendingOpsByRequestId.ContainsKey(requestId));
             s_PendingOpsByRequestId.Remove(requestId, out var operation);
 
-            Assert.IsFalse(resultsPtr == null);
+            Assert.IsTrue(resultsPtr != null);
             Assert.IsTrue(sizeOfResult > 0);
-            Assert.IsTrue(operation.numExpectedResults == numResults);
 
             var results = NativeCopyUtility.PtrToNativeArrayWithDefault(
                 XRShareAnchorResult.defaultValue, resultsPtr, sizeOfResult, numResults, operation.allocator);
@@ -130,7 +106,6 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             operation.completionSource.SetResult(results);
             operation.completionSource.Reset();
             s_CompletionSourcePool.Release(operation.completionSource);
-            s_OperationPool.Release(operation);
         }
     }
 }

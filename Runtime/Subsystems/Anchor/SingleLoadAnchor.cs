@@ -4,20 +4,18 @@ using System.Runtime.InteropServices;
 using AOT;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using UnityEngine.Assertions;
 using UnityEngine.Pool;
 using UnityEngine.XR.ARSubsystems;
+using static UnityEngine.XR.ARSubsystems.XRResultStatus;
+using static UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRAnchorSubsystem;
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
     static class SingleLoadAnchor
     {
-        struct LoadRequest
-        {
-            public AwaitableCompletionSource<Result<XRAnchor>> completionSource;
-            public NativeArray<SerializableGuid> anchorIdsToLoad;
-        }
-
-        static readonly Dictionary<SerializableGuid, LoadRequest> s_PendingRequestsByRequestId = new();
+        static readonly Dictionary<SerializableGuid, AwaitableCompletionSource<Result<XRAnchor>>>
+            s_PendingCompletionSourcesByRequestId = new();
 
         static readonly ObjectPool<AwaitableCompletionSource<Result<XRAnchor>>> s_CompletionSourcePool =
             ObjectPoolCreateUtil.Create<AwaitableCompletionSource<Result<XRAnchor>>>();
@@ -30,91 +28,65 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
         internal static void CancelAllRequests()
         {
-            foreach (var loadRequest in s_PendingRequestsByRequestId.Values)
+            foreach (var completionSource in s_PendingCompletionSourcesByRequestId.Values)
             {
-                var completionSource = loadRequest.completionSource;
                 completionSource.SetCanceled();
                 completionSource.Reset();
                 s_CompletionSourcePool.Release(completionSource);
             }
-            s_PendingRequestsByRequestId.Clear();
+            s_PendingCompletionSourcesByRequestId.Clear();
         }
 
-        internal static Awaitable<Result<XRAnchor>> TryLoadAnchorAsync(SerializableGuid savedAnchorGuid)
+        internal static unsafe Awaitable<Result<XRAnchor>> TryLoadAnchorAsync(SerializableGuid savedAnchorGuid)
         {
             var completionSource = s_CompletionSourcePool.Get();
+            var awaitable = completionSource.Awaitable;
+
             var requestId = new SerializableGuid(Guid.NewGuid());
-            var loadRequest = new LoadRequest
+            s_PendingCompletionSourcesByRequestId.Add(requestId, completionSource);
+
+            var anchorIdsToLoad = new NativeArray<SerializableGuid>(1, Allocator.Temp)
             {
-                completionSource = completionSource,
-                anchorIdsToLoad = new NativeArray<SerializableGuid>(1, Allocator.Persistent)
-                {
-                    [0] = savedAnchorGuid
-                }
+                [0] = savedAnchorGuid
             };
 
-            s_PendingRequestsByRequestId.Add(requestId, loadRequest);
-            var synchronousResultStatus = new XRResultStatus();
+            // only fails if provider isn't initialized
+            var success = NativeApi.TryLoadAnchorsAsync(
+                requestId,
+                anchorIdsToLoad.GetUnsafePtr(),
+                (uint)anchorIdsToLoad.Length,
+                IntPtr.Zero,
+                s_SingleLoadAsyncCallback);
 
-            unsafe
+            if (!success)
             {
-                NativeApi.TryLoadAnchorsAsync(
-                    requestId,
-                    loadRequest.anchorIdsToLoad.GetUnsafePtr(),
-                    (uint)loadRequest.anchorIdsToLoad.Length,
-                    IntPtr.Zero,
-                    s_SingleLoadAsyncCallback,
-                    ref synchronousResultStatus);
+                s_PendingCompletionSourcesByRequestId.Remove(requestId);
+                awaitable = AwaitableUtils<Result<XRAnchor>>.FromResult(completionSource, new Result<XRAnchor>(
+                    new XRResultStatus(StatusCode.ProviderUninitialized), XRAnchor.defaultValue));
+                s_CompletionSourcePool.Release(completionSource);
             }
 
-            if (synchronousResultStatus.IsError())
-            {
-                loadRequest.anchorIdsToLoad.Dispose();
-                var result = new Result<XRAnchor>(synchronousResultStatus, XRAnchor.defaultValue);
-                s_PendingRequestsByRequestId.Remove(requestId);
-                return AwaitableUtils<Result<XRAnchor>>.FromResult(completionSource, result);
-            }
-
-            return completionSource.Awaitable;
+            return awaitable;
         }
 
         [MonoPInvokeCallback(typeof(SingleLoadAsyncDelegate))]
         static unsafe void OnSingleLoadAsyncComplete(
             SerializableGuid requestId, void* resultsPtr, int sizeOfResult, int numResults)
         {
-            if (!s_PendingRequestsByRequestId.Remove(requestId, out var loadRequest))
-            {
-                Debug.LogError($"An unknown error occurred during a system callback for {nameof(TryLoadAnchorAsync)}.");
-                return;
-            }
+            Assert.IsTrue(s_PendingCompletionSourcesByRequestId.ContainsKey(requestId));
+            s_PendingCompletionSourcesByRequestId.Remove(requestId, out var completionSource);
+
+            Assert.IsTrue(resultsPtr != null);
+            Assert.IsTrue(sizeOfResult > 0);
+            Assert.AreEqual(numResults, 1);
 
             var loadResult = XRLoadAnchorResult.defaultValue;
-            if (resultsPtr != null)
-                UnsafeUtility.MemCpyStride(
-                    &loadResult, sizeof(XRLoadAnchorResult), resultsPtr, sizeOfResult, sizeOfResult, numResults);
-            else
-                Debug.LogError(
-                    $"An unknown error occurred when retrieving data for anchor {loadRequest.anchorIdsToLoad[0].ToString()}.");
+            UnsafeUtility.MemCpyStride(
+                &loadResult, sizeof(XRLoadAnchorResult), resultsPtr, sizeOfResult, sizeOfResult, numResults);
 
-            loadRequest.anchorIdsToLoad.Dispose();
-
-            var completionSource = loadRequest.completionSource;
             completionSource.SetResult(new Result<XRAnchor>(loadResult.resultStatus, loadResult.xrAnchor));
             completionSource.Reset();
             s_CompletionSourcePool.Release(completionSource);
-        }
-
-        static unsafe class NativeApi
-        {
-            // TryLoadAnchorsAsync is also shared with BatchLoadAnchors.cs
-            [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TryLoadAnchorsAsync")]
-            public static extern void TryLoadAnchorsAsync(
-                SerializableGuid requestId,
-                void* anchorIdsToLoad,
-                uint anchorIdsToLoadCount,
-                IntPtr incrementalResultsCallback,
-                IntPtr tryLoadAnchorAsyncCallback,
-                ref XRResultStatus synchronousResultStatus);
         }
     }
 }

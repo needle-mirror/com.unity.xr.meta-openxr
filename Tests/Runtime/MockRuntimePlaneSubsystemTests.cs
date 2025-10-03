@@ -1,5 +1,5 @@
-#if !UNITY_STANDALONE_LINUX
 #if ENABLE_MOCK_RUNTIME_TESTS
+#if OPENXR_PLUGIN_1_16_0_PRE_2_OR_NEWER
 using System;
 using System.Runtime.InteropServices;
 using AOT;
@@ -547,5 +547,5 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
         }
     }
 }
-#endif// ENABLE_MOCK_RUNTIME_TESTS
-#endif// !UNITY_STANDALONE_LINUX
+#endif // OPENXR_PLUGIN_1_16_0_PRE_2_OR_NEWER
+#endif // ENABLE_MOCK_RUNTIME_TESTS

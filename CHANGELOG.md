@@ -8,6 +8,19 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2025-10-03
+
+### Changed
+
+- Changed the minimum AR Foundation dependency version from 6.3.0-pre.2 to 6.3.0, upgrading to a verified release version.
+- Changed the minimum XR Composition Layers dependency version from 2.1.0 to 2.1.1 to ensure that you receive necessary bug fixes.
+- Changed the minimum OpenXR Plug-in dependency version from 1.16.0-pre.1 to 1.15.1. Test code that depends on OpenXR Plug-in 1.16 is now conditionally compiled with a version define so we can depend on the verified 1.15 release.
+
+### Fixed
+
+- Fixed `MetaOpenXRAnchorSubsystem` so that `TryEraseAnchorsAsync`, `TryLoadAnchorsAsync`, and `TrySaveAnchorAsync` now correctly return a completed Awaitable if you pass them an input array of 0 anchors.
+- Fixed `MetaOpenXRAnchorSubsystem` so that `TryEraseAnchorsAsync`, `TryLoadAnchorsAsync`, and `TrySaveAnchorsAsync` now correctly complete their erase, load, or save operations, respectively, even if the OpenXR runtime fails to enable required components on one or more anchors.
+
 ## [2.3.0-pre.2] - 2025-09-25
 
 ### Changed
@@ -16,6 +29,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+- Fixed the `MetaOpenXRCameraSubsystem` so that it correctly destroys the `PassthroughLayerData` when it is stopped.
 - Fixed `MetaOpenXRPlaneSubsystem` so that it doesn't cause the app to unexpectedly quit if the subsystem is destroyed while hiding planes that don't match your chosen plane detection mode.
 - Fixed the MetaOpenXROcclusionSubsystem so that it destroys all native resources when stopped, reducing its resource consumption while not in use.
 
