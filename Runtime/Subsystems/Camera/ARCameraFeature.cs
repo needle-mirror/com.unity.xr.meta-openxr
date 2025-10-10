@@ -32,6 +32,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 #endif
     public class ARCameraFeature : MetaOpenXRFeature
     {
+#if UNITY_EDITOR
+        const AndroidSdkVersions k_CameraMinSdkVersion = AndroidSdkVersions.AndroidApiLevel32;
+#endif
+
         /// <summary>
         /// The feature id string. This is used to give the feature a well known id for reference.
         /// </summary>
@@ -166,6 +170,16 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                         }
                     },
                     error = false
+                },
+                new ValidationRule(this)
+                {
+                    message = $"The Meta Quest Camera Feature requires that you set the minimum Android 12L API level '{k_CameraMinSdkVersion}'.",
+                    checkPredicate = () =>
+                        targetGroup != BuildTargetGroup.Android || PlayerSettings.Android.minSdkVersion >= k_CameraMinSdkVersion,
+                    fixItAutomatic = true,
+                    fixItMessage = $"Open Project Settings > Player Settings > Android tab and increase the 'Minimum API Level' to '{k_CameraMinSdkVersion}'.",
+                    fixIt = () => PlayerSettings.Android.minSdkVersion = k_CameraMinSdkVersion,
+                    error = true
                 }
             };
 

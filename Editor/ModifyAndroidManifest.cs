@@ -35,6 +35,48 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
                         }
                     }
                 );
+                elementsToAdd.Add(
+                    new ManifestElement
+                    {
+                        ElementPath = new List<string> { "manifest", "uses-feature" },
+                        Attributes = new Dictionary<string, string>
+                        {
+                            { "name", "android.hardware.camera" },
+                            { "required", "false" },
+                        }
+                    }
+                );
+
+                elementsToAdd.Add(
+                    new ManifestElement
+                    {
+                        ElementPath = new List<string> { "manifest", "uses-permission" },
+                        Attributes = new Dictionary<string, string>
+                        {
+                            { "name", "com.oculus.permission.USE_PASSTHROUGH_CAMERA" },
+                        }
+                    }
+                );
+                elementsToAdd.Add(
+                    new ManifestElement
+                    {
+                        ElementPath = new List<string> { "manifest", "uses-permission" },
+                        Attributes = new Dictionary<string, string>
+                        {
+                            { "name", "horizonos.permission.HEADSET_CAMERA" },
+                        }
+                    }
+                );
+                elementsToAdd.Add(
+                    new ManifestElement
+                    {
+                        ElementPath = new List<string> { "manifest", "uses-permission" },
+                        Attributes = new Dictionary<string, string>
+                        {
+                            { "name", "android.permission.CAMERA" },
+                        }
+                    }
+                );
             }
 
             var arAnchorFeature = androidOpenXRSettings.GetFeature<ARAnchorFeature>();

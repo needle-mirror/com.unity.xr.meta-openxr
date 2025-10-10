@@ -63,4 +63,7 @@ Meta Passthrough does not require the [AR Camera Background component](xref:arfo
 
 ## Image capture
 
-This package does not support AR Foundation [Image capture](xref:arfoundation-image-capture).
+This package only supports AR Foundation [Image capture](xref:arfoundation-image-capture) for CPU images. Refer to AR Foundation's [Camera platform support](xref:arfoundation-camera-platform-support) documentation for which camera features are supported for this platform.
+
+> [!NOTE]
+> CPU image capture for Meta Quest requires a minimum Android API level `32`. You can set the **Minimum API Level** to **Android 12L (API level 32)** in your project's Player settings. Refer to [Android Player settings](xref:um-class-player-settings-android) for more information.
