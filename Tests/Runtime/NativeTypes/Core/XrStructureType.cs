@@ -75,5 +75,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
         /// Corresponds with XrSceneCaptureRequestCompleteFB
         /// </summary>
         XR_TYPE_SCENE_CAPTURE_REQUEST_COMPLETE_FB = 1000198001,
+
+        /// <summary>
+        /// Corresponds with XrRoomMeshMETA
+        /// </summary>
+        XR_TYPE_ROOM_MESH_META = 1000553002,
     }
 }

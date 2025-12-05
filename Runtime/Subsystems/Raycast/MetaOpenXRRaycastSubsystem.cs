@@ -22,6 +22,29 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             + " Don't enable the AR Raycast Manager component until permission is granted."
             + " Refer to the Unity OpenXR: Meta package documentation for more information.";
 
+        /// <summary>
+        /// Performs a raycast from an arbitrary ray against the environment.
+        /// Results are sorted by distance from the ray origin.
+        /// </summary>
+        /// <param name="ray">A ray in session space from which to raycast.</param>
+        /// <returns>A <c>Result</c> containing an <see cref="EnvironmentRaycastHit"/> if <see cref="Result{T}.status"/> is not an error.</returns>
+        public Result<EnvironmentRaycastHit> RaycastEnvironment(Ray ray)
+        {
+            return ((MetaOpenXRRaycastProvider)provider).RaycastEnvironment(ray);
+        }
+
+        /// <summary>
+        /// Performs a raycast from an arbitrary ray against the environment.
+        /// Results are sorted by distance from the ray origin.
+        /// </summary>
+        /// <param name="ray">A ray in session space from which to raycast.</param>
+        /// <param name="maxDistance">The maximum distance from the ray origin a hit can be detected.</param>
+        /// <returns>A <c>Result</c> containing an <see cref="EnvironmentRaycastHit"/> if <see cref="Result{T}.status"/> is not an error.</returns>
+        public Result<EnvironmentRaycastHit> RaycastEnvironment(Ray ray, float maxDistance)
+        {
+            return ((MetaOpenXRRaycastProvider)provider).RaycastEnvironment(ray, maxDistance);
+        }
+
         class MetaOpenXRRaycastProvider : Provider
         {
             CancellationTokenSource m_TokenSource;
@@ -53,6 +76,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                     m_PermissionDenied = false;
                     return result;
                 }
+
                 if (result.nativeStatusCode == XR_ERROR_PERMISSION_INSUFFICIENT)
                 {
                     Debug.LogError(k_ScenePermissionError);
@@ -84,7 +108,22 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 NativeApi.Destroy();
             }
 
-            public override NativeArray<XRRaycastHit> Raycast(XRRaycastHit defaultRaycastHit, Ray ray, TrackableType trackableTypeMask, Allocator allocator)
+            public override NativeArray<XRRaycastHit> Raycast(
+                XRRaycastHit defaultRaycastHit,
+                Ray ray,
+                TrackableType
+                trackableTypeMask,
+                Allocator allocator)
+            {
+                return Raycast(defaultRaycastHit, ray, trackableTypeMask, allocator, -1);
+            }
+
+            public override NativeArray<XRRaycastHit> Raycast(
+                XRRaycastHit defaultRaycastHit,
+                Ray ray,
+                TrackableType trackableTypeMask,
+                Allocator allocator,
+                float maxDistance)
             {
                 if (m_PermissionDenied)
                 {
@@ -92,14 +131,36 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                     return new NativeArray<XRRaycastHit>(0, allocator);
                 }
 
-                var hit = XRRaycastHit.defaultValue;
-                XRResultStatus resultStatus = NativeApi.Raycast(ray.origin, ray.direction, ref hit);
-                if (resultStatus.IsError() || hit.hitType == TrackableType.None)
+                if ((trackableTypeMask & TrackableType.Depth) == 0)
+                    return new NativeArray<XRRaycastHit>(0, allocator);
+
+                var hit = EnvironmentRaycastHit.defaultValue;
+                XRResultStatus resultStatus = NativeApi.Raycast(ray.origin, ray.direction, ref hit, maxDistance);
+                if (resultStatus.IsError() || !hit.IsHit())
                     return new NativeArray<XRRaycastHit>(0, allocator);
 
                 var toReturn = new NativeArray<XRRaycastHit>(1, allocator);
-                toReturn[0] = hit;
+                toReturn[0] = new XRRaycastHit(hit.hit.trackableId, hit.hit.pose, hit.hit.distance, hit.hit.hitType);
                 return toReturn;
+            }
+
+            public Result<EnvironmentRaycastHit> RaycastEnvironment(Ray ray)
+            {
+                return RaycastEnvironment(ray, -1);
+            }
+
+            public Result<EnvironmentRaycastHit> RaycastEnvironment(Ray ray, float maxDistance)
+            {
+                if (m_PermissionDenied)
+                {
+                    Debug.LogError(k_ScenePermissionError);
+                    return new Result<EnvironmentRaycastHit>(new XRResultStatus(StatusCode.ProviderNotStarted), EnvironmentRaycastHit.defaultValue);
+                }
+
+                var environmentHit = EnvironmentRaycastHit.defaultValue;
+                XRResultStatus resultStatus = NativeApi.Raycast(ray.origin, ray.direction, ref environmentHit, maxDistance);
+
+                return new Result<EnvironmentRaycastHit>(resultStatus, environmentHit);
             }
 
             async void WaitForRaycasterReady(CancellationToken cancelToken)
@@ -131,7 +192,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 internal static extern XRResultStatus Destroy();
 
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_Raycast_Raycast")]
-                internal static extern XRResultStatus Raycast(Vector3 origin, Vector3 direction, ref XRRaycastHit raycastHit);
+                internal static extern XRResultStatus Raycast(Vector3 origin, Vector3 direction, ref EnvironmentRaycastHit raycastHit, float maxDistance);
 
                 [return : MarshalAs(UnmanagedType.U1)]
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_Raycast_IsRaycasterAsyncReady")]

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -42,16 +43,39 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             k_XR_FB_scene + " " +
             k_XR_FB_spatial_entity + " " +
             k_XR_FB_spatial_entity_container + " " +
-            k_XR_META_spatial_entity_discovery;
+            k_XR_META_spatial_entity_discovery + " " +
+            k_XR_META_spatial_entity_semantic_label + " " +
+            k_XR_META_spatial_entity_room_mesh;
 
         static List<XRPlaneSubsystemDescriptor> s_PlaneDescriptors = new();
 
-        const PlaneProviderType m_PlaneProviderType = PlaneProviderType.XrFbScene;
+        [SerializeField]
+        [Tooltip("Plane provider type")]
+        PlaneProviderType m_PlaneProviderType = PlaneProviderType.XrFbScene;
 
         /// <summary>
-        /// Get the `PlaneProviderType` for this feature.
+        /// Get or set the `PlaneProviderType` for this feature.
+        /// Note that the value cannot be set after OpenXR is initialized.
+        /// `planeProviderType` is used during initialization of the OpenXR loader.
         /// </summary>
-        public PlaneProviderType planeProviderType => m_PlaneProviderType;
+        public PlaneProviderType planeProviderType
+        {
+            get => m_PlaneProviderType;
+            set
+            {
+                if (m_PlaneProviderType == value)
+                    return;
+
+                var loader = LoaderUtility.GetActiveLoader();
+                if (loader != null && loader is OpenXRLoader)
+                {
+                    Debug.LogError("ARPlaneFeature.planeProviderType cannot be changed while OpenXR is running");
+                    return;
+                }
+
+                m_PlaneProviderType = value;
+            }
+        }
 
         /// <summary>
         /// Called after `xrCreateInstance`. Override this method to validate that any necessary OpenXR extensions were
@@ -69,6 +93,13 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// <seealso href="xref:openxr-features#enabling-openxr-spec-extension-strings">Enabling OpenXR spec extension strings</seealso>
         protected override bool OnInstanceCreate(ulong xrInstance)
         {
+            if (m_PlaneProviderType == PlaneProviderType.XrMetaSpatialEntityRoomMesh
+                && !OpenXRRuntime.IsExtensionEnabled(k_XR_META_spatial_entity_room_mesh))
+            {
+                Debug.LogWarning($"Plane provider type {m_PlaneProviderType} unavailable. Default provider type will be used as a fallback.");
+                m_PlaneProviderType = PlaneProviderType.XrFbScene;
+            }
+
             return
                 OpenXRRuntime.IsExtensionEnabled(k_XR_FB_scene)
                 && OpenXRRuntime.IsExtensionEnabled(k_XR_FB_spatial_entity)

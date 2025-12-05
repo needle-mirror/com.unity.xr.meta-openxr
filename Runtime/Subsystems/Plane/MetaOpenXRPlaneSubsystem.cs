@@ -12,7 +12,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 {
     /// <summary>
     /// The Meta-OpenXR implementation of <see cref="XRPlaneSubsystem"/>, built with the OpenXR Meta Mobile SDK.
-    /// Planes are provided based on bounded2d components present in your
+    /// Planes are provided based on bounded2d components or room mesh components present in your
     /// [Scene Model](https://developer.oculus.com/documentation/native/android/openxr-scene-overview#scene-model).
     /// </summary>
     [Preserve]

@@ -50,5 +50,15 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
         /// Corresponds with 'XR_META_spatial_entity_group_sharing'
         /// </summary>
         internal const int XR_META_spatial_entity_group_sharing_SPEC_VERSION = 1;
+
+        /// <summary>
+        /// Corresponds with 'XR_META_spatial_entity_semantic_label'
+        /// </summary>
+        internal const uint XR_META_spatial_entity_semantic_label_SPEC_VERSION = 1;
+
+        /// <summary>
+        /// Corresponds with 'XR_META_spatial_entity_room_mesh'
+        /// </summary>
+        internal const uint XR_META_spatial_entity_room_mesh_SPEC_VERSION = 1;
     }
 }

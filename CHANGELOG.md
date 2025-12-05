@@ -8,6 +8,21 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2025-12-05
+
+### Added
+
+- Added provider-specific [Raycast methods](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRRaycastSubsystem.Raycast(UnityEngine.XR.OpenXR.Features.Meta.EnvironmentRaycastHit,UnityEngine.Ray,UnityEngine.XR.ARSubsystems.TrackableType,Unity.Collections.Allocator)) for getting information about the [EnvironmentRaycastHitStatus](xref:UnityEngine.XR.OpenXR.Features.Meta.EnvironmentRaycastHitStatus) along with the XRRaycastHit.
+
+### Changed
+
+- Changed the minimum dependency version of the XR Composition Layers package from 2.1.1 to 2.2.0, which fixes a compile error in Unity 6.4 due to the removal of URP compatibility mode in that Editor version.
+- Changed AR Foundation dependency version from 6.4.0-pre.1 to 6.4.0.
+
+### Fixed
+
+- Fixed the `MetaOpenXRCameraSubsystem` so that it destroys and recreates the passthrough composition layer when the subsystem is stopped and started within the same frame.
+
 ## [2.4.0-pre.1] - 2025-10-10
 
 ### Added

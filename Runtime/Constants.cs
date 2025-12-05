@@ -57,6 +57,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             internal const string k_XR_FB_spatial_entity_query = "XR_FB_spatial_entity_query";
             internal const string k_XR_META_colocation_discovery = "XR_META_colocation_discovery";
             internal const string k_XR_EXT_future = "XR_EXT_future";
+            internal const string k_XR_META_spatial_entity_semantic_label = "XR_META_spatial_entity_semantic_label";
+            internal const string k_XR_META_spatial_entity_room_mesh = "XR_META_spatial_entity_room_mesh";
         }
     }
 }

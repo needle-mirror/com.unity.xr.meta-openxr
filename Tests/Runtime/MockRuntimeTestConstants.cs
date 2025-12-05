@@ -17,5 +17,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
         internal const string k_XrGetSpaceBoundingBox2dFbFuncName = "xrGetSpaceBoundingBox2DFB";
         internal const string k_XrRetrieveSpaceDiscoveryResultsMetaFuncName = "xrRetrieveSpaceDiscoveryResultsMETA";
         internal const string k_XrGetSpaceBoundary2dFbFuncName = "xrGetSpaceBoundary2DFB";
+        internal const string k_XrGetSpaceSemanticLabelsFBFuncName = "xrGetSpaceSemanticLabelsFB";
+        internal const string k_XrMetaSpatialEntitySemanticLabelExtName = "XR_META_spatial_entity_semantic_label";
+        internal const string k_XrMetaSpatialEntityRoomMeshExtName = "XR_META_spatial_entity_room_mesh";
+        internal const string k_XrGetSpaceRoomMeshMETAFuncName = "xrGetSpaceRoomMeshMETA";
+        internal const string k_XrGetSpaceRoomMeshFaceIndicesMETAFuncName = "xrGetSpaceRoomMeshFaceIndicesMETA";
     }
 }
