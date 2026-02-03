@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.meta-openxr",
   "displayName": "Unity OpenXR Meta",
-  "version": "2.4.0",
+  "version": "2.5.0-pre.1",
   "unity": "6000.0",
   "description": "Enables you to build mixed reality apps for Meta Quest devices by implementing support for Meta's OpenXR extensions.",
   "keywords": [
@@ -20,21 +20,21 @@
   ],
   "dependencies": {
     "com.unity.xr.openxr": "1.15.1",
-    "com.unity.xr.arfoundation": "6.4.0",
-    "com.unity.xr.compositionlayers": "2.2.0",
+    "com.unity.xr.arfoundation": "6.5.0-pre.1",
+    "com.unity.xr.compositionlayers": "2.3.0",
     "com.unity.xr.management": "4.4.0",
     "com.unity.xr.core-utils": "2.5.1"
   },
   "_upm": {
-    "changelog": "### Added\n\n- Added provider-specific [Raycast methods](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRRaycastSubsystem.Raycast(UnityEngine.XR.OpenXR.Features.Meta.EnvironmentRaycastHit,UnityEngine.Ray,UnityEngine.XR.ARSubsystems.TrackableType,Unity.Collections.Allocator)) for getting information about the [EnvironmentRaycastHitStatus](xref:UnityEngine.XR.OpenXR.Features.Meta.EnvironmentRaycastHitStatus) along with the XRRaycastHit.\n\n### Changed\n\n- Changed the minimum dependency version of the XR Composition Layers package from 2.1.1 to 2.2.0, which fixes a compile error in Unity 6.4 due to the removal of URP compatibility mode in that Editor version.\n- Changed AR Foundation dependency version from 6.4.0-pre.1 to 6.4.0.\n\n### Fixed\n\n- Fixed the `MetaOpenXRCameraSubsystem` so that it destroys and recreates the passthrough composition layer when the subsystem is stopped and started within the same frame."
+    "changelog": "### Added\n\n- Added a setting to the AR Camera Feature that allows you to enable passthrough before the splash screen is displayed. Refer to [Passthrough pre-splash screen](xref:meta-openxr-camera#passthrough-pre-splash-screen) for details.\n\n### Changed\n\n- Changed the minimum XR Composition Layers dependency version from 2.2.0 to 2.3.0.\n-  Camera image-related user permissions are now only added to the Android manifest if the user opts in to use camera image functionality. Refer to [Image capture](xref:meta-openxr-camera#image-capture) for more information.\n- macOS binaries are now code signed.\n- Changed AR Foundation dependency version from 6.4.0 to 6.5.0-pre.1.\n\n### Fixed\n\n- Fixed usages of APIs in `MetaOpenXRAnchorSubsystem` that were deprecated in AR Foundation 6.4.0.\n- Fixed usages of APIs in `MetaOpenXRPlaneSubsystem` that were deprecated in AR Foundation 6.5.0.\n- Fixed the Meta Quest Planes feature so that the plane classification `InnerWallFace` is recognized correctly when using the room mesh provider type.\n- Fixed the session, camera, and raycast subsystems so that they are not stripped if you set your project's [managed code stripping](https://docs.unity3d.com/6000.3/Documentation/Manual/managed-code-stripping-configure.html) level to **High**.\n- Fixed an issue that could cause `MetaOpenXRRaycastSubsystem` to incorrectly ignore a ray cast distance limit.\n- Fixed an issue where plane geometry was sometimes incorrect when setting the [plane provider type](xref:meta-openxr-planes#plane-provider-type) to Xr Meta Spatial Entity Room Mesh."
   },
   "upmCi": {
-    "footprint": "0fb67d9d8aa1f31560f37759ac89d820afe23e94"
+    "footprint": "b4f19a3f87c7a6f7286da0ddb0982d99d8cd5c42"
   },
-  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.meta-openxr@2.4/manual/index.html",
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.meta-openxr@2.5/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/xr.sdk.meta-openxr.git",
     "type": "git",
-    "revision": "387dc480f70f2133c1da03df10ede1cdde5901d2"
+    "revision": "d994b86d791ba3294939a1ae49f0f09b609b31ad"
   }
 }

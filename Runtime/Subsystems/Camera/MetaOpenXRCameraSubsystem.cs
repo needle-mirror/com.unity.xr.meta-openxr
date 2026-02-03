@@ -10,6 +10,12 @@ using UnityEngine.XR.OpenXR.CompositionLayers;
 using UnityEngine.XR.OpenXR.NativeTypes.Meta;
 using UnityEngine.XR.OpenXR.NativeTypes;
 using Unity.XR.CoreUtils;
+using UnityEngine.Scripting;
+using UnityEngine.Rendering;
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+using UnityEngine.Android;
+#endif
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
@@ -17,9 +23,15 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// The Meta-OpenXR implementation of the <see cref="XRCameraSubsystem"/>.
     /// Do not create this directly. Use the <see cref="SubsystemManager"/> instead.
     /// </summary>
+    [Preserve]
     public sealed class MetaOpenXRCameraSubsystem : XRCameraSubsystem
     {
         internal const string k_SubsystemId = "Meta-Camera";
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+        const string k_HorizonCameraPermission = "horizonos.permission.HEADSET_CAMERA";
+#endif
+
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void RegisterDescriptor()
@@ -57,9 +69,50 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             XRCameraSubsystemDescriptor.Register(cameraSubsystemCinfo);
         }
 
+        /// <summary>
+        /// Attempts to acquire the texture descriptor for a camera GPU image as a native texture.
+        /// </summary>
+        /// <param name="descriptor">The descriptor to fill in with the texture information if successful.</param>
+        /// <returns><see langword="true"/> if the method successfully acquires the native texture descriptor. Otherwise, <see langword="false"/>.</returns>
+        public bool TryAcquireLatestGpuImage(out XRTextureDescriptor descriptor)
+        {
+            return ((MetaOpenXRProvider)provider).TryAcquireLatestGpuImage(out descriptor);
+        }
+
+        /// <summary>
+        /// Releases a previously successfully acquired native texture descriptor.
+        /// </summary>
+        /// <param name="descriptor">The texture descriptor that was returned by <see cref="TryAcquireLatestGpuImage"/>.</param>
+        public void ReleaseGpuImage(XRTextureDescriptor descriptor)
+        {
+            ((MetaOpenXRProvider)provider).ReleaseGpuImage(descriptor);
+        }
+
+        protected override void OnStart()
+        {
+            base.OnStart();
+        }
+
+        protected override void OnStop()
+        {
+            base.OnStop();
+        }
+
         class MetaOpenXRProvider : Provider
         {
-            bool m_IsInitialized;
+            enum CameraReadyState
+            {
+                Ready,
+                SupportNotRequested,
+                SubsystemNotStarted,
+                NoPermission,
+                PlatformError
+            }
+
+            CameraReadyState m_CameraReadyState = CameraReadyState.SubsystemNotStarted;
+
+            bool m_GpuImageProviderInitialized;
+            GpuImageHandles m_CurrentGpuImageHandles;
 
             protected override bool TryInitialize()
             {
@@ -76,6 +129,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             {
                 var layerHandler = new MetaOpenXRPassthroughLayer();
                 OpenXRLayerProvider.RegisterLayerHandler(typeof(PassthroughLayerData), layerHandler);
+                CompositionLayerManager.PassthroughLayerType = typeof(PassthroughLayerData);
             }
 
             /// <summary>
@@ -90,16 +144,43 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 defaultLayer.LayerData.BlendType = BlendType.Premultiply;
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-                m_IsInitialized = NativeApi.UnityMetaQuest_InitializeCamera();
+                var cameraFeature = OpenXRSettings.Instance.GetFeature<ARCameraFeature>();
+
+                if (!cameraFeature.cameraImageSupportEnabled)
+                {
+                    m_CameraReadyState = CameraReadyState.SupportNotRequested;
+                }
+                else if (!Permission.HasUserAuthorizedPermission(k_HorizonCameraPermission))
+                {
+                    m_CameraReadyState = CameraReadyState.NoPermission;
+                }
+                else if (!NativeApi.UnityMetaQuest_InitializeCamera())
+                {
+                    m_CameraReadyState = CameraReadyState.PlatformError;
+                }
+                else
+                {
+                    m_CameraReadyState = CameraReadyState.Ready;
+                }
+
 #endif//UNITY_ANDROID && !UNITY_EDITOR
             }
 
             public override void Stop()
             {
-                m_IsInitialized = false;
+                m_CameraReadyState = CameraReadyState.SubsystemNotStarted;
 
 #if UNITY_ANDROID && !UNITY_EDITOR
+                // Release any held GPU image handles before stopping
+                if (m_GpuImageProviderInitialized && m_CurrentGpuImageHandles.IsValid)
+                {
+                    MetaOpenXRGpuImageApi.ReleaseGpuHandles(m_CurrentGpuImageHandles);
+                    m_CurrentGpuImageHandles.Reset();
+                }
+
                 NativeApi.UnityMetaQuest_ReleaseCamera();
+                MetaOpenXRGpuImageApi.Release();
+                m_GpuImageProviderInitialized = false;
 #endif//UNITY_ANDROID && !UNITY_EDITOR
 
                 if (IsPassthroughLayerActive())
@@ -111,12 +192,18 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             /// </summary>
             /// <param name="cameraParams">The current Unity <c>Camera</c> parameters.</param>
             /// <param name="cameraFrame">The current camera frame returned by the method.</param>
-            /// <returns><see langword="true"/> if the method successfully got a frame. Otherwise, <see langword="false"/>.</returns>
+            /// <returns><`true`/> if the method successfully got a frame. Otherwise, <see langword="false"/>.</returns>
             public override bool TryGetFrame(XRCameraParams cameraParams, out XRCameraFrame cameraFrame)
             {
                 cameraFrame = default;
+
 #if UNITY_ANDROID && !UNITY_EDITOR
-                return m_IsInitialized && NativeApi.UnityMetaQuest_Camera_TryGetFrame(cameraParams, out cameraFrame);
+                if (m_CameraReadyState != CameraReadyState.Ready)
+                {
+                    LogCameraNotReadyWarning("TryGetFrame");
+                    return false;
+                }
+                return NativeApi.UnityMetaQuest_Camera_TryGetFrame(cameraParams, out cameraFrame);
 #else
                 return false;
 #endif//UNITY_ANDROID && !UNITY_EDITOR
@@ -126,13 +213,18 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             /// Get the camera intrinsics information.
             /// </summary>
             /// <param name="cameraIntrinsics">The camera intrinsics information returned from the method.</param>
-            /// <returns><see langword="true"/> if the method successfully gets the camera intrinsics information.
-            /// Otherwise, <see langword="false"/>.</returns>
+            /// <returns><`true`/> if the method successfully gets the camera intrinsics information.
+            /// Otherwise, <`false`/>.</returns>
             public override bool TryGetIntrinsics(out XRCameraIntrinsics cameraIntrinsics)
             {
                 cameraIntrinsics = default;
 #if UNITY_ANDROID && !UNITY_EDITOR
-                return m_IsInitialized && NativeApi.UnityMetaQuest_Camera_TryGetIntrinsics(out cameraIntrinsics);
+                if (m_CameraReadyState != CameraReadyState.Ready)
+                {
+                    LogCameraNotReadyWarning("TryGetIntrinsics");
+                    return false;
+                }
+                return NativeApi.UnityMetaQuest_Camera_TryGetIntrinsics(out cameraIntrinsics);
 #else
                 return false;
 #endif//UNITY_ANDROID && !UNITY_EDITOR
@@ -153,7 +245,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             /// <summary>
             /// Property to be implemented by the provider to query or set the current camera configuration.
             /// </summary>
-            /// <value>The current camera configuration, if it exists. Otherwise, <see langword="null"/>.</value>
+            /// <value>The current camera configuration, if it exists. Otherwise, <`null`/>.</value>
             /// <exception cref="System.NotSupportedException">Thrown when setting the current configuration if the
             /// implementation does not support camera configurations.</exception>
             public override XRCameraConfiguration? currentConfiguration
@@ -176,13 +268,106 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             /// Get the latest native camera image.
             /// </summary>
             /// <param name="cameraImageCinfo">The metadata required to construct a <see cref="XRCpuImage"/>.</param>
-            /// <returns><see langword="true"/> if the camera image is acquired. Otherwise, <see langword="false"/>.</returns>
+            /// <returns><`true`/> if the camera image is acquired. Otherwise, <`false`/>.</returns>
             /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera image.</exception>
             public override bool TryAcquireLatestCpuImage(out XRCpuImage.Cinfo cameraImageCinfo)
             {
                 cameraImageCinfo = default;
-                return m_IsInitialized && MetaOpenXRCpuImageApi.TryAcquireLatestImage(MetaOpenXRCpuImageApi.ImageType.Camera,
+
+                if (m_CameraReadyState != CameraReadyState.Ready)
+                {
+                    LogCameraNotReadyWarning("TryAcquireLatestCpuImage");
+                    return false;
+                }
+
+                return MetaOpenXRCpuImageApi.TryAcquireLatestImage(MetaOpenXRCpuImageApi.ImageType.Camera,
                     out cameraImageCinfo);
+            }
+
+            internal bool TryAcquireLatestGpuImage(out XRTextureDescriptor descriptor)
+            {
+                descriptor = default;
+#if !UNITY_ANDROID
+                return false;
+#endif
+
+                if (SystemInfo.graphicsDeviceType != GraphicsDeviceType.Vulkan)
+                {
+                    Debug.LogError("TryAcquireLatestGpuImage: API is only available if the graphics API is set to Vulkan");
+                    return false;
+                }
+
+                if (Application.platform != RuntimePlatform.Android)
+                {
+                    Debug.LogError("TryAcquireLatestGpuImage: API is only available if the runtime platform is Android");
+                    return false;
+                }
+
+                // Initialize GPU image provider for Vulkan texture support.
+                // We do not do this in the Start() method because we need to have
+                // the Vulkan support in place first
+#if UNITY_ANDROID && !UNITY_EDITOR
+                if (m_CameraReadyState != CameraReadyState.Ready)
+                {
+                    LogCameraNotReadyWarning("TryAcquireLatestGpuImage");
+                    return false;
+                }
+
+                if (!m_GpuImageProviderInitialized)
+                {
+                    m_GpuImageProviderInitialized = MetaOpenXRGpuImageApi.Initialize();
+                }
+#endif
+
+                if (m_GpuImageProviderInitialized)
+                {
+                    if (m_CurrentGpuImageHandles.IsValid)
+                    {
+                        Debug.LogError("TryAcquireLatestGpuImage: API is trying to acquire an image before releasing the previous one.");
+                        return false;
+                    }
+
+                    var success = MetaOpenXRGpuImageApi.TryAcquireLatestGpuHandles(out m_CurrentGpuImageHandles);
+                    if(!success)
+                    {
+                        return false;
+                    }
+
+                    descriptor = new XRTextureDescriptor(
+                        m_CurrentGpuImageHandles.m_VkImage,
+                        m_CurrentGpuImageHandles.m_Width,
+                        m_CurrentGpuImageHandles.m_Height,
+                        1,
+                        TextureFormat.RGBA32,
+                        0, // propertyNameId not needed as there is no use case for it
+                        0,
+                        XRTextureType.Texture2D
+                    );
+
+                    return success;
+                }
+
+                return false;
+            }
+
+            internal void ReleaseGpuImage(XRTextureDescriptor descriptor)
+            {
+                if (!m_GpuImageProviderInitialized || !m_CurrentGpuImageHandles.IsValid)
+                {
+                    return;
+                }
+
+                if (descriptor.nativeTexture != m_CurrentGpuImageHandles.m_VkImage)
+                {
+                    Debug.LogError("ReleaseGpuImage: The provided descriptor does not match the currently held GPU image." +
+                        "Please release the descriptor returned from the most recent TryAcquireLatestGpuImage call. " +
+                        "Otherwise, the current image handle will remain held and prevent future image acquisitions" +
+                        "until properly released or the subsystem stops.");
+                    return;
+                }
+
+                MetaOpenXRGpuImageApi.ReleaseGpuHandles(m_CurrentGpuImageHandles);
+                m_CurrentGpuImageHandles.Reset();
             }
 
             static bool IsPassthroughLayerActive()
@@ -247,6 +432,26 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 }
 
                 return null;
+            }
+
+            void LogCameraNotReadyWarning(string methodName)
+            {
+                switch (m_CameraReadyState)
+                {
+                    case CameraReadyState.SupportNotRequested:
+                        Debug.LogWarning($"{methodName} returned false because camera image support is not enabled. " +
+                            "Enable Camera Image Support in Project Settings > XR Plug-in Management > OpenXR > Meta Quest > Camera (Passthrough).");
+                        break;
+                    case CameraReadyState.NoPermission:
+                        Debug.LogWarning($"{methodName} returned false because andriod camera permissions have not been granted.");
+                        break;
+                    case CameraReadyState.PlatformError:
+                        Debug.LogWarning($"{methodName} returned false because camera initialization failed. This may indicate a platform or hardware issue.");
+                        break;
+                    case CameraReadyState.SubsystemNotStarted:
+                        Debug.LogWarning($"{methodName} returned false because the camera subsystem is not started.");
+                        break;
+                }
             }
         }
 

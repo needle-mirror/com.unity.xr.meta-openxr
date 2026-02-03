@@ -1,4 +1,3 @@
-#if ENABLE_MOCK_RUNTIME_TESTS
 #if OPENXR_PLUGIN_1_16_0_PRE_2_OR_NEWER
 using System;
 using System.Runtime.InteropServices;
@@ -20,13 +19,13 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
 
         static unsafe IntPtr s_SpatialEntityPropertiesSupported_MockCallback =
             Marshal.GetFunctionPointerForDelegate(
-                (GetSystemProperties_Delegate)SpatialEntityPropertiesSupported_MockCallback);
+                (GetSystemProperties_delegate)SpatialEntityPropertiesSupported_MockCallback);
 
         static unsafe IntPtr s_SceneCaptureRequestSuccess_MockCallback =
             Marshal.GetFunctionPointerForDelegate(
                 (RequestSceneCaptureFB_Delegate)RequestSceneCaptureFBSuccess_MockCallback);
 
-        [MonoPInvokeCallback(typeof(GetSystemProperties_Delegate))]
+        [MonoPInvokeCallback(typeof(GetSystemProperties_delegate))]
         static unsafe void SpatialEntityPropertiesSupported_MockCallback(XrSystemPropertiesBaseHeader* nativeSystemPropertiesStruct)
         {
             if (nativeSystemPropertiesStruct != null)
@@ -122,4 +121,3 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
     }
 }
 #endif // OPENXR_PLUGIN_1_16_0_PRE_2_OR_NEWER
-#endif // ENABLE_MOCK_RUNTIME_TESTS

@@ -14,4 +14,4 @@ Refer to the following topics to understand how to set up your AR Foundation pro
 | [Configure project settings](xref:meta-openxr-project-settings) | Configure your project settings for OpenXR Meta. |
 | [Optimize graphics settings](xref:meta-openxr-graphics-settings) | Understand the required and recommended graphics settings for OpenXR Meta.
 | [Set up your scene](xref:meta-openxr-scene-setup) | Learn how to set up your scene to handle input, Passthrough, and system permissions. |
-| [Meta Quest Link](xref:meta-openxr-link) | Configure Meta Quest Link. |
+| [Configure Meta Horizon Link](xref:meta-openxr-link) | Configure Meta Horizon Link for faster iteration. |

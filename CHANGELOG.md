@@ -8,11 +8,35 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.5.0-pre.1] - 2026-02-03
+
+### Added
+
+- Added a setting to the AR Camera Feature that allows you to enable passthrough before the splash screen is displayed. Refer to [Passthrough pre-splash screen](xref:meta-openxr-camera#passthrough-pre-splash-screen) for details.
+
+### Changed
+
+- Changed the minimum XR Composition Layers dependency version from 2.2.0 to 2.3.0.
+-  Camera image-related user permissions are now only added to the Android manifest if the user opts in to use camera image functionality. Refer to [Image capture](xref:meta-openxr-camera#image-capture) for more information.
+- macOS binaries are now code signed.
+- Changed AR Foundation dependency version from 6.4.0 to 6.5.0-pre.1.
+
+### Fixed
+
+- Fixed usages of APIs in `MetaOpenXRAnchorSubsystem` that were deprecated in AR Foundation 6.4.0.
+- Fixed usages of APIs in `MetaOpenXRPlaneSubsystem` that were deprecated in AR Foundation 6.5.0.
+- Fixed the Meta Quest Planes feature so that the plane classification `InnerWallFace` is recognized correctly when using the room mesh provider type.
+- Fixed the session, camera, and raycast subsystems so that they are not stripped if you set your project's [managed code stripping](https://docs.unity3d.com/6000.3/Documentation/Manual/managed-code-stripping-configure.html) level to **High**.
+- Fixed an issue that could cause `MetaOpenXRRaycastSubsystem` to incorrectly ignore a ray cast distance limit.
+- Fixed an issue where plane geometry was sometimes incorrect when setting the [plane provider type](xref:meta-openxr-planes#plane-provider-type) to Xr Meta Spatial Entity Room Mesh.
+
 ## [2.4.0] - 2025-12-05
 
 ### Added
 
+- Added support for GPU camera image capture via [MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImage](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImage(UnityEngine.XR.ARSubsystems.XRTextureDescriptor@)) and [MetaOpenXRCameraSubsystem.ReleaseGpuImage](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.ReleaseGpuImage(UnityEngine.XR.ARSubsystems.XRTextureDescriptor)). Refer to [Access images via GPU](xref:meta-openxr-camera#access-images-via-gpu) for more information.
 - Added provider-specific [Raycast methods](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRRaycastSubsystem.Raycast(UnityEngine.XR.OpenXR.Features.Meta.EnvironmentRaycastHit,UnityEngine.Ray,UnityEngine.XR.ARSubsystems.TrackableType,Unity.Collections.Allocator)) for getting information about the [EnvironmentRaycastHitStatus](xref:UnityEngine.XR.OpenXR.Features.Meta.EnvironmentRaycastHitStatus) along with the XRRaycastHit.
+- Added a selectable [plane provider type](xref:meta-openxr-planes#plane-provider-type) property to the Meta Quest Planes feature, which enables you to opt in to the new High Fidelity Scene capability in Horizon OS.
 
 ### Changed
 
@@ -287,4 +311,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.1.0] - 2023-04-04
 
-- This is the first release of Meta OpenXR Plugin <com.unity.xr.meta-openxr>.
+- This is the first release of Meta OpenXR Plugin `com.unity.xr.meta-openxr`.

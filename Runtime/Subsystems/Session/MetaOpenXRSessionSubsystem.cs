@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
@@ -8,6 +9,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// The Meta-OpenXR implementation of the <see cref="XRSessionSubsystem"/>.
     /// Do not create this directly. Use the <see cref="SubsystemManager"/> instead.
     /// </summary>
+    [Preserve]
     public sealed class MetaOpenXRSessionSubsystem : XRSessionSubsystem
     {
         internal const string k_SubsystemId = "Meta-Session";

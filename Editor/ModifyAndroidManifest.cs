@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.Build.Reporting;
 using UnityEngine.XR.OpenXR;
 using UnityEngine.XR.OpenXR.Features.Meta;
+using Unity.XR.CompositionLayers;
 using Unity.XR.Management.AndroidManifest.Editor;
 
 namespace UnityEditor.XR.OpenXR.Features.Meta
@@ -35,45 +36,65 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
                         }
                     }
                 );
-                elementsToAdd.Add(
-                    new ManifestElement
-                    {
-                        ElementPath = new List<string> { "manifest", "uses-feature" },
-                        Attributes = new Dictionary<string, string>
-                        {
-                            { "name", "android.hardware.camera" },
-                            { "required", "false" },
-                        }
-                    }
-                );
 
-                elementsToAdd.Add(
-                    new ManifestElement
-                    {
-                        ElementPath = new List<string> { "manifest", "uses-permission" },
-                        Attributes = new Dictionary<string, string>
+                if (arCameraFeature.cameraImageSupportEnabled)
+                {
+                    elementsToAdd.Add(
+                        new ManifestElement
                         {
-                            { "name", "com.oculus.permission.USE_PASSTHROUGH_CAMERA" },
+                            ElementPath = new List<string> { "manifest", "uses-feature" },
+                            Attributes = new Dictionary<string, string>
+                            {
+                                { "name", "android.hardware.camera" },
+                                { "required", "false" },
+                            }
                         }
-                    }
-                );
-                elementsToAdd.Add(
-                    new ManifestElement
-                    {
-                        ElementPath = new List<string> { "manifest", "uses-permission" },
-                        Attributes = new Dictionary<string, string>
+                    );
+
+                    elementsToAdd.Add(
+                        new ManifestElement
                         {
-                            { "name", "horizonos.permission.HEADSET_CAMERA" },
+                            ElementPath = new List<string> { "manifest", "uses-permission" },
+                            Attributes = new Dictionary<string, string>
+                            {
+                                { "name", "com.oculus.permission.USE_PASSTHROUGH_CAMERA" },
+                            }
                         }
-                    }
-                );
+                    );
+                    elementsToAdd.Add(
+                        new ManifestElement
+                        {
+                            ElementPath = new List<string> { "manifest", "uses-permission" },
+                            Attributes = new Dictionary<string, string>
+                            {
+                                { "name", "horizonos.permission.HEADSET_CAMERA" },
+                            }
+                        }
+                    );
+                    elementsToAdd.Add(
+                        new ManifestElement
+                        {
+                            ElementPath = new List<string> { "manifest", "uses-permission" },
+                            Attributes = new Dictionary<string, string>
+                            {
+                                { "name", "android.permission.CAMERA" },
+                            }
+                        }
+                    );
+                }
+            }
+
+            if ((arCameraFeature != null && arCameraFeature.enabled && arCameraFeature.passthroughPreSplashScreen)
+                || CompositionLayersRuntimeSettings.PassthroughSplashScreenEnabled)
+            {
                 elementsToAdd.Add(
                     new ManifestElement
                     {
-                        ElementPath = new List<string> { "manifest", "uses-permission" },
+                        ElementPath = new List<string> { "manifest", "application", "meta-data" },
                         Attributes = new Dictionary<string, string>
                         {
-                            { "name", "android.permission.CAMERA" },
+                                { "name", "com.oculus.ossplash.background" },
+                                { "value", "passthrough-contextual" },
                         }
                     }
                 );

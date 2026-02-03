@@ -6,7 +6,7 @@
   * [Configure project settings](xref:meta-openxr-project-settings)
   * [Optimize graphics settings](xref:meta-openxr-graphics-settings)
   * [Set up your scene](xref:meta-openxr-scene-setup)
-  * [Meta Quest Link](xref:meta-openxr-link)
+  * [Configure Meta Horizon Link](xref:meta-openxr-link)
 * [Architecture](xref:meta-openxr-architecture)
 * [Features](xref:meta-openxr-features)
   * [Display utilities](xref:meta-openxr-display-utilities)

@@ -22,5 +22,13 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
         internal const string k_XrMetaSpatialEntityRoomMeshExtName = "XR_META_spatial_entity_room_mesh";
         internal const string k_XrGetSpaceRoomMeshMETAFuncName = "xrGetSpaceRoomMeshMETA";
         internal const string k_XrGetSpaceRoomMeshFaceIndicesMETAFuncName = "xrGetSpaceRoomMeshFaceIndicesMETA";
+        internal const string k_XrFutureExtName = "XR_EXT_future";
+        internal const string k_XrEnvironmentRaycastExtName = "XR_META_environment_raycast";
+        internal const string k_XrMetaCreateRaycastSyncFuncName = "xrCreateEnvironmentRaycasterAsyncMETA";
+        internal const string k_XrMetaCreateRaycastCompleteFuncName = "xrCreateEnvironmentRaycasterCompleteMETA";
+        internal const string k_XrMetaDestroyRaycasterFuncName = "xrDestroyEnvironmentRaycasterMETA";
+        internal const string k_XrMetaPerformRaycastFuncName = "xrPerformEnvironmentRaycastMETA";
+        internal const string k_XrPollFutureFuncName = "xrPollFutureEXT";
+        internal const string k_XrCancelFutureFuncName = "xrCancelFutureEXT";
     }
 }

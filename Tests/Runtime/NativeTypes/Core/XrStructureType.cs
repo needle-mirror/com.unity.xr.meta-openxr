@@ -80,5 +80,15 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
         /// Corresponds with XrRoomMeshMETA
         /// </summary>
         XR_TYPE_ROOM_MESH_META = 1000553002,
+
+        /// <summary>
+        /// Corresponds with XrSystemEnvironmentRaycastPropertiesMETA
+        /// </summary>
+        XR_TYPE_SYSTEM_ENVIRONMENT_RAYCAST_PROPERTIES_META = 1000592000,
+
+        /// <summary>
+        /// Corresponds with XrEnvironmentRaycastFilterDistanceMETA
+        /// </summary>
+        XR_TYPE_ENVIRONMENT_RAYCAST_FILTER_DISTANCE_META = 1000592005,
     }
 }

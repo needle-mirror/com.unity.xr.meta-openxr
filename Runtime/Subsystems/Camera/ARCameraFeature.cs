@@ -1,14 +1,15 @@
+using System;
 using System.Collections.Generic;
 using Unity.XR.CoreUtils;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.Rendering;
+using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.XR.OpenXR.Features;
 #endif
 #if MODULE_URP_ENABLED
-using System;
-using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 #endif
 using static UnityEngine.XR.OpenXR.Features.Meta.Constants.OpenXRExtensions;
@@ -36,6 +37,31 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         const AndroidSdkVersions k_CameraMinSdkVersion = AndroidSdkVersions.AndroidApiLevel32;
 #endif
 
+        [SerializeField, Tooltip("If enabled, this feature will attempt to initialize support for camera subsystem CPU and GPU images.")]
+        bool m_CameraImageSupport;
+
+        /// <summary>
+        /// This property allows for script code to enable GPU and CPU image support for the camera subsystem at
+        /// runtime.  Enabling GPU image support does not guarantee the functionality since there are
+        /// restrictions.  Consult the [Camera](xref:meta-openxr-camera) documentation for details.
+        /// </summary>
+        /// <value>Boolean specifying whether GPU image support is enabled.</value>
+        public bool cameraImageSupportEnabled
+        {
+            get { return m_CameraImageSupport; }
+            set
+            {
+                if (SubsystemUtils.TryGetLoadedSubsystem<XRCameraSubsystem, MetaOpenXRCameraSubsystem>(out var subsystem))
+                {
+                    if (subsystem.running && m_CameraImageSupport != value)
+                    {
+                        Debug.LogWarning($"Setting {nameof(cameraImageSupportEnabled)} to {value} will not take effect as the camera subsystem is already running. Stop and restart the subsystem for the change to take effect.");
+                    }
+                }
+                m_CameraImageSupport = value;
+            }
+        }
+
         /// <summary>
         /// The feature id string. This is used to give the feature a well known id for reference.
         /// </summary>
@@ -51,6 +77,30 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         const string k_OpenXRRequestedExtensions = k_XR_FB_passthrough;
 
         static List<XRCameraSubsystemDescriptor> s_CameraDescriptors = new();
+
+        [SerializeField]
+        [Tooltip("Enable passthrough before splash screen is displayed.")]
+        bool m_PassthroughPreSplashScreen = false;
+
+        /// <summary>
+        /// Set to true to enable passthrough before the splash screen is displayed.
+        /// For more information, refer to
+        /// <a href="https://developers.meta.com/horizon/documentation/native/android/mobile-passthrough-loading-screens/">Passthrough Loading Screen</a>.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown if this property is set at runtime.</exception>
+        public bool passthroughPreSplashScreen
+        {
+            get => m_PassthroughPreSplashScreen;
+#if UNITY_EDITOR
+            set
+            {
+                if (Application.isPlaying)
+                    throw new InvalidOperationException("You can only change the passthrough pre-splash screen setting in the editor before runtime.");
+
+                m_PassthroughPreSplashScreen = value;
+            }
+#endif
+        }
 
         /// <summary>
         /// Called after `xrCreateInstance`. Override this method to validate that any necessary OpenXR extensions were

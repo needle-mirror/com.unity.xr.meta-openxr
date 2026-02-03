@@ -7,7 +7,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// </summary>
         internal const string k_CompanyName = "Unity Technologies";
         internal const string k_PackageName = "com.unity.xr.meta-openxr";
-        internal const string k_MajorMinorVersion = "2.4";
+        internal const string k_MajorMinorVersion = "2.5";
 
         internal const string k_ARFoundationLibrary = "libUnityARFoundationMeta";
         internal const string k_AssemblyName = "Unity.XR.MetaOpenXR";

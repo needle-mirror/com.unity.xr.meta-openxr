@@ -142,8 +142,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                     supportsHorizontalPlaneDetection = true,
                     supportsVerticalPlaneDetection = true,
                     supportsArbitraryPlaneDetection = true,
-                    supportsBoundaryVertices = true,
-                    supportsClassification = true
+                    supportsBoundaryVerticesDelegate = () => true,
+                    supportsClassificationDelegate = () => true
                 });
             }
 

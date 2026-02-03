@@ -3,8 +3,9 @@ using UnityEngine.XR.OpenXR.NativeTypes;
 using Unity.Collections;
 using System.Threading;
 using System.Runtime.InteropServices;
-using static UnityEngine.XR.ARSubsystems.XRResultStatus;
 using System;
+using UnityEngine.Scripting;
+using static UnityEngine.XR.ARSubsystems.XRResultStatus;
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
@@ -13,6 +14,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// provider-based ray casts, and allows the [ARRaycastManager](xref:UnityEngine.XR.ARFoundation.ARRaycastManager)
     /// to execute the fallback ray casts.
     /// </summary>
+    [Preserve]
     public sealed class MetaOpenXRRaycastSubsystem : XRRaycastSubsystem
     {
         internal const string k_SubsystemId = "Meta-Raycast";
