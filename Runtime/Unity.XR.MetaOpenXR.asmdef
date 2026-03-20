@@ -25,6 +25,16 @@
             "name": "com.unity.render-pipelines.universal",
             "expression": "7.0.0",
             "define": "MODULE_URP_ENABLED"
+        },
+        {
+            "name": "com.unity.xr.arfoundation",
+            "expression": "6.4.0",
+            "define": "ARFOUNDATION_6_4_OR_NEWER"
+        },
+        {
+            "name": "com.unity.xr.arfoundation",
+            "expression": "6.5.0-pre.1",
+            "define": "ARFOUNDATION_6_5_0_1_OR_NEWER"
         }
     ],
     "noEngineReferences": false

@@ -9,6 +9,7 @@ using UnityEngine.XR.OpenXR.CompositionLayers;
 using UnityEngine.XR.OpenXR.NativeTypes.Meta;
 using UnityEngine.XR.OpenXR.NativeTypes;
 using Unity.XR.CoreUtils;
+using UnityEngine.Scripting;
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
@@ -16,6 +17,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// The Meta-OpenXR implementation of the <see cref="XRCameraSubsystem"/>.
     /// Do not create this directly. Use the <see cref="SubsystemManager"/> instead.
     /// </summary>
+    [Preserve]
     public sealed class MetaOpenXRCameraSubsystem : XRCameraSubsystem
     {
         internal const string k_SubsystemId = "Meta-Camera";
@@ -126,7 +128,16 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
                 var passthroughLayer = FindCompositionLayerType<PassthroughLayerData>(CompositionLayerManager.Instance.CompositionLayers);
                 if (passthroughLayer != null)
+                {
                     UnityObjectUtils.Destroy(passthroughLayer.gameObject);
+
+                    // notify the CompLayerManager that the comp layer has been destroyed immediately since
+                    // relying on UnityEngine destruction of the comp layer GO can take place _later_ than
+                    // this subsystem possibly re-starting and needing to create a new passthrough layer.
+                    // it is safe to call this public API multiple times with the same input comp layer since
+                    // subsequent calls will be no-ops.
+                    CompositionLayerManager.Instance.CompositionLayerDestroyed(passthroughLayer);
+                }
             }
 
             static CompositionLayer FindCompositionLayerType<T>(IReadOnlyCollection<CompositionLayer> layers)

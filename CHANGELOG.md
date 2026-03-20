@@ -8,6 +8,19 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.3.1] - 2026-03-20
+
+### Fixed
+
+- Fixed the session, camera, and raycast subsystems so that they are not stripped if you set your project's [managed code stripping](https://docs.unity3d.com/6000.3/Documentation/Manual/managed-code-stripping-configure.html) level to **High**.
+- Fixed the `MetaOpenXRCameraSubsystem` so that it destroys and recreates the passthrough composition layer when the subsystem is stopped and started within the same frame.
+- Fixed `BoundaryVisibilityFeature` so that it no longer causes Meta Horizon Link to unexpectedly quit if you enter Play mode, exit Play mode, then re-enter Play mode while the Boundary Visibility feature is enabled. ([UUM-135935](https://issuetracker.unity3d.com/issues/crash-on-unityopenxrmeta-xrfunctable-clearcachedfunc-when-starting-stopping-and-then-starting-meta-quest-link-using-openxr-meta-in-play-mode-every-second-time))
+- Fixed `MetaOpenXRAnchorSubsystem` and `MetaOpenXRPlaneSubsystem` so that they no longer use AR Foundation APIs that were deprecated in AR Foundation 6.4.0 or 6.5.0-pre.1 if this package is used in combination with those AR Foundation versions or newer.
+
+### Changed
+
+- Changed the minimum XR Composition Layers dependency version from 2.1.1 to 2.4.0 to ensure that this package compiles in Unity versions 6.4.0 or newer.
+
 ## [2.3.0] - 2025-10-03
 
 ### Changed
