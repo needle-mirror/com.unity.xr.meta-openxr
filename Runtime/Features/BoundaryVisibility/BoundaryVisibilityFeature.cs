@@ -96,6 +96,16 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             return true;
         }
 
+        /// <summary>
+        /// Called before `xrDestroyInstance`.
+        /// </summary>
+        /// <param name="xrInstance">The OpenXR instance handle.</param>
+        protected override void OnInstanceDestroy(ulong xrInstance)
+        {
+            NativeApi.Destroy();
+            s_Instance = null;
+        }
+
         async void SuppressVisibilityFireAndForget()
         {
             try
@@ -142,12 +152,14 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         delegate void BoundaryVisibilityChangedDelegate(XrBoundaryVisibility visibility);
 
         static readonly IntPtr s_BoundaryVisibilityCallback =
-                Marshal.GetFunctionPointerForDelegate((BoundaryVisibilityChangedDelegate)OnBoundaryVisibilityChanged);
+            Marshal.GetFunctionPointerForDelegate((BoundaryVisibilityChangedDelegate)OnBoundaryVisibilityChanged);
 
         [MonoPInvokeCallback(typeof(BoundaryVisibilityChangedDelegate))]
         static void OnBoundaryVisibilityChanged(XrBoundaryVisibility visibility)
         {
-            s_Instance.currentVisibility = visibility;
+            if (s_Instance != null)
+                s_Instance.currentVisibility = visibility;
+
             s_Instance?.boundaryVisibilityChanged?.Invoke(s_Instance, visibility);
         }
 
@@ -183,6 +195,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         {
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_BoundaryVisibility_Create")]
             public static extern void Create(IntPtr boundaryVisibilityChangedCallback);
+
+            [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_BoundaryVisibility_Destroy")]
+            public static extern void Destroy();
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_BoundaryVisibility_TryRequestBoundaryVisibility")]
             public static extern XrResult TryRequestBoundaryVisibility(XrBoundaryVisibility visibility);

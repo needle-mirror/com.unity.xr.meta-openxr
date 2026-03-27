@@ -47,6 +47,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             " to false at runtime if the device does not support hand removal.")]
         bool m_EnableHandRemoval;
 
+        bool m_SupportsDepthTimestamps;
+
         /// <summary>
         /// Called after `xrCreateInstance`. Override this method to validate that any necessary OpenXR extensions were
         /// successfully enabled
@@ -70,9 +72,24 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 m_EnableHandRemoval = false;
             }
 
+            bool isExtensionEnabled = OpenXRUtils.IsExtensionEnabled(k_XR_META_environment_depth, displayName, typeof(XROcclusionSubsystem));
+            if (isExtensionEnabled && OpenXRRuntime.GetExtensionVersion(k_XR_META_environment_depth) >= 2)
+            {
+                m_SupportsDepthTimestamps = true;
+            }
+
             return
-                OpenXRUtils.IsExtensionEnabled(k_XR_META_environment_depth, displayName, typeof(XROcclusionSubsystem)) &&
+                isExtensionEnabled &&
                 IsCapabilitySupported(SystemCapability.EnvironmentDepth, xrInstance, displayName, typeof(XROcclusionSubsystem));
+        }
+
+        /// <summary>
+        /// Called before `xrDestroyInstance`.
+        /// </summary>
+        /// <param name="xrInstance">Handle of the xrInstance</param>
+        protected override void OnInstanceDestroy(ulong xrInstance)
+        {
+            m_SupportsDepthTimestamps = false;
         }
 
         /// <summary>
@@ -94,6 +111,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 {
                     // always succeeds if the subsystem isn't yet started
                     metaOcclusionSubsystem.TrySetHandRemovalEnabled(m_EnableHandRemoval);
+                    metaOcclusionSubsystem.TrySetSupportsDepthTimestamp(m_SupportsDepthTimestamps);
                     break;
                 }
             }

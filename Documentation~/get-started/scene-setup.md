@@ -28,6 +28,8 @@ After you have completed the AR Foundation scene setup steps, follow these instr
 4. Select from the following options. The options differ based on the render pipeline you're using:
     * URP: In the **Environment** section, set the **Background Type** to **Solid Color**.
     * Built-In Render Pipeline: Set **Clear Flags** to **Solid Color**.
+    > [!IMPORTANT]
+    > In Unity 6.5 and newer, the Built-In Render Pipeline is deprecated and will be made obsolete in a future release. For more information, refer to [Migrating from the Built-In Render Pipeline to URP](https://docs.unity3d.com/6000.5/Documentation/Manual/urp/upgrading-from-birp.html) and [Render pipeline feature comparison](https://docs.unity3d.com/6000.5/Documentation/Manual/render-pipelines-feature-comparison.html).
 5. Select the **Background** color to open the color picker.
 
 ![Open the camera background color picker in the Inspector window.](../images/camera-background.png)<br/>*Camera background color picker in the Inspector window.*

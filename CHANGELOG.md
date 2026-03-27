@@ -8,6 +8,18 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2026-03-27
+
+### Changed
+
+- Changed [MetaOpenXROcclusionSubsystem](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXROcclusionSubsystem) to use the runtime-provided depth timestamp if supported. The previous implementation gave the frame's predicted display time as the depth timestamp.
+- Changed the minimum dependency version of XR Composition Layers from 2.3.0 to 2.4.0 to ensure that you have access to latest bug fixes.
+- Changed the minimum dependency version of AR Foundation from 6.5.0-pre.1 to 6.5.0.
+
+### Fixed
+
+- Fixed `BoundaryVisibilityFeature` so that it no longer causes Meta Horizon Link to unexpectedly quit if you enter Play mode, exit Play mode, then re-enter Play mode while the Boundary Visibility feature is enabled. ([UUM-135935](https://issuetracker.unity3d.com/issues/crash-on-unityopenxrmeta-xrfunctable-clearcachedfunc-when-starting-stopping-and-then-starting-meta-quest-link-using-openxr-meta-in-play-mode-every-second-time))
+
 ## [2.5.0-pre.1] - 2026-02-03
 
 ### Added

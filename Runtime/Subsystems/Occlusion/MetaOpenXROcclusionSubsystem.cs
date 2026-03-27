@@ -58,9 +58,17 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         public XrResult TrySetHandRemovalEnabled(bool enableHandRemoval)
             => ((MetaOpenXROcclusionProvider)provider).TrySetHandRemovalEnabled(enableHandRemoval);
 
+        /// <summary>
+        /// Must be called before the provider is started to enable support for OpenXR Depth Timestamps.
+        /// </summary>
+        /// <param name="supportsDepthTimestamp">Indicates whether to support depth timestamps</param>
+        internal bool TrySetSupportsDepthTimestamp(bool supportsDepthTimestamp)
+            => ((MetaOpenXROcclusionProvider)provider).TrySetSupportsDepthTimestamp(supportsDepthTimestamp);
+
         class MetaOpenXROcclusionProvider : Provider
         {
             internal bool isHandRemovalEnabled { get; private set; }
+            internal bool supportsDepthTimestamp { get; private set; }
 
             const string k_EnvironmentDepthTextureName = "_EnvironmentDepthTexture";
             int m_EnvironmentDepthTextureId;
@@ -118,6 +126,17 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 return result;
             }
 
+            internal bool TrySetSupportsDepthTimestamp(bool supportsDepthTimestamp)
+            {
+                if (!running)
+                {
+                    this.supportsDepthTimestamp = supportsDepthTimestamp;
+                    return true;
+                }
+                else
+                    return false;
+            }
+
             public override void Start()
             {
                 // Natively, initializing the occlusion provider can fail due to lack of required permissions.
@@ -128,7 +147,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
             XRResultStatus TryStart()
             {
-                var result = NativeApi.TryStart(SystemInfo.graphicsDeviceType, isHandRemovalEnabled);
+                var result = NativeApi.TryStart(SystemInfo.graphicsDeviceType, isHandRemovalEnabled, supportsDepthTimestamp);
                 if (result.IsSuccess())
                 {
                     m_PermissionDenied = false;
@@ -265,7 +284,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_Occlusion_TryStart")]
                 internal static extern XRResultStatus TryStart(
-                    GraphicsDeviceType graphisAPI, [MarshalAs(UnmanagedType.U1)]bool enableHandRemoval);
+                    GraphicsDeviceType graphisAPI, [MarshalAs(UnmanagedType.U1)]bool enableHandRemoval, [MarshalAs(UnmanagedType.U1)]bool supportDepthTimestamp);
 
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_Occlusion_TrySetHandRemovalEnabled")]
                 internal static extern XrResult SetHandRemovalEnabled([MarshalAs(UnmanagedType.U1)]bool enableHandRemoval);

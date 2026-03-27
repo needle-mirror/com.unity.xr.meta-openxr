@@ -13,4 +13,8 @@ uid: meta-openxr-whats-new
 
 * Added a setting to the AR Camera Feature that allows you to enable passthrough before the splash screen is displayed. Refer to [Passthrough pre-splash screen](xref:meta-openxr-camera#passthrough-pre-splash-screen) for details.
 
+## Depth Timestamps
+
+* If a runtime supports it, the [MetaOpenXROcclusionSubsystem](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXROcclusionSubsystem) will now populate the [XROcclusionFrame](xref:UnityEngine.XR.ArSubsystems.XROcclusionFrame) with more accurate timestamp data provided by the runtime. Otherwise the subsystem will populate it with the frame's predicted display time as the depth timestamp.
+
 For a full list of changes in this version including backwards-compatible bugfixes, refer to the package [changelog](xref:meta-openxr-changelog).

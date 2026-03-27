@@ -5,6 +5,9 @@ uid: meta-openxr-graphics-settings
 
 The following sections outline specific graphics settings for Meta Quest devices for optimal performance and Passthrough.
 
+> [!IMPORTANT]
+> In Unity 6.5 and newer, the Built-In Render Pipeline is deprecated and will be made obsolete in a future release. For more information, refer to [Migrating from the Built-In Render Pipeline to URP](https://docs.unity3d.com/6000.5/Documentation/Manual/urp/upgrading-from-birp.html) and [Render pipeline feature comparison](https://docs.unity3d.com/6000.5/Documentation/Manual/render-pipelines-feature-comparison.html).
+
 ## Vulkan Graphics API
 
 Meta [recommends](https://developer.oculus.com/documentation/unity/unity-conf-settings/#rendering-settings) that you use the Vulkan Graphics API in your project, as some newer features for Meta Quest devices are only supported with that API.
