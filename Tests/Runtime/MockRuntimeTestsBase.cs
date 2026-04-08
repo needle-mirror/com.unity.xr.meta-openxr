@@ -2,8 +2,10 @@
 using System;
 using System.Runtime.InteropServices;
 using NUnit.Framework;
+using UnityEngine;
 using UnityEngine.XR.OpenXR.TestTooling;
 
+[assembly: UnityEngine.TestTools.UnityPlatform(RuntimePlatform.WindowsEditor, RuntimePlatform.Android, RuntimePlatform.OSXEditor)]
 namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
 {
     abstract class MockRuntimeTestFixture

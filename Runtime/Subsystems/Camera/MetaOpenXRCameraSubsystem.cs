@@ -10,6 +10,7 @@ using UnityEngine.XR.OpenXR.CompositionLayers;
 using UnityEngine.XR.OpenXR.NativeTypes.Meta;
 using UnityEngine.XR.OpenXR.NativeTypes;
 using Unity.XR.CoreUtils;
+using UnityEngine.Scripting;
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
@@ -17,6 +18,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// The Meta-OpenXR implementation of the <see cref="XRCameraSubsystem"/>.
     /// Do not create this directly. Use the <see cref="SubsystemManager"/> instead.
     /// </summary>
+    [Preserve]
     public sealed class MetaOpenXRCameraSubsystem : XRCameraSubsystem
     {
         internal const string k_SubsystemId = "Meta-Camera";

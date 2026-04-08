@@ -8,11 +8,23 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.4.1] - 2026-04-08
+
+### Fixed
+
+- Fixed usages of APIs in the `MetaOpenXRAnchorSubsystem` that were deprecated in AR Foundation 6.4.0.
+- Corrected the CHANGELOG entry for 2.4.0 and updated [What's new in version 2.4](xref:meta-openxr-whats-new) to reflect that the Meta Quest Planes feature now supports the Horizon OS High Fidelity Scene capability.
+- Fixed the Meta Quest Planes feature so that the plane classification `InnerWallFace` is recognized correctly when using the room mesh provider type.
+- Fixed the session, camera, and raycast subsystems so that they are not stripped if you set your project's [managed code stripping](https://docs.unity3d.com/6000.3/Documentation/Manual/managed-code-stripping-configure.html) level to **High**.
+- Fixed an issue that could cause `MetaOpenXRRaycastSubsystem` to incorrectly ignore a ray cast distance limit.
+- Fixed `BoundaryVisibilityFeature` so that it no longer causes Meta Horizon Link to unexpectedly quit if you enter Play mode, exit Play mode, then re-enter Play mode while the Boundary Visibility feature is enabled. ([UUM-135935](https://issuetracker.unity3d.com/issues/crash-on-unityopenxrmeta-xrfunctable-clearcachedfunc-when-starting-stopping-and-then-starting-meta-quest-link-using-openxr-meta-in-play-mode-every-second-time))
+
 ## [2.4.0] - 2025-12-05
 
 ### Added
 
 - Added provider-specific [Raycast methods](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRRaycastSubsystem.Raycast(UnityEngine.XR.OpenXR.Features.Meta.EnvironmentRaycastHit,UnityEngine.Ray,UnityEngine.XR.ARSubsystems.TrackableType,Unity.Collections.Allocator)) for getting information about the [EnvironmentRaycastHitStatus](xref:UnityEngine.XR.OpenXR.Features.Meta.EnvironmentRaycastHitStatus) along with the XRRaycastHit.
+- Added a selectable [plane provider type](xref:meta-openxr-planes#plane-provider-type) property to the Meta Quest Planes feature, which enables you to opt in to the new High Fidelity Scene capability in Horizon OS.
 
 ### Changed
 
@@ -287,4 +299,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.1.0] - 2023-04-04
 
-- This is the first release of Meta OpenXR Plugin <com.unity.xr.meta-openxr>.
+- This is the first release of Meta OpenXR Plugin `com.unity.xr.meta-openxr`.

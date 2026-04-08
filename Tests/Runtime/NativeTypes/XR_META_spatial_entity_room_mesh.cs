@@ -1,4 +1,3 @@
-#if ENABLE_MOCK_RUNTIME_TESTS
 #if OPENXR_PLUGIN_1_16_0_PRE_2_OR_NEWER
 using UnityEngine.XR.OpenXR.NativeTypes;
 using XrSpace = System.UInt64;
@@ -60,4 +59,3 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
         XrRoomMeshFaceIndicesMETA* roomFaceIndicesOutput);
 }
 #endif // OPENXR_PLUGIN_1_16_0_PRE_2_OR_NEWER
-#endif // ENABLE_MOCK_RUNTIME_TESTS

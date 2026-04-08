@@ -193,10 +193,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                     subsystemTypeOverride = typeof(MetaOpenXRAnchorSubsystem),
                     supportsTrackableAttachments = false,
                     supportsSynchronousAdd = false,
-                    supportsSaveAnchor = true,
-                    supportsLoadAnchor = true,
-                    supportsEraseAnchor = true,
-                    supportsGetSavedAnchorIds = false,
+                    supportsSaveAnchorDelegate = () => GetCachedSystemCapabilities()[SystemCapability.SpacePersistence].isSupported == Supported.Supported,
+                    supportsLoadAnchorDelegate = () => GetCachedSystemCapabilities()[SystemCapability.SpacePersistence].isSupported == Supported.Supported,
+                    supportsEraseAnchorDelegate = () => GetCachedSystemCapabilities()[SystemCapability.SpacePersistence].isSupported == Supported.Supported,
+                    supportsGetSavedAnchorIdsDelegate = () => false,
                     supportsAsyncCancellation = false,
                 };
 

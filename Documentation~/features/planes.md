@@ -7,6 +7,7 @@ This page is a supplement to the AR Foundation [Plane detection](xref:arfoundati
 
 [!include[](../snippets/arf-docs-tip.md)]
 
+<a id="plane-provider-type"></a>
 
 ## Plane provider type
 
