@@ -1,7 +1,7 @@
 ---
 uid: meta-openxr-camera
 ---
-<a id="passthrough"/>
+<a id="passthrough"></a>
 
 # Camera (Passthrough)
 
@@ -22,7 +22,7 @@ To enable the Passthrough capability in your app:
 
 ![Meta Quest feature group in the Unity Editor](../images/openxr-features-all-landscape.png)<br/>*The Meta Quest feature group, shown with all features enabled.*
 
-<a id="passthrough-pre-splash-screen"/>
+<a id="passthrough-pre-splash-screen"></a>
 
 ### Enable Passthrough splash screen
 
@@ -57,7 +57,7 @@ Refer to [Configure camera background for Passthrough](xref:meta-openxr-scene-se
 > [!TIP]
 > If Passthrough isn't working in your project after setting the alpha channel value to `0`, ensure your URP settings are correctly configured, as described in [Optimize graphics settings](xref:meta-openxr-graphics-settings#universal-render-pipeline).
 
-<a id="composition-layers"/>
+<a id="composition-layers"></a>
 
 ## Composition layers
 
@@ -108,6 +108,34 @@ To enable CPU and GPU image support in your app, enable the **Camera Image Suppo
 
 For information about accessing camera images on the CPU, including synchronous and asynchronous conversion, refer to AR Foundation's [Image capture](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@latest/manual/features/camera/image-capture.html#access-images-via-cpu) documentation.
 
+On Meta Quest, the camera subsystem supports the following CPU image acquisition options:
+
+| **Option** | **Description** |
+|:---------- | :-------------- |
+| **Mono (default)** | Use [MetaOpenXRCameraSubsystem.TryAcquireLatestCpuImage](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestCpuImage(UnityEngine.XR.ARSubsystems.XRCpuImage@)) to obtain a single left eye camera image. |
+| **Left or right eye Camera (single)** | Use [MetaOpenXRCameraSubsystem.TryAcquireLatestCpuImageForPosition](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestCpuImageForPosition(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.CameraPosition,UnityEngine.XR.ARSubsystems.XRCpuImage.Cinfo@)) with [CameraPosition.LeftEye](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.CameraPosition) or [CameraPosition.RightEye](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.CameraPosition) to acquire the latest image from one specific camera. |
+| **Stereo pair (synchronized)** | Use [MetaOpenXRCameraSubsystem.TryAcquireLatestStereoCpuImagePair](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestStereoCpuImagePair(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.XRCpuImagePair@)) to acquire a left and right image from the same capture request. This returns an [XRCpuImagePair](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.XRCpuImagePair) with `leftEyeImageCinfo` and `rightEyeImageCinfo`. |
+
+The following code samples demonstrate each CPU acquisition option. Dispose each `XRCpuImage` when done (e.g. with `using`).
+
+#### Mono (default)
+
+The following code sample demonstrates mono (single left eye) CPU image acquisition:
+
+[!code-cs[acquire_cpu_image](../../Tests/Runtime/CodeSamples/CpuImageSamples.cs#acquire_cpu_image)]
+
+#### Left or right eye (single)
+
+The following code sample demonstrates single eye (left or right) CPU image acquisition:
+
+[!code-cs[acquire_cpu_image_for_position](../../Tests/Runtime/CodeSamples/CpuImageSamples.cs#acquire_cpu_image_for_position)]
+
+#### Stereo pair
+
+The following code sample demonstrates stereo eye CPU image acquisition:
+
+[!code-cs[acquire_stereo_cpu_image_pair](../../Tests/Runtime/CodeSamples/CpuImageSamples.cs#acquire_stereo_cpu_image_pair)]
+
 > [!NOTE]
 > CPU image capture for Meta Quest requires a minimum Android API level `32`. You can set the **Minimum API Level** to **Android 12L (API level 32)** in your project's Player settings. Refer to [Android Player settings](xref:um-class-player-settings-android) for more information.
 
@@ -123,23 +151,43 @@ The following sections describe how to access camera images on the GPU for Meta 
 > [!NOTE]
 > GPU image capture is not supported on Quest Link.
 
-#### Acquire GPU images
+#### Acquire and Release GPU images
 
 > [!NOTE]
-> Only acquire one GPU image at a time. Attempting to acquire a new image before releasing the previous one will fail.
+> Only one GPU acquisition is active at a time: either one single image (default), one per-camera image, or one stereo pair. Release the current acquisition before switching to another mode or acquiring again.
 
-To access the device camera image on the GPU, use [MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImage](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImage(UnityEngine.XR.ARSubsystems.XRTextureDescriptor@)) to acquire an [XRTextureDescriptor](xref:UnityEngine.XR.ARSubsystems.XRTextureDescriptor). The descriptor contains a native Vulkan image handle that you can use to create a Unity texture.
+On Meta Quest, the camera subsystem supports the following GPU image acquisition methods to obtain an `XRTextureDescriptor`. The descriptor contains a native Vulkan image handle that you can use to create a Unity texture. The acquisition options are:
 
-The following code sample demonstrates how to acquire GPU images in your project:
+| **Option** | **Description** |
+|:---------- | :-------------- |
+| **Mono (default)** | Use [MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImage](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImage(UnityEngine.XR.ARSubsystems.XRTextureDescriptor@)) to acquire a single [XRTextureDescriptor](xref:UnityEngine.XR.ARSubsystems.XRTextureDescriptor). Release with [ReleaseGpuImage](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.ReleaseGpuImage(UnityEngine.XR.ARSubsystems.XRTextureDescriptor)). |
+| **Left or right eye (single)** | Use [MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImageForPosition](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImageForPosition(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.CameraPosition,UnityEngine.XR.ARSubsystems.XRTextureDescriptor@)) with [CameraPosition.LeftEye](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.CameraPosition) or [CameraPosition.RightEye](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.CameraPosition) to acquire the latest image from one camera. Release with [ReleaseGpuImageForPosition](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.ReleaseGpuImageForPosition(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.CameraPosition,UnityEngine.XR.ARSubsystems.XRTextureDescriptor)). <strong>Note</strong>: Right eye requires stereo image capture support. |
+| **Stereo pair (synchronized)** | Use [MetaOpenXRCameraSubsystem.TryAcquireLatestStereoGpuImagePair](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestStereoGpuImagePair(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.XRTextureDescriptorPair@)) to acquire a left and right [XRTextureDescriptorPair](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.XRTextureDescriptorPair) from the same capture request. Release with [ReleaseStereoGpuImagePair](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.ReleaseStereoGpuImagePair(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.XRTextureDescriptorPair)). Returns `false` if images are not synchronized. |
+
+The following code samples demonstrate each GPU acquisition option. Each are acquired and released within the same frame.
+
+#### Mono (default)
+
+The following code sample demonstrates mono (single left eye) GPU image acquisition:
 
 [!code-cs[acquire_gpu_image](../../Tests/Runtime/CodeSamples/GpuImageSamples.cs#acquire_gpu_image)]
 
-> [!NOTE]
-> GPU images are valid only for the current frame. Do not hold references to GPU images across frames.
+#### Left or right eye (single)
 
-#### Release GPU images
+The following code sample demonstrates single eye (left or right) GPU image acquisition:
+
+[!code-cs[acquire_gpu_image_for_position](../../Tests/Runtime/CodeSamples/GpuImageSamples.cs#acquire_gpu_image_for_position)]
+
+#### Stereo pair
+
+The following code sample demonstrates stereo eye CPU image acquisition:
+
+[!code-cs[acquire_stereo_gpu_image_pair](../../Tests/Runtime/CodeSamples/GpuImageSamples.cs#acquire_stereo_gpu_image_pair)]
 
 > [!IMPORTANT]
-> You must release GPU images after use by calling [MetaOpenXRCameraSubsystem.ReleaseGpuImage](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.ReleaseGpuImage(UnityEngine.XR.ARSubsystems.XRTextureDescriptor)) with the descriptor returned from `TryAcquireLatestGpuImage`. Failure to release images will prevent acquiring new images and might cause resource leaks.
+> GPU images are valid only for the current frame. Do not hold references to GPU images across frames.
+> Failure to release images will prevent acquiring new images and might cause resource leaks.
 
-Release the GPU image using the [MetaOpenXRCameraSubsystem.ReleaseGpuImage](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.ReleaseGpuImage(UnityEngine.XR.ARSubsystems.XRTextureDescriptor)) method.
+### Stereo sync API
+
+When acquiring a stereo image pair, the subsystem tries to match left and right image timestamps so both images come from the same capture. [MetaOpenXRCameraSubsystem.SetMaxStereoSyncAttempts](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.SetMaxStereoSyncAttempts(System.Int32)) sets how many times the subsystem will attempt to find a synchronized pair. The value is clamped to 1–10; the default is 3. If stereo capture fails to find a synced pair, it will return the last acquired pair.  You can call this method before or after the subsystem starts.

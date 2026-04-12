@@ -7,7 +7,7 @@ Unity OpenXR: Meta is an official Unity package available from the [Package Mana
 
 ## Dependencies
 
-To use Unity OpenXR: Meta 2.5, your project must meet the following requirements:
+To use Unity OpenXR: Meta 2.6, your project must meet the following requirements:
 
 * Unity 6 (6000.0 or newer)
 * [Android Build Support](xref:um-android-install-dependencies) module
