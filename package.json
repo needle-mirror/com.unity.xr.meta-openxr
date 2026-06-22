@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.meta-openxr",
   "displayName": "Unity OpenXR Meta",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "unity": "6000.0",
   "description": "Enables you to build mixed reality apps for Meta Quest devices by implementing support for Meta's OpenXR extensions.",
   "keywords": [
@@ -26,15 +26,15 @@
     "com.unity.xr.core-utils": "2.5.1"
   },
   "_upm": {
-    "changelog": "### Changed\n\n- Changed [MetaOpenXROcclusionSubsystem](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXROcclusionSubsystem) to use the runtime-provided depth timestamp if supported. The previous implementation gave the frame's predicted display time as the depth timestamp.\n- Changed the minimum dependency version of XR Composition Layers from 2.3.0 to 2.4.0 to ensure that you have access to latest bug fixes.\n- Changed the minimum dependency version of AR Foundation from 6.5.0-pre.1 to 6.5.0.\n\n### Fixed\n\n- Fixed `BoundaryVisibilityFeature` so that it no longer causes Meta Horizon Link to unexpectedly quit if you enter Play mode, exit Play mode, then re-enter Play mode while the Boundary Visibility feature is enabled. ([UUM-135935](https://issuetracker.unity3d.com/issues/crash-on-unityopenxrmeta-xrfunctable-clearcachedfunc-when-starting-stopping-and-then-starting-meta-quest-link-using-openxr-meta-in-play-mode-every-second-time))"
+    "changelog": "### Fixed\n\n- Fixed a rare issue where the Editor could unexpectedly quit after entering and exiting Play mode with Meta Horizon Link, if `UnityOpenXRMeta_XrFuncTable_ClearCachedFunc` was called after the OpenXR loader was deinitialized."
   },
   "upmCi": {
-    "footprint": "81adb3847d0268b5652de1ee4e1ee6b1bb75bef7"
+    "footprint": "c07f97d8fcfdfde3e5ea0a5ce62319a4469e69f3"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.meta-openxr@2.5/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/xr.sdk.meta-openxr.git",
     "type": "git",
-    "revision": "e270672e27f93f98cf90faf7d7ead1731d19fac0"
+    "revision": "aa7c579f15f1692338a2359079cc60956c82fc9e"
   }
 }
