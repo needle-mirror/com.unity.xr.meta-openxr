@@ -8,6 +8,12 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.3.2] - 2026-06-22
+
+### Fixed
+
+- Fixed a rare issue where the Editor could unexpectedly quit after entering and exiting Play mode with Meta Horizon Link, if `UnityOpenXRMeta_XrFuncTable_ClearCachedFunc` was called after the OpenXR loader was deinitialized.
+
 ## [2.3.1] - 2026-03-20
 
 ### Fixed
@@ -275,4 +281,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.1.0] - 2023-04-04
 
-- This is the first release of Meta OpenXR Plugin <com.unity.xr.meta-openxr>.
+- This is the first release of Meta OpenXR Plugin `com.unity.xr.meta-openxr`.

@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.meta-openxr",
   "displayName": "Unity OpenXR Meta",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "unity": "6000.0",
   "description": "Enables you to build mixed reality apps for Meta Quest devices by implementing support for Meta's OpenXR extensions.",
   "keywords": [
@@ -26,15 +26,15 @@
     "com.unity.xr.core-utils": "2.5.1"
   },
   "_upm": {
-    "changelog": "### Fixed\n\n- Fixed the session, camera, and raycast subsystems so that they are not stripped if you set your project's [managed code stripping](https://docs.unity3d.com/6000.3/Documentation/Manual/managed-code-stripping-configure.html) level to **High**.\n- Fixed the `MetaOpenXRCameraSubsystem` so that it destroys and recreates the passthrough composition layer when the subsystem is stopped and started within the same frame.\n- Fixed `BoundaryVisibilityFeature` so that it no longer causes Meta Horizon Link to unexpectedly quit if you enter Play mode, exit Play mode, then re-enter Play mode while the Boundary Visibility feature is enabled. ([UUM-135935](https://issuetracker.unity3d.com/issues/crash-on-unityopenxrmeta-xrfunctable-clearcachedfunc-when-starting-stopping-and-then-starting-meta-quest-link-using-openxr-meta-in-play-mode-every-second-time))\n- Fixed `MetaOpenXRAnchorSubsystem` and `MetaOpenXRPlaneSubsystem` so that they no longer use AR Foundation APIs that were deprecated in AR Foundation 6.4.0 or 6.5.0-pre.1 if this package is used in combination with those AR Foundation versions or newer.\n\n### Changed\n\n- Changed the minimum XR Composition Layers dependency version from 2.1.1 to 2.4.0 to ensure that this package compiles in Unity versions 6.4.0 or newer."
+    "changelog": "### Fixed\n\n- Fixed a rare issue where the Editor could unexpectedly quit after entering and exiting Play mode with Meta Horizon Link, if `UnityOpenXRMeta_XrFuncTable_ClearCachedFunc` was called after the OpenXR loader was deinitialized."
   },
   "upmCi": {
-    "footprint": "2efd05a6d52d0b7ee292ecd2078fb619b2926e37"
+    "footprint": "ead55c1a6b2c10c9f6ec34de7d7e91fea9aabf90"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.meta-openxr@2.3/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/xr.sdk.meta-openxr.git",
     "type": "git",
-    "revision": "c03bb7e64b8a3d78246c1f10c24eace56aa1ab6c"
+    "revision": "2fcaf7ad8f92387986888b70a21ebaede6d2e1e1"
   }
 }
