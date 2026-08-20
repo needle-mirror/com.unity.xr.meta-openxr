@@ -47,7 +47,7 @@ AR Foundation doesn't provide a networking solution for messaging GUIDs between 
 
 ## Share anchor
 
-Once you have set the group ID, all subsequent calls to [TryShareAnchorAsync](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRAnchorManagerExtensions.TryShareAnchorAsync(UnityEngine.XR.ARFoundation.ARAnchorManager,UnityEngine.XR.ARFoundation.ARAnchor)) or [TryShareAnchorsAsync](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRAnchorManagerExtensions.TryShareAnchorsAsync(UnityEngine.XR.ARFoundation.ARAnchorManager,IEnumerable{UnityEngine.XR.ARFoundation.ARAnchor},List{UnityEngine.XR.ARSubsystems.XRShareAnchorResult})) will share anchors with that group.
+Once you have set the group ID, all subsequent calls to [TryShareAnchorAsync](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRAnchorManagerExtensions.TryShareAnchorAsync(UnityEngine.XR.ARFoundation.ARAnchorManager,UnityEngine.XR.ARFoundation.ARAnchor)) or [TryShareAnchorsAsync](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRAnchorManagerExtensions.TryShareAnchorsAsync(UnityEngine.XR.ARFoundation.ARAnchorManager,System.Collections.Generic.IEnumerable{UnityEngine.XR.ARFoundation.ARAnchor},System.Collections.Generic.List{UnityEngine.XR.ARSubsystems.XRShareAnchorResult})) will share anchors with that group.
 
 Most apps will only need one group per physical location of colocated users. However, you can also share with multiple groups if necessary by changing the active group ID at any time.
 
@@ -57,7 +57,7 @@ To share an anchor, use the [ARAnchorManager.TryShareAnchorAsync](xref:UnityEngi
 
 ## Batch share anchors
 
-You can share a batch of anchors with the [ARAnchorManager.TryShareAnchorsAsync](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRAnchorManagerExtensions.TryShareAnchorsAsync(UnityEngine.XR.ARFoundation.ARAnchorManager,IEnumerable{UnityEngine.XR.ARFoundation.ARAnchor},List{UnityEngine.XR.ARSubsystems.XRShareAnchorResult})) extension method as shown in the following code example:
+You can share a batch of anchors with the [ARAnchorManager.TryShareAnchorsAsync](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRAnchorManagerExtensions.TryShareAnchorsAsync(UnityEngine.XR.ARFoundation.ARAnchorManager,System.Collections.Generic.IEnumerable{UnityEngine.XR.ARFoundation.ARAnchor},System.Collections.Generic.List{UnityEngine.XR.ARSubsystems.XRShareAnchorResult})) extension method as shown in the following code example:
 
 [!code-cs[TryShareAnchorsAsync](../../../Tests/Runtime/CodeSamples/Anchors/BatchShareAnchorsSample.cs#TryShareAnchorsAsync)]
 
@@ -67,7 +67,7 @@ Meta defines its OpenXR API such that the entire batch either succeeds or fails 
 
 ## Load shared anchors
 
-Once you have set the group ID, you can load all shared anchors from the group with the [ARAnchorManager.TryLoadAllSharedAnchorsAsync](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRAnchorManagerExtensions.TryLoadAllSharedAnchorsAsync(UnityEngine.XR.ARFoundation.ARAnchorManager,List{UnityEngine.XR.ARSubsystems.XRAnchor},Action{Unity.XR.CoreUtils.Collections.ReadOnlyListSpan{UnityEngine.XR.ARSubsystems.XRAnchor}})) extension method as shown in the following code example:
+Once you have set the group ID, you can load all shared anchors from the group with the [ARAnchorManager.TryLoadAllSharedAnchorsAsync](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRAnchorManagerExtensions.TryLoadAllSharedAnchorsAsync(UnityEngine.XR.ARFoundation.ARAnchorManager,System.Collections.Generic.List{UnityEngine.XR.ARSubsystems.XRAnchor},System.Action{Unity.XR.CoreUtils.Collections.ReadOnlyListSpan{UnityEngine.XR.ARSubsystems.XRAnchor}})) extension method as shown in the following code example:
 
 [!code-cs[TryLoadAllSharedAnchorsAsync](../../../Tests/Runtime/CodeSamples/Anchors/LoadAllSharedAnchorsSample.cs#TryLoadAllSharedAnchorsAsync)]
 

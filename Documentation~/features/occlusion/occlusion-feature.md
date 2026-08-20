@@ -3,7 +3,7 @@ uid: meta-openxr-occlusion-feature
 ---
 # Meta Quest Occlusion feature
 
-The Meta Quest Occlusion feature allows mixed reality content in your app to appear hidden or partially obscured behind objects in the physical environment. Without occlusion, geometry in your scene will always render on top of physical objects in your [Passthrough](xref:meta-openxr-camera#passthrough) layer, regardless of their difference in depth.
+The Meta Quest Occlusion feature allows mixed reality content in your app to appear hidden or partially obscured behind objects in the physical environment. Without occlusion, geometry in your scene will always render on top of physical objects in your [Passthrough](xref:meta-openxr-camera-passthrough) layer, regardless of their difference in depth.
 
 <!-- TODO: add screenshot of occlusion working on device -->
 

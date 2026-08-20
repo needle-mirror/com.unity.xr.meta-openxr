@@ -61,5 +61,5 @@ To use this example code, add the Permissions Check component to a GameObject in
 
 ## Additional resources
 
-* [Passthrough](xref:meta-openxr-camera#passthrough)
+* [Passthrough](xref:meta-openxr-camera-passthrough)
 * [Graphics settings](xref:meta-openxr-graphics-settings)

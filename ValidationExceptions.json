@@ -1,0 +1,15 @@
+{
+    "ErrorExceptions": [
+        {
+            "ValidationTest": "API Validation",
+            "ExceptionMessage": "Adding to includePlatforms requires a new minor or major version. Was:\"Android, Editor\" Now:\"Android, Editor, macOSStandalone, WindowsStandalone64\"",
+            "PackageVersion": "2.6.1"
+        },
+        {
+            "ValidationTest": "API Validation",
+            "ExceptionMessage": "Additions require a new minor or major version.",
+            "PackageVersion": "2.6.1"
+        }
+    ],
+    "WarningExceptions": []
+}

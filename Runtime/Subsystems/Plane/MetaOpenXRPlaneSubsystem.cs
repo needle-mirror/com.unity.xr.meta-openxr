@@ -2,6 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using Unity.XR.CoreUtils;
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
 #if UNITY_ANDROID
@@ -92,7 +93,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                     throw new OverflowException("Exceeded the maximum number of boundary vertices.");
                 }
 
-                CreateOrResizeNativeArrayIfNecessary(vertexCountAsInt, allocator, ref boundary);
+                NativeArrayUtils.EnsureExactSize(ref boundary, vertexCountAsInt, allocator);
                 NativeApi.GetBoundaryVertexData(in trackableId, boundary.GetUnsafePtr(), vertexCountAsInt);
 
                 FlipBoundaryWindingOrder(boundary);

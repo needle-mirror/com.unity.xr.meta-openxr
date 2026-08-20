@@ -9,7 +9,7 @@ Use the **Project Settings** window to enable OpenXR Meta features and add the O
 
 ## Prerequisites
 
-You must have the [Android Build Support](xref:um-android-install-dependencies) module installed in the version of the Unity Editor you're using. Refer to [Add modules](https://docs.unity3d.com/hub/manual/AddModules.html) for more information.
+You must have the [Android Build Support](xref:um-android-install-dependencies) module installed in the version of the Unity Editor you're using. Refer to [Add modules](https://docs.unity.com/en-us/hub/add-modules) for more information.
 
 <a id="build-platform"></a>
 

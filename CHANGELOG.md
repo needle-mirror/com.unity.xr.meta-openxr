@@ -8,13 +8,34 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.6.1] - 2026-08-20
+
+### Added
+
+- Added `MetaSocialEyeGazeFeature` feature and `MetaSocialEyeGazeDevice` input device, providing left and right eye gaze pose, tracking state, and confidence through Unity's Input System via the `XR_FB_eye_tracking_social` OpenXR extension. Refer to [Social eye gaze](xref:meta-openxr-social-eye-gaze) for more information.
+
+### Changed
+
+- Improved performance by around 30% when converting acquired CPU camera images from YUV to `RGBA32` on Meta Quest.
+- Changed the minimum OpenXR Plug-in dependency version from 1.15.1 to 1.18.0.
+- Changed the minimum AR Foundation dependency version from 6.5.0 to 6.6.0.
+- Changed the minimum XR Core Utils dependency version from 2.5.1 to 2.6.0.
+- Changed the `Unity.XR.MetaOpenXR` runtime assembly to be included for `WindowsStandalone64` and `macOSStandalone` in addition to previously included platforms. This change allows you to build standalone Windows and macOS apps with this package, and fixes issue [UUM-140740](https://issuetracker.unity.com/issues/21880/error-a-scripted-object-has-a-different-serialization-layout-when-loading-is-thrown-when-building-a-project-with-development-build).
+
+### Fixed
+
+- Fixed the camera subsystem so that Passthrough pixels are no longer tinted by non-black Camera background colors when the color alpha value is zero. ([MOXRB-179](https://issuetracker.unity3d.com/issues/passthrough-shows-background-color-tint-when-camera-clear-color-alpha-is-set-to-0))
+- Fixed the Meta Quest Camera feature so that automatically fixing your camera's clear flags can no longer possibly throw a `NullReferenceException`.
+- Fixed internal Android App Manifest logic so that required Android Manifest entries are processed regardless of whether the Meta Quest Session feature is enabled for the Android build target.
+- Fixed usages of APIs that were deprecated in AR Foundation 6.6.0-pre.1.
+
 ## [2.6.0-pre.1] - 2026-04-12
 
 ### Added
 
-- Added support for CPU camera image individual left/right eye and synchronized stereo pair via [MetaOpenXRCameraSubsystem.TryAcquireLatestCpuImageForPosition](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestCpuImageForPosition(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.CameraPosition,UnityEngine.XR.ARSubsystems.XRCpuImage.Cinfo@)), [MetaOpenXRCameraSubsystem.TryAcquireLatestStereoCpuImagePair](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestStereoCpuImagePair(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.XRCpuImagePair@)), and [MetaOpenXRCameraSubsystem.SetMaxStereoSyncAttempts](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.SetMaxStereoSyncAttempts(System.Int32)) for tuning stereo timestamp matching. Refer to [Access images via CPU](xref:meta-openxr-camera#access-images-via-cpu) for more information.
+- Added support for CPU camera image individual left/right eye and synchronized stereo pair via [MetaOpenXRCameraSubsystem.TryAcquireLatestCpuImageForPosition](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestCpuImageForPosition(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.CameraPosition,UnityEngine.XR.ARSubsystems.XRCpuImage.Cinfo@)), [MetaOpenXRCameraSubsystem.TryAcquireLatestStereoCpuImagePair](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestStereoCpuImagePair(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.XRCpuImagePair@)), and [MetaOpenXRCameraSubsystem.SetMaxStereoSyncAttempts](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.SetMaxStereoSyncAttempts(System.Int32)) for tuning stereo timestamp matching. Refer to [Access images via CPU](xref:meta-openxr-camera-image-capture#access-images-via-cpu) for more information.
 
-- Added support for GPU camera image left/right single acquire and synchronized stereo pair via [MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImageForPosition](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImageForPosition(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.CameraPosition,UnityEngine.XR.ARSubsystems.XRTextureDescriptor@)), [MetaOpenXRCameraSubsystem.ReleaseGpuImageForPosition](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.ReleaseGpuImageForPosition(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.CameraPosition,UnityEngine.XR.ARSubsystems.XRTextureDescriptor)), [MetaOpenXRCameraSubsystem.TryAcquireLatestStereoGpuImagePair](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestStereoGpuImagePair(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.XRTextureDescriptorPair@)), and [MetaOpenXRCameraSubsystem.ReleaseStereoGpuImagePair](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.ReleaseStereoGpuImagePair(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.XRTextureDescriptorPair)). Refer to [Access images via GPU](xref:meta-openxr-camera#access-images-via-gpu) for more information.
+- Added support for GPU camera image left/right single acquire and synchronized stereo pair via [MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImageForPosition](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImageForPosition(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.CameraPosition,UnityEngine.XR.ARSubsystems.XRTextureDescriptor@)), [MetaOpenXRCameraSubsystem.ReleaseGpuImageForPosition](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.ReleaseGpuImageForPosition(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.CameraPosition,UnityEngine.XR.ARSubsystems.XRTextureDescriptor)), [MetaOpenXRCameraSubsystem.TryAcquireLatestStereoGpuImagePair](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestStereoGpuImagePair(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.XRTextureDescriptorPair@)), and [MetaOpenXRCameraSubsystem.ReleaseStereoGpuImagePair](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.ReleaseStereoGpuImagePair(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.XRTextureDescriptorPair)). Refer to [Access images via GPU](xref:meta-openxr-camera-image-capture#access-images-via-gpu) for more information.
 
 ### Fixed
 
@@ -36,12 +57,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added a setting to the AR Camera Feature that allows you to enable passthrough before the splash screen is displayed. Refer to [Passthrough pre-splash screen](xref:meta-openxr-camera#passthrough-pre-splash-screen) for details.
+- Added a setting to the AR Camera Feature that allows you to enable passthrough before the splash screen is displayed. Refer to [Passthrough pre-splash screen](xref:meta-openxr-camera-passthrough#pre-splash-screen) for details.
 
 ### Changed
 
 - Changed the minimum XR Composition Layers dependency version from 2.2.0 to 2.3.0.
--  Camera image-related user permissions are now only added to the Android manifest if the user opts in to use camera image functionality. Refer to [Image capture](xref:meta-openxr-camera#image-capture) for more information.
+-  Camera image-related user permissions are now only added to the Android manifest if the user opts in to use camera image functionality. Refer to [Image capture](xref:meta-openxr-camera-image-capture) for more information.
 - macOS binaries are now code signed.
 - Changed AR Foundation dependency version from 6.4.0 to 6.5.0-pre.1.
 
@@ -58,8 +79,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added support for GPU camera image capture via [MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImage](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImage(UnityEngine.XR.ARSubsystems.XRTextureDescriptor@)) and [MetaOpenXRCameraSubsystem.ReleaseGpuImage](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.ReleaseGpuImage(UnityEngine.XR.ARSubsystems.XRTextureDescriptor)). Refer to [Access images via GPU](xref:meta-openxr-camera#access-images-via-gpu) for more information.
-- Added provider-specific [Raycast methods](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRRaycastSubsystem.Raycast(UnityEngine.XR.OpenXR.Features.Meta.EnvironmentRaycastHit,UnityEngine.Ray,UnityEngine.XR.ARSubsystems.TrackableType,Unity.Collections.Allocator)) for getting information about the [EnvironmentRaycastHitStatus](xref:UnityEngine.XR.OpenXR.Features.Meta.EnvironmentRaycastHitStatus) along with the XRRaycastHit.
+- Added support for GPU camera image capture via [MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImage](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImage(UnityEngine.XR.ARSubsystems.XRTextureDescriptor@)) and [MetaOpenXRCameraSubsystem.ReleaseGpuImage](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.ReleaseGpuImage(UnityEngine.XR.ARSubsystems.XRTextureDescriptor)). Refer to [Access images via GPU](xref:meta-openxr-camera-image-capture#access-images-via-gpu) for more information.
+- Added provider-specific [Raycast methods](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRRaycastSubsystem.RaycastEnvironment(UnityEngine.Ray)) for getting information about the [EnvironmentRaycastHitStatus](xref:UnityEngine.XR.OpenXR.Features.Meta.EnvironmentRaycastHitStatus) along with the XRRaycastHit.
 - Added a selectable [plane provider type](xref:meta-openxr-planes#plane-provider-type) property to the Meta Quest Planes feature, which enables you to opt in to the new High Fidelity Scene capability in Horizon OS.
 
 ### Changed
@@ -152,7 +173,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Recompiled the native plug-in with support for [16 KB page sizes](https://developer.android.com/guide/practices/page-sizes) on Android 15 or newer.
-- Re-implemented the Meta Quest Camera (Passthrough) feature using the XR Composition Layers package, allowing you more customization options for how Passthrough images are composited into your app. If you choose not to customize your app's composition layers, the `MetaOpenXRCameraSubsystem` will create the required components at runtime for you. Refer to [Composition layers](xref:meta-openxr-camera#composition-layers) for more information.
+- Re-implemented the Meta Quest Camera (Passthrough) feature using the XR Composition Layers package, allowing you more customization options for how Passthrough images are composited into your app. If you choose not to customize your app's composition layers, the `MetaOpenXRCameraSubsystem` will create the required components at runtime for you. Refer to [Composition layers](xref:meta-openxr-camera-composition-layers) for more information.
 - Changed the `MetaOpenXRPlaneSubystem` so that it doesn't log any errors if `xrGetSpaceBoundingBox2DFB` fails. There is a known issue in Meta Quest software version v74 and newer that causes this API repeatedly fail in some cases.
 
 ### Fixed
@@ -200,7 +221,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Fixed an issue with [BoundedPlane.nativePtr](xref:UnityEngine.XR.ARSubsystems.BoundedPlane.nativePtr), [XRBoundingBox.nativePtr](xref:UnityEngine.XR.ARSubsystems.XRBoundingBox.nativePtr), and [XRAnchor.nativePtr](xref:UnityEngine.XR.ARSubsystems.XRAnchor.nativePtr) so they now return a pointer to a struct with a version number and a pointer to the `XrSpace` handle of their respective trackable type. Refer to [Plane native pointer](xref:meta-openxr-planes#Native-pointer), [Bounding box native pointer](xref:meta-openxr-bounding-boxes#Native-pointer), and [Anchor native pointer](xref:meta-openxr-anchors#Native-pointer) for more information.
+- Fixed an issue with [BoundedPlane.nativePtr](xref:UnityEngine.XR.ARSubsystems.BoundedPlane.nativePtr), [XRBoundingBox.nativePtr](xref:UnityEngine.XR.ARSubsystems.XRBoundingBox.nativePtr), and [XRAnchor.nativePtr](xref:UnityEngine.XR.ARSubsystems.XRAnchor.nativePtr) so they now return a pointer to a struct with a version number and a pointer to the `XrSpace` handle of their respective trackable type. Refer to [Plane native pointer](xref:meta-openxr-planes#native-pointer), [Bounding box native pointer](xref:meta-openxr-bounding-boxes#native-pointer), and [Anchor native pointer](xref:meta-openxr-anchors-feature#native-pointer) for more information.
 - Fixed Android Manifest setup for builds so that if your app uses Bounding Boxes or Meshing but not Planes, your app's Android Manifest will now correctly declare the `com.oculus.permission.USE_SCENE` permission.
 - Fixed the **Meta Quest: Display Utilities** feature so that it works correctly even when **Meta Quest: Session** is disabled. ([MOXRB-70](https://issuetracker.unity3d.com/product/unity/issues/guid/MOXRB-70))
 - Fixed the **Meta Quest: Anchors** and **Meta Quest: Passthrough** features so they gracefully fail to create their subsystems if the OpenXR runtime does not support the required system properties.
@@ -268,7 +289,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added new extension methods for the `XRDisplaySubsystem` to support getting the supported display refresh rates and requesting a display refresh rate. Refer to [Meta Quest Display Utilities](xref:meta-openxr-display-utilities) for more information.
-- Added documentation for recommended settings when using [Universal Render Pipeline](xref:meta-openxr-project-setup#universal-render-pipeline).
+- Added documentation for recommended settings when using [Universal Render Pipeline](xref:meta-openxr-graphics-settings#universal-render-pipeline).
 
 ### Changed
 

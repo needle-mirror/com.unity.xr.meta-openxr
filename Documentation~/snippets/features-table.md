@@ -4,6 +4,7 @@ This package defines the following OpenXR Features:
 | :---------- | :-------------- |
 | [Display utilities](xref:meta-openxr-display-utilities) | Get the supported display refresh rates for the device and request a display refresh rate. |
 | [Boundary visibility](xref:meta-openxr-boundary-visibility) | Suppress the visibility of the boundary. |
+| [Social Eye Gaze](xref:meta-openxr-social-eye-gaze) | Use per-eye gaze data to animate avatar eyes and build social presence applications |
 
 AR Features implement [AR Foundation](xref:arfoundation-manual) interfaces. This package implements the following AR features:
 

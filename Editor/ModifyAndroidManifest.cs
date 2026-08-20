@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor.Build.Reporting;
 using UnityEngine.XR.OpenXR;
 using UnityEngine.XR.OpenXR.Features.Meta;
 using Unity.XR.CompositionLayers;
@@ -8,16 +7,12 @@ using Unity.XR.Management.AndroidManifest.Editor;
 
 namespace UnityEditor.XR.OpenXR.Features.Meta
 {
-    class ModifyAndroidManifestMeta : OpenXRFeatureBuildHooks
+    // ReSharper disable once UnusedMember.Global
+    class ModifyAndroidManifestMeta : IAndroidManifestRequirementProvider
     {
-        public override int callbackOrder => 1;
-        public override Type featureType => typeof(ARSessionFeature);
+        public int callbackOrder => 2;
 
-        protected override void OnPreprocessBuildExt(BuildReport report) { }
-        protected override void OnPostGenerateGradleAndroidProjectExt(string path) { }
-        protected override void OnPostprocessBuildExt(BuildReport report) { }
-
-        protected override ManifestRequirement ProvideManifestRequirementExt()
+        public ManifestRequirement ProvideManifestRequirement()
         {
             var androidOpenXRSettings = OpenXRSettings.GetSettingsForBuildTargetGroup(BuildTargetGroup.Android);
             var elementsToAdd = new List<ManifestElement>();
@@ -185,13 +180,40 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
                 );
             }
 
+            var socialEyeGaze = androidOpenXRSettings.GetFeature<MetaSocialEyeGazeFeature>();
+            if (socialEyeGaze != null && socialEyeGaze.enabled)
+            {
+                elementsToAdd.Add(
+                    new ManifestElement
+                    {
+                        ElementPath = new List<string> { "manifest", "uses-feature" },
+                        Attributes = new Dictionary<string, string>
+                        {
+                            { "name", "oculus.software.eye_tracking" },
+                            { "required", socialEyeGaze.eyeTrackingRequired ? "true" : "false" },
+                        }
+                    }
+                );
+
+                elementsToAdd.Add(
+                    new ManifestElement
+                    {
+                        ElementPath = new List<string> { "manifest", "uses-permission" },
+                        Attributes = new Dictionary<string, string>
+                        {
+                            { "name", "com.oculus.permission.EYE_TRACKING" },
+                        }
+                    }
+                );
+            }
+
             return new ManifestRequirement
             {
-                SupportedXRLoaders = new HashSet<Type>()
+                SupportedXRLoaders = new HashSet<Type>
                 {
                     typeof(OpenXRLoader)
                 },
-                NewElements = elementsToAdd
+                OverrideElements = elementsToAdd
             };
         }
     }

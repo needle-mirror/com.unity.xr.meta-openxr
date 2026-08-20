@@ -19,6 +19,7 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
             BoundaryVisibilityFeature.featureId,
             AROcclusionFeature.featureId,
             ColocationDiscoveryFeature.featureId,
+            MetaSocialEyeGazeFeature.featureId,
         },
         DefaultFeatureIds = new []
         {

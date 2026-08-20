@@ -36,6 +36,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             internal const string k_MeshUrl = k_DocumentationFeatureBaseUrl + "meshing.html";
             internal const string k_OcclusionUrl = k_DocumentationFeatureBaseUrl + "occlusion.html";
             internal const string k_ColocationDiscoveryUrl = k_DocumentationFeatureBaseUrl + "colocation-discovery.html";
+            internal const string k_SocialEyeGazeUrl = k_DocumentationFeatureBaseUrl + "social-eye-gaze.html";
         }
 
         internal static class OpenXRExtensions
@@ -59,6 +60,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             internal const string k_XR_EXT_future = "XR_EXT_future";
             internal const string k_XR_META_spatial_entity_semantic_label = "XR_META_spatial_entity_semantic_label";
             internal const string k_XR_META_spatial_entity_room_mesh = "XR_META_spatial_entity_room_mesh";
+            internal const string k_XR_FB_eye_tracking_social = "XR_FB_eye_tracking_social";
         }
     }
 }

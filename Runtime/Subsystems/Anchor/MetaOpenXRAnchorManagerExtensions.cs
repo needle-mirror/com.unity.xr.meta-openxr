@@ -47,8 +47,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// <param name="anchor">The anchor you wish to share.</param>
         /// <returns>The result of the async operation. You are responsible to <see langword="await"/> this result.</returns>
         /// <exception cref="NullReferenceException">Thrown if `anchorManager` is null.</exception>
-        /// <exception cref="InvalidOperationException">Thrown if the <see cref="ARAnchorManager.subsystem"/> is not a
-        /// <see cref="MetaOpenXRAnchorSubsystem"/>.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the <see cref="ARAnchorManager"/>'s loaded
+        /// <see cref="XRAnchorSubsystem"/> is not a <see cref="MetaOpenXRAnchorSubsystem"/>.</exception>
         public static Awaitable<XRResultStatus> TryShareAnchorAsync(this ARAnchorManager anchorManager, ARAnchor anchor)
         {
             if (anchorManager == null)
@@ -75,8 +75,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// <returns>The async operation. You are responsible to <see langword="await"/> this `Awaitable` before you read
         /// the results.</returns>
         /// <exception cref="NullReferenceException">Thrown if the anchorManager is null.</exception>
-        /// <exception cref="InvalidOperationException">Thrown if the <see cref="ARAnchorManager.subsystem"/> is not a
-        /// <see cref="MetaOpenXRAnchorSubsystem"/>.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the <see cref="ARAnchorManager"/>'s loaded
+        /// <see cref="XRAnchorSubsystem"/> is not a <see cref="MetaOpenXRAnchorSubsystem"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="anchors"/> is `null` or
         /// <paramref name="outputShareAnchorResults"/> is `null`.</exception>
         /// <exception cref="NullReferenceException">Thrown if an anchor passed in to share is null.</exception>
@@ -134,8 +134,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// parameter to ignore it.</param>
         /// <returns>The result of the async operation. You are responsible to <see langword="await"/> this result.</returns>
         /// <exception cref="NullReferenceException">Thrown if the anchorManager is null.</exception>
-        /// <exception cref="InvalidOperationException">Thrown if the <see cref="ARAnchorManager.subsystem"/> is not a
-        /// <see cref="MetaOpenXRAnchorSubsystem"/>.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the <see cref="ARAnchorManager"/>'s loaded
+        /// <see cref="XRAnchorSubsystem"/> is not a <see cref="MetaOpenXRAnchorSubsystem"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="outputLoadedAnchors"/> is `null`.</exception>
         /// <remarks>
         /// If no anchors were shared with <see cref="MetaOpenXRAnchorSubsystem.sharedAnchorsGroupId"/>, then this

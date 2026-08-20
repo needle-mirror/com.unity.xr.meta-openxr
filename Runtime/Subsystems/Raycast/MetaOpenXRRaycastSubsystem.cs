@@ -218,9 +218,18 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 subsystemTypeOverride = typeof(MetaOpenXRRaycastSubsystem),
                 supportsViewportBasedRaycast = false,
                 supportsWorldBasedRaycast = true,
-                supportedTrackableTypes = TrackableType.Depth,
+                supportedTrackableTypesDelegate = GetSupportedTrackableTypes,
                 supportsTrackedRaycasts = false,
             });
+        }
+
+        static TrackableType GetSupportedTrackableTypes()
+        {
+            var feature = OpenXRSettings.Instance.GetFeature<ARRaycastFeature>();
+            if (feature == null || !feature.enabled)
+                return TrackableType.None;
+
+            return TrackableType.Depth;
         }
     }
 }

@@ -61,4 +61,4 @@ UnityXRNativeBoundingBox nativeBoundingBoxData;
 XrSpace* boundingBoxXrSpaceHandle = static_cast<XrSpace*>(nativeBoundingBoxData.boundingBoxPtr);
 ```
 
-To learn more about native pointers and their usage, refer to [Extending AR Foundation](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@6.0/manual/architecture/extensions.html).
+To learn more about native pointers and their usage, refer to [Extending AR Foundation](xref:arfoundation-extensions).

@@ -207,10 +207,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                     fixIt = () =>
                     {
                         var xrOrigin = FindAnyObjectByType<XROrigin>();
-                        if (xrOrigin != null || xrOrigin.enabled)
+                        if (xrOrigin != null && xrOrigin.enabled)
                         {
                             var camera = xrOrigin.Camera;
-                            if (camera != null || camera.GetComponent<ARCameraManager>() != null)
+                            if (camera != null && camera.GetComponent<ARCameraManager>() != null)
                             {
                                 camera.clearFlags = CameraClearFlags.SolidColor;
                                 Color clearColor = camera.backgroundColor;

@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.meta-openxr",
   "displayName": "Unity OpenXR Meta",
-  "version": "2.6.0-pre.1",
+  "version": "2.6.1",
   "unity": "6000.0",
   "description": "Enables you to build mixed reality apps for Meta Quest devices by implementing support for Meta's OpenXR extensions.",
   "keywords": [
@@ -19,22 +19,22 @@
     "arfoundation"
   ],
   "dependencies": {
-    "com.unity.xr.openxr": "1.15.1",
-    "com.unity.xr.arfoundation": "6.5.0",
+    "com.unity.xr.openxr": "1.18.0",
+    "com.unity.xr.arfoundation": "6.6.0",
     "com.unity.xr.compositionlayers": "2.4.0",
-    "com.unity.xr.management": "4.4.0",
-    "com.unity.xr.core-utils": "2.5.1"
+    "com.unity.xr.management": "4.7.0",
+    "com.unity.xr.core-utils": "2.6.0"
   },
   "_upm": {
-    "changelog": "### Added\n\n- Added support for CPU camera image individual left/right eye and synchronized stereo pair via [MetaOpenXRCameraSubsystem.TryAcquireLatestCpuImageForPosition](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestCpuImageForPosition(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.CameraPosition,UnityEngine.XR.ARSubsystems.XRCpuImage.Cinfo@)), [MetaOpenXRCameraSubsystem.TryAcquireLatestStereoCpuImagePair](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestStereoCpuImagePair(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.XRCpuImagePair@)), and [MetaOpenXRCameraSubsystem.SetMaxStereoSyncAttempts](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.SetMaxStereoSyncAttempts(System.Int32)) for tuning stereo timestamp matching. Refer to [Access images via CPU](xref:meta-openxr-camera#access-images-via-cpu) for more information.\n\n- Added support for GPU camera image left/right single acquire and synchronized stereo pair via [MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImageForPosition](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImageForPosition(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.CameraPosition,UnityEngine.XR.ARSubsystems.XRTextureDescriptor@)), [MetaOpenXRCameraSubsystem.ReleaseGpuImageForPosition](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.ReleaseGpuImageForPosition(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.CameraPosition,UnityEngine.XR.ARSubsystems.XRTextureDescriptor)), [MetaOpenXRCameraSubsystem.TryAcquireLatestStereoGpuImagePair](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestStereoGpuImagePair(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.XRTextureDescriptorPair@)), and [MetaOpenXRCameraSubsystem.ReleaseStereoGpuImagePair](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.ReleaseStereoGpuImagePair(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.XRTextureDescriptorPair)). Refer to [Access images via GPU](xref:meta-openxr-camera#access-images-via-gpu) for more information.\n\n### Fixed\n\n- Fixed a rare issue where the Editor could unexpectedly quit after entering and exiting Play mode with Meta Horizon Link, if `UnityOpenXRMeta_XrFuncTable_ClearCachedFunc` was called after the OpenXR loader was deinitialized."
+    "changelog": "### Added\n\n- Added `MetaSocialEyeGazeFeature` feature and `MetaSocialEyeGazeDevice` input device, providing left and right eye gaze pose, tracking state, and confidence through Unity's Input System via the `XR_FB_eye_tracking_social` OpenXR extension. Refer to [Social eye gaze](xref:meta-openxr-social-eye-gaze) for more information.\n\n### Changed\n\n- Improved performance by around 30% when converting acquired CPU camera images from YUV to `RGBA32` on Meta Quest.\n- Changed the minimum OpenXR Plug-in dependency version from 1.15.1 to 1.18.0.\n- Changed the minimum AR Foundation dependency version from 6.5.0 to 6.6.0.\n- Changed the minimum XR Core Utils dependency version from 2.5.1 to 2.6.0.\n- Changed the `Unity.XR.MetaOpenXR` runtime assembly to be included for `WindowsStandalone64` and `macOSStandalone` in addition to previously included platforms. This change allows you to build standalone Windows and macOS apps with this package, and fixes issue [UUM-140740](https://issuetracker.unity.com/issues/21880/error-a-scripted-object-has-a-different-serialization-layout-when-loading-is-thrown-when-building-a-project-with-development-build).\n\n### Fixed\n\n- Fixed the camera subsystem so that Passthrough pixels are no longer tinted by non-black Camera background colors when the color alpha value is zero. ([MOXRB-179](https://issuetracker.unity3d.com/issues/passthrough-shows-background-color-tint-when-camera-clear-color-alpha-is-set-to-0))\n- Fixed the Meta Quest Camera feature so that automatically fixing your camera's clear flags can no longer possibly throw a `NullReferenceException`.\n- Fixed internal Android App Manifest logic so that required Android Manifest entries are processed regardless of whether the Meta Quest Session feature is enabled for the Android build target.\n- Fixed usages of APIs that were deprecated in AR Foundation 6.6.0-pre.1."
   },
   "upmCi": {
-    "footprint": "eccd2ab843beb1e85a3932aac1e830713cf0e80e"
+    "footprint": "2e06958738a54480203e0568ea3dace386cb8f80"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.xr.meta-openxr@2.6/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/xr.sdk.meta-openxr.git",
     "type": "git",
-    "revision": "a840f497f5c9ba1451c8282f6539aff5fe470688"
+    "revision": "b8e4a88f7ac30e0ca025fa9735c0626c8469f216"
   }
 }

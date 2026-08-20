@@ -42,7 +42,7 @@ To optimize your Universal Render Pipeline Asset for Meta Quest:
 1. Locate your project's Universal Render Pipeline Asset. One way to do this is to type `t:UniversalRenderPipelineAsset` into the **Project** window's search bar.
 
     > [!TIP]
-    > If your project does not contain a Universal Render Pipeline Asset, refer to [Installing the Universal Render Pipeline into an existing Project](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/InstallURPIntoAProject.html) from the URP docs.
+    > If your project does not contain a Universal Render Pipeline Asset, refer to [Installing the Universal Render Pipeline into an existing Project](xref:urp-install-urp-into-a-project) from the URP docs.
 
 2. In the **Inspector**, under the **Rendering** header, disable **Terrain Holes**.
 3. Under the **Quality** header, disable **HDR**.
@@ -61,5 +61,5 @@ To optimize your Universal Renderer Data for Meta Quest:
 
 ## Additional resources
 
-* [Optimization techniques for untethered XR devices](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@17.0/manual/xr-untethered-device-optimization.html) (URP documentation)
+* [Optimization techniques for untethered XR devices](xref:urp-xr-untethered-device-optimization)
 * [XR platform system requirements](xref:um-system-requirements#xr)

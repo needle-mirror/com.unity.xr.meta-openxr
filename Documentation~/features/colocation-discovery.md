@@ -32,7 +32,7 @@ Colocation advertisement is the process of broadcasting a message for colocated 
 
 When you start colocation advertisement, the [advertisementState](xref:UnityEngine.XR.OpenXR.Features.Meta.ColocationDiscoveryFeature.advertisementState) transitions between `Inactive`, `Starting`, and `Active`. You can be notified when the advertisement state changes by subscribing to [ColocationDiscoveryFeature.advertisementStateChanged](xref:UnityEngine.XR.OpenXR.Features.Meta.ColocationDiscoveryFeature.advertisementStateChanged). You can query the current advertisement state via `ColocationDiscoveryFeature.advertisementState`. During the transition period when the state is `Starting` can fail and return back to `Inactive`. If the `advertisementState` is not `Inactive` when calling `TryStartAdvertisementAsync`, the request will fail with [XRResultStatus.StatusCode.ValidationFailure](xref:UnityEngine.XR.ARSubsystems.XRResultStatus.StatusCode.ValidationFailure).
 
-To start colocation advertisement, call [ColocationDiscoveryFeature.TryStartAdvertisementAsync](xref:UnityEngine.XR.OpenXR.Features.Meta.ColocationDiscoveryFeature.TryStartAdvertisementAsync(Span{System.Byte})) as shown in the following code example:
+To start colocation advertisement, call [ColocationDiscoveryFeature.TryStartAdvertisementAsync](xref:UnityEngine.XR.OpenXR.Features.Meta.ColocationDiscoveryFeature.TryStartAdvertisementAsync(System.Span{System.Byte})) as shown in the following code example:
 
 [!code-cs[StartAdvertisementAsync](../../Tests/Runtime/CodeSamples/ColocationDiscoverySample.cs#StartAdvertisementAsync)]
 
@@ -88,7 +88,7 @@ The OpenXR runtime can also stop discovery on its own without a request to stop 
 
 ### Discovered messages
 
-Subscribe to [ColocationDiscoveryFeature.messageDiscovered](xref:UnityEngine.XR.OpenXR.Features.Meta.ColocationDiscoveryFeature.messageDiscovered) to be notified when a message is discovered. The `messageDiscovered` event passes a [XRColocationDiscoveredMessage](xref:UnityEngine.XR.OpenXR.Features.Meta.XRColocationDiscoveredMessage) that contains a `SerializableGuid` representing the advertisement ID and `NativeArray<byte>` representing the data of the message. The `NativeArray<byte>` is allocated with `Allocator.Temp` and will be disposed of at the end of the frame. The advertisement ID is used to distinguish between different advertised messages. The data contains the message the advertiser is broadcasting.
+Subscribe to [ColocationDiscoveryFeature.messageDiscovered](xref:UnityEngine.XR.OpenXR.Features.Meta.ColocationDiscoveryFeature.messageDiscovered) to be notified when a message is discovered. The `messageDiscovered` event passes a [ColocationDiscoveryMessage](xref:UnityEngine.XR.OpenXR.Features.Meta.ColocationDiscoveryMessage) that contains a `SerializableGuid` representing the advertisement ID and `NativeArray<byte>` representing the data of the message. The `NativeArray<byte>` is allocated with `Allocator.Temp` and will be disposed of at the end of the frame. The advertisement ID is used to distinguish between different advertised messages. The data contains the message the advertiser is broadcasting.
 
 If the advertised message is a `SerializableGuid`, you can convert the message of bytes back to a `SerializableGuid` by passing the bytes to a constructor of a new `Guid` and passing that guid into the constructor of a new `SerializableGuid`. The following code example demonstrates how to convert bytes to a `SerializableGuid`:
 

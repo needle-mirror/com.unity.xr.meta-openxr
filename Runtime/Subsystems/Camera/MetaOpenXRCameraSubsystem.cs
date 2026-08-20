@@ -595,6 +595,16 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             public override Feature currentCamera => Feature.WorldFacingCamera;
 
             /// <summary>
+            /// Whether this provider requires the camera's background color to be pre-multiplied
+            /// by its alpha channel before clearing the framebuffer.
+            /// </summary>
+            /// <value>
+            /// Always returns <see langword="true"/> because Meta OpenXR uses premultiplied alpha
+            /// compositing on the default scene layer.
+            /// </value>
+            public override bool requiresPremultipliedBackgroundColor => true;
+
+            /// <summary>
             /// Property to be implemented by the provider to query or set the current camera configuration.
             /// </summary>
             /// <value>The current camera configuration, if it exists. Otherwise, `null`.</value>

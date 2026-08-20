@@ -17,7 +17,7 @@ You can use the `XRResultStatus.nativeStatusCode` property to access the underly
 
 ## Persistent and shared anchor GUIDs
 
-On Meta's OpenXR runtime, the `SerializableGuid` returned by [ARAnchorManager.TrySaveAnchorAsync](xref:UnityEngine.XR.ARFoundation.ARAnchorManager.TrySaveAnchorAsync) and [ARAnchorManager.TryShareAnchorAsync](xref:UnityEngine.XR.ARFoundation.ARAnchorManager.TryShareAnchorAsync(UnityEngine.XR.ARSubsystems.TrackableId,CancellationToken)) is the same value as the input anchor's [trackableId](xref:UnityEngine.XR.ARSubsystems.ITrackable.trackableId).
+On Meta's OpenXR runtime, the `SerializableGuid` returned by [ARAnchorManager.TrySaveAnchorAsync](xref:UnityEngine.XR.ARFoundation.ARAnchorManager.TrySaveAnchorAsync*) and [ARAnchorManager.TryShareAnchorAsync](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRAnchorManagerExtensions.TryShareAnchorAsync(UnityEngine.XR.ARFoundation.ARAnchorManager,UnityEngine.XR.ARFoundation.ARAnchor)) is the same value as the input anchor's [trackableId](xref:UnityEngine.XR.ARSubsystems.ITrackable.trackableId).
 
 ## Batch save anchors
 
@@ -25,7 +25,7 @@ OpenXR Meta overrides AR Foundation's default implementation for batch save anch
 
 ## Batch load anchors
 
-OpenXR Meta overrides AR Foundation's default implementation for batch load anchors by requesting to load the entire batch at once instead of one at a time. [XRAnchorSubsystem.TryLoadAnchorsAsync](xref:UnityEngine.XR.ARSubsystems.XRAnchorSubsystem.TryLoadAnchorsAsync(Unity.Collections.NativeArray{UnityEngine.XR.ARSubsystems.SerializableGuid},Unity.Collections.Allocator,Action{Unity.Collections.NativeArray{UnityEngine.XR.ARSubsystems.LoadAnchorResult}},CancellationToken)) will always order successfully loaded anchors in its output results followed by anchors that failed to load.
+OpenXR Meta overrides AR Foundation's default implementation for batch load anchors by requesting to load the entire batch at once instead of one at a time. `TryLoadAnchorsAsync` on [XRAnchorSubsystem](xref:UnityEngine.XR.ARSubsystems.XRAnchorSubsystem) will always order successfully loaded anchors in its output results followed by anchors that failed to load.
 
 ### Incremental load results
 
@@ -55,4 +55,4 @@ UnityXRNativeAnchor nativeAnchor;
 XrSpace* anchorXrSpaceHandle = static_cast<XrSpace*>(nativeAnchor.referencePointPtr);
 ```
 
-To learn more about native pointers and their usage, refer to [Extending AR Foundation](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@6.0/manual/architecture/extensions.html).
+To learn more about native pointers and their usage, refer to [Extending AR Foundation](xref:arfoundation-extensions).
