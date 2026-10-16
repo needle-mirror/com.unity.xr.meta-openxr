@@ -1,9 +1,11 @@
 #if OPENXR_PLUGIN_1_16_0_PRE_2_OR_NEWER
 using System;
-using System.Runtime.InteropServices;
 using AOT;
 using NUnit.Framework;
 using Unity.Collections;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.SubsystemsImplementation.Extensions;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.XR.Management;
@@ -39,48 +41,88 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
             new(1.1F, 0.0F), new(0.0F, 1.1F), new(-0.9F, -0.1F)
         };
 
+        // Pointers to mock callbacks that RootedFunctionPointer keeps alive for the domain's lifetime; they never change.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static unsafe IntPtr s_DiscoverSpacesMETAPtr =
-            Marshal.GetFunctionPointerForDelegate((XrDiscoverSpacesMETA_Delegate)DiscoverSpacesMETA_MockDelegate);
+            RootedFunctionPointer.For((XrDiscoverSpacesMETA_Delegate)DiscoverSpacesMETA_MockDelegate);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static unsafe IntPtr s_RetrieveSpaceDiscoveryResults_OneTestPlane_Ptr =
-            Marshal.GetFunctionPointerForDelegate(
+            RootedFunctionPointer.For(
                 (XrRetrieveSpaceDiscoveryResultsMETA_Delegate)RetrieveSpaceDiscoveryResultsMETA_OneTestPlane_MockDelegate);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static unsafe IntPtr s_RetrieveSpaceDiscoveryResults_NoPlanes_Ptr =
-            Marshal.GetFunctionPointerForDelegate(
+            RootedFunctionPointer.For(
                 (XrRetrieveSpaceDiscoveryResultsMETA_Delegate)RetrieveSpaceDiscoveryResultsMETA_NoPlanes_MockDelegate);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static unsafe IntPtr s_RetrieveSpaceDiscoveryResults_RoomMeshOneBounded2d_Ptr =
-            Marshal.GetFunctionPointerForDelegate(
+            RootedFunctionPointer.For(
                 (XrRetrieveSpaceDiscoveryResultsMETA_Delegate)RetrieveSpaceDiscoveryResultsMETA_RoomMeshOneBounded2d_MockDelegate);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static unsafe IntPtr s_RetrieveSpaceDiscoveryResults_RoomMeshOneRoomMesh_Ptr =
-            Marshal.GetFunctionPointerForDelegate(
+            RootedFunctionPointer.For(
                 (XrRetrieveSpaceDiscoveryResultsMETA_Delegate)RetrieveSpaceDiscoveryResultsMETA_RoomMeshOneRoomMesh_MockDelegate);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static unsafe IntPtr s_SpaceComponentStatusFBPtr =
-            Marshal.GetFunctionPointerForDelegate((XrGetSpaceComponentStatusFB_Delegate)SpaceComponentStatusFB_MockDelegate);
+            RootedFunctionPointer.For((XrGetSpaceComponentStatusFB_Delegate)SpaceComponentStatusFB_MockDelegate);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static unsafe IntPtr s_LocateSpacePtr =
-            Marshal.GetFunctionPointerForDelegate((XrLocateSpace_Delegate)LocateSpace_MockDelegate);
+            RootedFunctionPointer.For((XrLocateSpace_Delegate)LocateSpace_MockDelegate);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static unsafe IntPtr s_LocateSpaceZeroPosePtr =
-            Marshal.GetFunctionPointerForDelegate((XrLocateSpace_Delegate)LocateSpace_ZeroPose_MockDelegate);
+            RootedFunctionPointer.For((XrLocateSpace_Delegate)LocateSpace_ZeroPose_MockDelegate);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static unsafe IntPtr s_SpaceBoundingBox2DFBPtr =
-            Marshal.GetFunctionPointerForDelegate((XrGetSpaceBoundingBox2DFB_Delegate)SpaceBoundingBox2DFB_MockDelegate);
+            RootedFunctionPointer.For((XrGetSpaceBoundingBox2DFB_Delegate)SpaceBoundingBox2DFB_MockDelegate);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static unsafe IntPtr s_LocateViewsPtr =
-            Marshal.GetFunctionPointerForDelegate((XrLocateViews_Delegate)LocateViews_MockDelegate);
+            RootedFunctionPointer.For((XrLocateViews_Delegate)LocateViews_MockDelegate);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static unsafe IntPtr s_SpaceBoundary2DFBSuccessPtr =
-            Marshal.GetFunctionPointerForDelegate((XrGetSpaceBoundary2DFB_Delegate)SpaceBoundary2DFB_SuccessMockDelegate);
+            RootedFunctionPointer.For((XrGetSpaceBoundary2DFB_Delegate)SpaceBoundary2DFB_SuccessMockDelegate);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static unsafe IntPtr s_SpaceBoundary2DFBFailurePtr =
-            Marshal.GetFunctionPointerForDelegate((XrGetSpaceBoundary2DFB_Delegate)SpaceBoundary2DFB_FailureMockDelegate);
+            RootedFunctionPointer.For((XrGetSpaceBoundary2DFB_Delegate)SpaceBoundary2DFB_FailureMockDelegate);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static unsafe IntPtr s_SpatialEntityPropertiesSupported_MockCallback =
-            Marshal.GetFunctionPointerForDelegate(
+            RootedFunctionPointer.For(
                 (GetSystemProperties_delegate)SpatialEntityPropertiesSupported_MockCallback);
 
         [MonoPInvokeCallback(typeof(GetSystemProperties_delegate))]

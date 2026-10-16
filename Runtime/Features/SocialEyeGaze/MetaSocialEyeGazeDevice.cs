@@ -1,3 +1,6 @@
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.Layouts;
@@ -24,6 +27,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// <summary>
         /// The active <see cref="MetaSocialEyeGazeDevice"/> instance, or <see langword="null"/> if no device is connected.
         /// </summary>
+        // Reset in OnRemoved, and in RegisterLayout on every entry into play mode.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         public static MetaSocialEyeGazeDevice current { get; private set; }
 
         /// <summary>

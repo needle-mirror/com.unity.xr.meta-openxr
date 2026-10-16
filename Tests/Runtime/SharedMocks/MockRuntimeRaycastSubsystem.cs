@@ -1,6 +1,8 @@
 using AOT;
 using System;
-using System.Runtime.InteropServices;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.XR.OpenXR.NativeTypes;
 
 using XrSession = System.UInt64;
@@ -15,27 +17,49 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
         const XrFutureEXT k_SucceedingFuture = 1;
         const XrFutureEXT k_CancelledFuture = 2;
 
+        // Pointers to mock callbacks that RootedFunctionPointer keeps alive for the domain's lifetime; they never change.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         internal static unsafe IntPtr xrCreateEnvironmentRaycasterAsyncMETA_ptr =
-            Marshal.GetFunctionPointerForDelegate((xrCreateEnvironmentRaycasterAsyncMETA_delegate)xrCreateEnvironmentRaycasterAsyncMETA);
+            RootedFunctionPointer.For((xrCreateEnvironmentRaycasterAsyncMETA_delegate)xrCreateEnvironmentRaycasterAsyncMETA);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         internal static unsafe IntPtr xrCreateEnvironmentRaycasterCompleteMETA_ptr =
-            Marshal.GetFunctionPointerForDelegate((xrCreateEnvironmentRaycasterCompleteMETA_delegate)xrCreateEnvironmentRaycasterCompleteMETA);
+            RootedFunctionPointer.For((xrCreateEnvironmentRaycasterCompleteMETA_delegate)xrCreateEnvironmentRaycasterCompleteMETA);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         internal static unsafe IntPtr xrDestroyEnvironmentRaycasterMETA_ptr =
-            Marshal.GetFunctionPointerForDelegate((xrDestroyEnvironmentRaycasterMETA_delegate)xrDestroyEnvironmentRaycasterMETA);
+            RootedFunctionPointer.For((xrDestroyEnvironmentRaycasterMETA_delegate)xrDestroyEnvironmentRaycasterMETA);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         internal static unsafe IntPtr xrPerformEnvironmentRaycastMETA_ptr_returnForwardHit =
-            Marshal.GetFunctionPointerForDelegate((xrPerformEnvironmentRaycastMETA_delegate)xrPerformEnvironmentRaycastMETA_returnForwardHit);
+            RootedFunctionPointer.For((xrPerformEnvironmentRaycastMETA_delegate)xrPerformEnvironmentRaycastMETA_returnForwardHit);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         internal static unsafe IntPtr envrionmentRaycastPropertiesSupported_MockCallback =
-            Marshal.GetFunctionPointerForDelegate(
+            RootedFunctionPointer.For(
                 (GetSystemProperties_delegate)EnvironmentRaycastPropertiesSupported_MockCallback);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         internal static unsafe IntPtr xrPollFutureEXT_ptr =
-            Marshal.GetFunctionPointerForDelegate((xrPollFutureEXT_delegate)xrPollFutureEXT);
+            RootedFunctionPointer.For((xrPollFutureEXT_delegate)xrPollFutureEXT);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         internal static unsafe IntPtr xrCancelFutureEXT_ptr =
-            Marshal.GetFunctionPointerForDelegate((xrCancelFutureEXT_delegate)xrCancelFutureEXT);
+            RootedFunctionPointer.For((xrCancelFutureEXT_delegate)xrCancelFutureEXT);
 
         [MonoPInvokeCallback(typeof(xrCreateEnvironmentRaycasterAsyncMETA_delegate))]
         internal static unsafe XrResult xrCreateEnvironmentRaycasterAsyncMETA(

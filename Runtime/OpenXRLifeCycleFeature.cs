@@ -110,7 +110,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             public static extern IntPtr UnityOpenXRMeta_OpenXRLifeCycle_HookGetInstanceProcAddr(IntPtr func);
 
             [DllImport(Constants.k_ARFoundationLibrary)]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityOpenXRMeta_OpenXRLifeCycle_OnInstanceCreate(ulong xrInstance);
 
             [DllImport(Constants.k_ARFoundationLibrary)]

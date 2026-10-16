@@ -4,6 +4,9 @@ using System.Runtime.InteropServices;
 using AOT;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.Assertions;
 using UnityEngine.Pool;
 using UnityEngine.XR.ARSubsystems;
@@ -21,8 +24,15 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             public Action<NativeArray<XRLoadAnchorResult>> incrementalCallback;
         }
 
+        // Cleared by CancelAllRequests, which MetaOpenXRAnchorSubsystem calls when its provider is destroyed.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static readonly Dictionary<SerializableGuid, LoadOperation> s_PendingOpsByRequestId = new();
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static readonly ObjectPool<AwaitableCompletionSource<NativeArray<XRLoadAnchorResult>>> s_CompletionSourcePool =
             ObjectPoolCreateUtil.Create<AwaitableCompletionSource<NativeArray<XRLoadAnchorResult>>>(defaultCapacity: 2);
 

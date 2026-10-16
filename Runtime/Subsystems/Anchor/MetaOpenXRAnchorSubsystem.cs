@@ -223,16 +223,16 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             internal static extern void ReleaseChanges();
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TryRemoveAnchor")]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool TryRemoveAnchor(TrackableId anchorId);
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TrySaveAnchorsAsync")]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool TrySaveAnchorsAsync(
                 SerializableGuid requestId, void* anchorIds, uint numAnchorIds, IntPtr completedCallback);
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TryLoadAnchorsAsync")]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool TryLoadAnchorsAsync(
                 SerializableGuid requestId,
                 void* anchorIds,
@@ -241,12 +241,12 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 IntPtr completedCallback);
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TryEraseAnchorsAsync")]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool TryEraseAnchorsAsync(
                 SerializableGuid requestId, void* anchorIds, uint numAnchorIds, IntPtr completedCallback);
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TryShareAnchorsAsync")]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool TryShareAnchorsAsync(
                 SerializableGuid requestId,
                 void* anchorIds,

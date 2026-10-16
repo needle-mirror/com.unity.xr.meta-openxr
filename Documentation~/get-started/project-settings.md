@@ -24,7 +24,7 @@ To add the Meta Quest build platform:
 1. Click the **Switch Platform** button.
 1. If you haven't already installed the Unity OpenXR: Meta package, select **Install** when you're prompted.
 
-The Meta Quest build platform shares its settings with the [Android build platform](xref:um-android-build-settings) by default. Optionally, you can add a Meta Quest [Build profile](xref:um-build-profiles) to customize Meta Quest-specific settings. Refer to [Develop for Meta Quest workflow](xref:um-xr-meta-quest-develop) for more information.
+The Meta Quest build platform shares its settings with the [Android build platform](xref:um-android-build-settings) by default. Optionally, you can add a Meta Quest [Build profile](xref:um-build-profiles) to customize Meta Quest-specific settings. Refer to [Meta Quest build profile settings reference](xref:um-xr-meta-quest-build-profile-settings) (Unity Manual) for more information.
 
 <a id="enable-openxr-features"></a>
 
@@ -63,3 +63,4 @@ Refer to [Optimize graphics settings](xref:meta-openxr-graphics-settings) to und
 ## Additional resources
 
 * [Oculus Touch Controller Profile](xref:openxr-oculus-touch-controller-profile) (Unity OpenXR plug-in documentation)
+* [Develop for Meta XR](xref:um-xr-meta-quest-develop) (Unity Manual)

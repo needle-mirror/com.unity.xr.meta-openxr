@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.Rendering;
 using UnityEngine.XR.ARSubsystems;
 #if UNITY_EDITOR
@@ -39,6 +42,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// </summary>
         const string k_OpenXRRequestedExtensions = k_XR_META_environment_depth;
 
+        // Scratch buffer that CreateSubsystem clears before each use.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static List<XROcclusionSubsystemDescriptor> s_OcclusionDescriptors = new();
         List<XROcclusionSubsystem> m_OcclusionSubsystems = new(1);
 

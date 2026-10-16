@@ -1,4 +1,7 @@
 using System.Runtime.CompilerServices;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.XR.ARSubsystems;
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
@@ -21,6 +24,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
     static class AwaitableUtils
     {
+        // Reset after every use.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static AwaitableCompletionSource<XRResultStatus> s_CompletionSource = new();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

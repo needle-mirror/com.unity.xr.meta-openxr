@@ -1039,32 +1039,33 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
 #if UNITY_ANDROID && !UNITY_EDITOR
             [DllImport(Constants.k_ARFoundationLibrary)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityMetaQuest_InitializeCamera();
 
             [DllImport(Constants.k_ARFoundationLibrary)]
             public static extern void UnityMetaQuest_ReleaseCamera();
 
             [DllImport(Constants.k_ARFoundationLibrary)]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityMetaQuest_Camera_TryGetFrame(
                 XRCameraParams cameraParams, out XRCameraFrame cameraFrame);
 
             [DllImport(Constants.k_ARFoundationLibrary)]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityMetaQuest_Camera_TryGetIntrinsics(out XRCameraIntrinsics cameraIntrinsics);
 
             [DllImport(Constants.k_ARFoundationLibrary)]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityMetaQuest_Camera_TryGetFrameForPosition(
                 int cameraPosition, XRCameraParams cameraParams, out XRCameraFrame cameraFrame);
 
             [DllImport(Constants.k_ARFoundationLibrary)]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityMetaQuest_Camera_TryGetIntrinsicsForPosition(
                 int cameraPosition, out XRCameraIntrinsics cameraIntrinsics);
 
             [DllImport(Constants.k_ARFoundationLibrary)]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityMetaQuest_Camera_SupportsStereoImageCapture();
 
             [DllImport(Constants.k_ARFoundationLibrary)]

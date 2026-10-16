@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.XR.ARSubsystems;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -44,6 +47,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             k_XR_FB_spatial_entity_container + " " +
             k_XR_META_spatial_entity_discovery;
 
+        // Scratch buffer that CreateSubsystem clears before each use.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static List<XRBoundingBoxSubsystemDescriptor> s_BoundingBoxDescriptors = new();
 
         /// <summary>

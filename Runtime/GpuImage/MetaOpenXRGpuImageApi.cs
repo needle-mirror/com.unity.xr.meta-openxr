@@ -35,6 +35,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     {
 #if UNITY_ANDROID
         [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_GpuImage_Initialize")]
+        [return: MarshalAs(UnmanagedType.I1)]
         internal static extern bool Initialize();
 
         [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_GpuImage_Release")]
@@ -44,12 +45,15 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         internal static extern void BeginFrame();
 
         [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_GpuImage_TryAcquireLatest")]
+        [return: MarshalAs(UnmanagedType.I1)]
         internal static extern bool TryAcquireLatestGpuHandles(out GpuImageHandles outHandles);
 
         [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_GpuImage_TryAcquireLatestForPosition")]
+        [return: MarshalAs(UnmanagedType.I1)]
         internal static extern bool TryAcquireLatestGpuHandlesForPosition(int cameraPosition, out GpuImageHandles outHandles);
 
         [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_GpuImage_TryAcquireLatestStereo")]
+        [return: MarshalAs(UnmanagedType.I1)]
         internal static extern bool TryAcquireLatestStereoGpuHandles(out GpuImageHandles outLeftHandles, out GpuImageHandles outRightHandles);
 
         [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_GpuImage_ReleaseHandles")]

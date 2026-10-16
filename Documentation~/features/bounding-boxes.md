@@ -53,7 +53,7 @@ typedef struct UnityXRNativeBoundingBox
 } UnityXRNativeBoundingBox;
 ```
 
-Cast the `void* boundingBoxPtr` to an [XrSpace](https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#spaces) handle in C++ using the following example code:
+Cast the `void* boundingBoxPtr` to an [XrSpace](https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#spaces) handle in C++ using the following example code:
 
 ```cpp
 // Marhshal the native bounding box data from the XRBoundingBox.nativePtr in C#

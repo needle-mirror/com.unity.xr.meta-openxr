@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.XR.OpenXR.Features;
@@ -44,6 +47,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             k_XR_META_spatial_entity_discovery + " " +
             k_XR_META_spatial_entity_mesh;
 
+        // Scratch buffer that CreateSubsystem clears before each use.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static List<XRMeshSubsystemDescriptor> s_MeshDescriptors = new();
 
         /// <summary>

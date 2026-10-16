@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.XR.ARSubsystems;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -46,6 +49,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             k_XR_META_spatial_entity_group_sharing + " " +
             k_XR_FB_spatial_entity_query;
 
+        // Scratch buffer that CreateSubsystem clears before each use.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static List<XRAnchorSubsystemDescriptor> s_AnchorDescriptors = new();
 
         /// <summary>

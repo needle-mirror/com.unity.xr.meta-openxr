@@ -16,7 +16,7 @@ Unity's [OpenXR Plug-in](https://docs.unity3d.com/Packages/com.unity.xr.openxr@1
 
 ## OpenXR extensions
 
-Meta's OpenXR extensions can be found in the Khronos Group [OpenXR Specification](https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html).
+Meta's OpenXR extensions can be found in the Khronos Group [OpenXR Specification](https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html).
 
 This package enables support for the following OpenXR extensions in your project:
 
@@ -36,6 +36,6 @@ This package enables support for the following OpenXR extensions in your project
 | [XR_META_environment_raycast](https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#XR_META_environment_raycast)| [Ray casts](xref:meta-openxr-raycasts) | This extension enables you to perform raycast operations against the surrounding physical environment. |
 | [XR_META_spatial_entity_discovery](https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#XR_META_spatial_entity_discovery) | [Planes](xref:meta-openxr-planes), [Anchors](xref:meta-openxr-anchors), [Meshing](xref:meta-openxr-meshing), [Bounding boxes](xref:meta-openxr-bounding-boxes) | This extension enables finding and loading persisted Spatial Entities which can then be tracked across different sessions and over time by applications. |
 | [XR_META_spatial_entity_group_sharing](https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#XR_META_spatial_entity_group_sharing) | [Anchors](xref:meta-openxr-anchors) | This extension enables sharing Spatial Entities to an application specific group GUID. |
-| [XR_META_spatial_entity_mesh](https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#XR_META_spatial_entity_mesh) | [Meshing](xref:meta-openxr-meshing) | This extension expands on the concept of spatial entities to include a way for a spatial entity to represent a triangle mesh that describes 3D geometry of the spatial entity in a scene. |
+| [XR_META_spatial_entity_mesh](https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#XR_META_spatial_entity_mesh) | [Meshing](xref:meta-openxr-meshing) | This extension expands on the concept of spatial entities to include a way for a spatial entity to represent a triangle mesh that describes 3D geometry of the spatial entity in a scene. |
 | [XR_META_spatial_entity_persistence](https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#XR_META_spatial_entity_persistence) | [Anchors](xref:meta-openxr-anchors) | This extension enables saving and erasing Spatial Entities, allowing them to be retrieved and tracked across different sessions and over time. |
 | [XR_META_spatial_entity_sharing](https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#XR_META_spatial_entity_sharing) | [Anchors](xref:meta-openxr-anchors) | This extension enables sharing Spatial Entities, allowing them to be retrieved and tracked by colocated users. |

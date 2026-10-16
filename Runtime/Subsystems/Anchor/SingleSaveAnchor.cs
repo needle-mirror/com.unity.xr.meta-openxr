@@ -4,6 +4,9 @@ using System.Runtime.InteropServices;
 using AOT;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.Assertions;
 using UnityEngine.Pool;
 using UnityEngine.XR.ARSubsystems;
@@ -14,9 +17,16 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 {
     static class SingleSaveAnchor
     {
+        // Cleared by CancelAllRequests, which MetaOpenXRAnchorSubsystem calls when its provider is destroyed.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static readonly Dictionary<SerializableGuid, AwaitableCompletionSource<Result<SerializableGuid>>>
             s_PendingCompletionSourcesByRequestId = new();
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static readonly ObjectPool<AwaitableCompletionSource<Result<SerializableGuid>>> s_CompletionSourcePool =
             ObjectPoolCreateUtil.Create<AwaitableCompletionSource<Result<SerializableGuid>>>();
 

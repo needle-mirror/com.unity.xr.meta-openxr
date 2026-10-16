@@ -24,7 +24,7 @@ To enable Meta Horizon Link:
 When you enter Play mode, the current scene plays in both your headset and the **Game** view.
 
 > [!NOTE]
-> Although the Android build target is required to build your app for Meta Quest devices, Standalone project settings apply in Play mode.
+> Although the Android build platform or Meta Quest build profile is required to build your app for Meta Quest devices, Standalone (**Windows, Mac, Linux**) project settings apply in Play mode.
 
 ## Enable developer features
 

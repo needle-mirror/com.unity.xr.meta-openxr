@@ -1,4 +1,7 @@
 using System;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.XR.ARSubsystems;
 using System.Runtime.InteropServices;
 
@@ -14,6 +17,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// A default-initialized environment raycast hit,
         /// using `Pose.identity` instead of zero-initialization.
         /// </summary>
+        // Never modified by this package.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         public static EnvironmentRaycastHit defaultValue = new EnvironmentRaycastHit(
             0,
             new XRRaycastHit(TrackableId.invalidId, Pose.identity, 0, TrackableType.None)

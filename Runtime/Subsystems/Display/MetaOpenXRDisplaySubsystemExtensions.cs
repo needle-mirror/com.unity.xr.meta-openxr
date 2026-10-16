@@ -94,11 +94,11 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             public static extern int GetDisplayRefreshRateCount();
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_Display_TryGetDisplayRefreshRates")]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool TryGetDisplayRefreshRates(void* refreshRates, uint capacity);
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_Display_TryRequestDisplayRefreshRate")]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool TryRequestDisplayRefreshRate(float refreshRate);
         }
     }

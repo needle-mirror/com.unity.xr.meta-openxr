@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using Unity.XR.CoreUtils;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.XR.ARFoundation;
@@ -76,6 +79,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// </summary>
         const string k_OpenXRRequestedExtensions = k_XR_FB_passthrough;
 
+        // Scratch buffer that CreateSubsystem clears before each use.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static List<XRCameraSubsystemDescriptor> s_CameraDescriptors = new();
 
         [SerializeField]

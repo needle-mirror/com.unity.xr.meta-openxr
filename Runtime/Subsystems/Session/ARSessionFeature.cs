@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.XR.ARSubsystems;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -31,6 +34,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
         internal const string displayName = "Meta Quest: Session";
 
+        // Scratch buffer that CreateSubsystem clears before each use.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static List<XRSessionSubsystemDescriptor> s_SessionDescriptors = new();
 
         /// <summary>

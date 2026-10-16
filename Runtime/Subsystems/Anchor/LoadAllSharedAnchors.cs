@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AOT;
 using Unity.Collections;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.Assertions;
 using UnityEngine.Pool;
 using UnityEngine.XR.ARSubsystems;
@@ -19,8 +22,15 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             internal Action<NativeArray<XRAnchor>> incrementalCallback;
         }
 
+        // Cleared by CancelAllRequests, which MetaOpenXRAnchorSubsystem calls when its provider is destroyed.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static readonly Dictionary<SerializableGuid, LoadOperation> s_PendingOpsByRequestId = new();
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static readonly ObjectPool<AwaitableCompletionSource<Result<NativeArray<XRAnchor>>>> s_CompletionSourcePool =
             ObjectPoolCreateUtil.Create<AwaitableCompletionSource<Result<NativeArray<XRAnchor>>>>(defaultCapacity: 2);
 
@@ -132,7 +142,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         static class NativeApi
         {
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaQuest_Anchor_TryLoadAllSharedAnchorsAsync")]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool TryLoadAllSharedAnchorsAsync(
                 SerializableGuid requestId,
                 SerializableGuid groupId,

@@ -1,6 +1,9 @@
 using System;
 using System.Runtime.InteropServices;
 using AOT;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.XR.OpenXR.NativeTypes;
 
 using XrSession = System.UInt64;
@@ -24,7 +27,11 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
         public GetEyeGazesDelegate getEyeGazes;
         public DestroyEyeTrackerDelegate destroyEyeTracker;
 
-        // Active instance — routes static interceptors to the current test's mock delegates
+        // Active instance — routes static interceptors to the current test's mock delegates.
+        // Cleared by MockSocialEyeGazeEnvironment.Stop, so it never carries over between tests.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static SocialEyeGazeMocks s_Current;
 
         internal static void Activate(SocialEyeGazeMocks mocks) => s_Current = mocks;
@@ -47,8 +54,20 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
             XrEyeTrackerFB eyeTracker, in XrEyeGazesInfoFB gazesInfo, out XrEyeGazesFB eyeGazes);
         delegate XrResult DestroyNative(XrEyeTrackerFB eyeTracker);
 
+        // Never reset: the native mock runtime holds pointers into these delegates.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static readonly CreateNative s_CreatePinned = CreateInterceptor;
+
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static readonly GetGazesNative s_GetGazesPinned = GetGazesInterceptor;
+
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static readonly DestroyNative s_DestroyPinned = DestroyInterceptor;
 
         static readonly IntPtr s_CreatePtr = Marshal.GetFunctionPointerForDelegate(s_CreatePinned);
@@ -56,10 +75,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
         static readonly IntPtr s_DestroyPtr = Marshal.GetFunctionPointerForDelegate(s_DestroyPinned);
 
         static readonly unsafe IntPtr k_EyeTrackingSupportedPtr =
-            Marshal.GetFunctionPointerForDelegate(
+            RootedFunctionPointer.For(
                 (GetSystemProperties_delegate)EyeTrackingSupported_MockCallback);
         static readonly unsafe IntPtr k_EyeTrackingUnsupportedPtr =
-            Marshal.GetFunctionPointerForDelegate(
+            RootedFunctionPointer.For(
                 (GetSystemProperties_delegate)EyeTrackingUnsupported_MockCallback);
 
         // Interceptors — called by the native mock runtime, routed to s_Current

@@ -47,7 +47,7 @@ typedef struct UnityXRNativeAnchor
 } UnityXRNativeAnchor;
 ```
 
-Cast the `void* referencePointPtr` to an [XrSpace](https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#spaces) handle in C++ using the following example code:
+Cast the `void* referencePointPtr` to an [XrSpace](https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#spaces) handle in C++ using the following example code:
 
 ```cpp
 // Marshal the native anchor data from the XRAnchor.nativePtr in C#

@@ -1,4 +1,7 @@
 using System.Linq;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEditor.XR.Management;
 using UnityEngine;
 using UnityEngine.XR.OpenXR;
@@ -10,6 +13,11 @@ namespace UnityEditor.XR.OpenXR.Features.Meta
     static class XRManagerEditorUtility
     {
         static readonly string[] k_RequiredFeatureIds = { ARSessionFeature.featureId, MetaQuestFeature.featureId };
+
+        // Editor-only cache of a settings asset, reloaded if the asset is destroyed.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static XRGeneralSettingsPerBuildTarget s_AllSettings;
 
         internal static bool IsMetaOpenXRTheActiveBuildTarget()

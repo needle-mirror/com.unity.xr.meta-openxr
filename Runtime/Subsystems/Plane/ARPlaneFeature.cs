@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 #if UNITY_EDITOR
@@ -47,6 +50,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             k_XR_META_spatial_entity_semantic_label + " " +
             k_XR_META_spatial_entity_room_mesh;
 
+        // Scratch buffer that CreateSubsystem clears before each use.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static List<XRPlaneSubsystemDescriptor> s_PlaneDescriptors = new();
 
         [SerializeField]

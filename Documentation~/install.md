@@ -5,6 +5,9 @@ uid: meta-openxr-install
 
 Unity OpenXR: Meta is an official Unity package available from the [Package Manager](xref:um-upm-ui). To understand how to install a package via the Package Manager, refer to [Install a UPM package from a registry](xref:um-upm-ui-install).
 
+> [!TIP]
+> Search for `Unity OpenXR Meta` in the **Unity Registry**, or [Install the package by name](xref:um-upm-ui-quick) with the package ID `com.unity.xr.meta-openxr`.
+
 ## Dependencies
 
 To use Unity OpenXR: Meta 2.6, your project must meet the following requirements:
@@ -19,3 +22,7 @@ The Package Manager automatically installs required package dependencies if you 
 
 > [!NOTE]
 > You can visit the Unity Forum for more information on the [Unity 6 New Naming Convention](https://discussions.unity.com/t/unity-6-new-naming-convention/942214).
+
+## Additional resources
+
+* [Meta Quest build profile](xref:um-xr-meta-quest-build-profile) (Unity Manual)

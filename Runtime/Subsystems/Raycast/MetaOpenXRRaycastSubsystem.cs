@@ -196,8 +196,8 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_Raycast_Raycast")]
                 internal static extern XRResultStatus Raycast(Vector3 origin, Vector3 direction, ref EnvironmentRaycastHit raycastHit, float maxDistance);
 
-                [return : MarshalAs(UnmanagedType.U1)]
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_Raycast_IsRaycasterAsyncReady")]
+                [return : MarshalAs(UnmanagedType.I1)]
                 internal static extern bool IsRaycasterAsyncReady();
 
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_Raycast_CompleteRaycaster")]

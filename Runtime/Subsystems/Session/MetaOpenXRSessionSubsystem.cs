@@ -1,5 +1,8 @@
 using System;
 using System.Runtime.InteropServices;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.Scripting;
 using UnityEngine.XR.ARSubsystems;
 
@@ -14,6 +17,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     {
         internal const string k_SubsystemId = "Meta-Session";
 
+        // Cleared in OnDestroy.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         internal static MetaOpenXRSessionSubsystem instance { get; private set; }
 
         /// <summary>
@@ -22,6 +29,16 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         public MetaOpenXRSessionSubsystem()
         {
             instance = this;
+        }
+
+        /// <summary>
+        /// Clears the reference to this instance so that it is not used after the subsystem is destroyed.
+        /// </summary>
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            if (instance == this)
+                instance = null;
         }
 
         /// <summary>
@@ -115,6 +132,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
             public override void Destroy() => NativeApi.UnityOpenXRMeta_Session_Destruct();
 
+#if ARFOUNDATION_6_7_0_OR_NEWER
+            [Obsolete("GetAvailabilityAsync has been deprecated in AR Foundation version 6.7. Call XRResultStatus.IsSuccess on the result of TryStartAsync instead.")]
+#endif
             public override Promise<SessionAvailability> GetAvailabilityAsync()
                 => Promise<SessionAvailability>.CreateResolvedPromise(
                     NativeApi.UnityOpenXRMeta_Session_IsSupported()
@@ -150,7 +170,6 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 id = k_SubsystemId,
                 providerType = typeof(MetaOpenXRProvider),
                 subsystemTypeOverride = typeof(MetaOpenXRSessionSubsystem),
-                supportsInstall = false,
                 supportsMatchFrameRate = false
             });
         }
@@ -170,11 +189,11 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             public static extern void UnityOpenXRMeta_Session_Stop();
 
             [DllImport(Constants.k_ARFoundationLibrary)]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityOpenXRMeta_Session_IsSupported();
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_SceneCapture_TryRequestSceneCapture")]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool TryRequestSceneCapture();
         }
     }

@@ -1,7 +1,9 @@
 #if OPENXR_PLUGIN_1_16_0_PRE_2_OR_NEWER
 using System;
-using System.Runtime.InteropServices;
 using AOT;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.XR.OpenXR.NativeTypes;
 
 namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
@@ -61,20 +63,33 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
         };
         internal static XrVector2f[] TestPlanePointsRoomMesh => s_TestPlanePointsRoomMesh;
 
+        // Pointers to mock callbacks that RootedFunctionPointer keeps alive for the domain's lifetime; they never change.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static unsafe IntPtr s_SpaceSemanticLabelsFBPtr =
-            Marshal.GetFunctionPointerForDelegate((XrGetSpaceSemanticLabelsFB_Delegate)SpaceSemanticLabelsFB_MockDelegate);
+            RootedFunctionPointer.For((XrGetSpaceSemanticLabelsFB_Delegate)SpaceSemanticLabelsFB_MockDelegate);
         internal static IntPtr SpaceSemanticLabelsFBPtr => s_SpaceSemanticLabelsFBPtr;
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static unsafe IntPtr s_SpaceRoomMeshMETAPtr =
-            Marshal.GetFunctionPointerForDelegate((XrGetSpaceRoomMeshMETA_Delegate)SpaceRoomMeshMETA_MockDelegate);
+            RootedFunctionPointer.For((XrGetSpaceRoomMeshMETA_Delegate)SpaceRoomMeshMETA_MockDelegate);
         internal static IntPtr SpaceRoomMeshMETAPtr => s_SpaceRoomMeshMETAPtr;
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static unsafe IntPtr s_SpaceRoomMesh_NoPlanes_METAPtr =
-            Marshal.GetFunctionPointerForDelegate((XrGetSpaceRoomMeshMETA_Delegate)SpaceRoomMesh_NoPlanes_META_MockDelegate);
+            RootedFunctionPointer.For((XrGetSpaceRoomMeshMETA_Delegate)SpaceRoomMesh_NoPlanes_META_MockDelegate);
         internal static IntPtr SpaceRoomMesh_NoPlanes_METAPtr => s_SpaceRoomMesh_NoPlanes_METAPtr;
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static unsafe IntPtr s_SpaceRoomMeshFaceIndicesMETAPtr =
-            Marshal.GetFunctionPointerForDelegate((XrGetSpaceRoomMeshFaceIndicesMETA_Delegate)SpaceRoomMeshFaceIndicesMETA_MockDelegate);
+            RootedFunctionPointer.For((XrGetSpaceRoomMeshFaceIndicesMETA_Delegate)SpaceRoomMeshFaceIndicesMETA_MockDelegate);
         internal static IntPtr SpaceRoomMeshFaceIndicesMETAPtr => s_SpaceRoomMeshFaceIndicesMETAPtr;
 
         [MonoPInvokeCallback(typeof(XrGetSpaceSemanticLabelsFB_Delegate))]

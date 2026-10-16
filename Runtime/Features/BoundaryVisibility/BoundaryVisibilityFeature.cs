@@ -1,6 +1,9 @@
 using System;
 using System.Runtime.InteropServices;
 using AOT;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.XR.OpenXR.NativeTypes;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -41,6 +44,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         /// </remarks>
         public const int XR_BOUNDARY_VISIBILITY_SUPPRESSION_NOT_ALLOWED_META = 1000528000;
 
+        // Cleared in OnInstanceDestroy.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static BoundaryVisibilityFeature s_Instance;
 
         [SerializeField, Tooltip("If enabled, this feature will attempt to suppress boundary visibility immediately after XR is initialized.")]

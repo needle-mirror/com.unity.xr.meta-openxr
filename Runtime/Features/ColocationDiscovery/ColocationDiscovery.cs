@@ -2,21 +2,44 @@ using System;
 using System.Runtime.InteropServices;
 using AOT;
 using Unity.Collections;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.Assertions;
 using UnityEngine.XR.ARSubsystems;
 using static UnityEngine.XR.ARSubsystems.XRResultStatus;
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
-    static class ColocationDiscovery
+    static partial class ColocationDiscovery
     {
+        // Subscribers are added via ColocationDiscoveryFeature and must survive an XR restart within a play session,
+        // so they are only cleared when entering or exiting play mode.
+#if UNITY_6000_5_OR_NEWER
+        [AutoStaticsCleanup]
+#endif
         internal static event EventHandler<Result<ColocationState>> stateChanged;
 
+#if UNITY_6000_5_OR_NEWER
+        [AutoStaticsCleanup]
+#endif
         internal static event EventHandler<ColocationDiscoveryMessage> messageDiscovered;
 
+        // Reset in CancelRequestsAndDestroyNative.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         internal static ColocationState discoveryState;
 
+        // Completion sources are reset after every use and canceled in CancelRequestsAndDestroyNative.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static AwaitableCompletionSource<XRResultStatus> s_StartCompletionSource = new();
+
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static AwaitableCompletionSource<XRResultStatus> s_StopCompletionSource = new();
 
         delegate void StartAsyncDelegate(XRResultStatus resultStatus);
@@ -40,13 +63,28 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
         internal static void CancelRequestsAndDestroyNative()
         {
+            // Destroy the native provider first so that code running during cancellation (awaiters or stateChanged
+            // handlers) can't start a new request that Destroy would then orphan. Such retries instead fail with
+            // ProviderUninitialized and leave the state Inactive.
+            NativeApi.Destroy();
+
+            // Reset state before canceling so that awaiters resumed by the cancellation observe Inactive.
+            var wasInactive = discoveryState == ColocationState.Inactive;
+            discoveryState = ColocationState.Inactive;
+
             s_StartCompletionSource.SetCanceled();
             s_StartCompletionSource.Reset();
 
             s_StopCompletionSource.SetCanceled();
             s_StopCompletionSource.Reset();
 
-            NativeApi.Destroy();
+            if (wasInactive)
+                return;
+
+            // Raise the event last so that a throwing handler can't skip any of the cleanup above.
+            var stateChangedResult = new Result<ColocationState>(
+                new XRResultStatus(StatusCode.UnqualifiedSuccess), discoveryState);
+            stateChanged?.Invoke(typeof(ColocationDiscovery), stateChangedResult);
         }
 
         internal static Awaitable<XRResultStatus> TryStartAsync()

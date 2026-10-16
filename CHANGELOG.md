@@ -8,6 +8,26 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.7.0] - 2026-10-16
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+- Fixed an issue where room layout discovery called `xrDiscoverSpacesMETA` on runtimes that don't support `XR_META_spatial_entity_discovery`, such as Android XR, which logged errors every frame while the app space was changing. Room layout discovery now only runs while the plane or bounding box subsystem exists.
+- Fixed issues related to the `AutoStaticsCleanupAttribute`, as required by Unity versions 6000.7.0b1 and newer.
+- Fixed compiler warnings from usages of APIs that are deprecated as of AR Foundation 6.7.
+- Fixed an issue where `ColocationDiscoveryFeature.advertisementState` and `ColocationDiscoveryFeature.discoveryState` weren't reset when the OpenXR instance was destroyed, which caused later calls to start colocation advertisement or discovery to fail with a validation error after XR was restarted, or after re-entering Play mode with domain reload disabled.
+- Fixed an issue where the passthrough composition layer didn't destroy its native passthrough handles when the OpenXR session ended, and could later try to destroy handles from a previous session after XR was restarted or after re-entering Play mode with domain reload disabled.
+
+### Security
+
 ## [2.6.1] - 2026-08-20
 
 ### Added

@@ -7,6 +7,7 @@
   * [Optimize graphics settings](xref:meta-openxr-graphics-settings)
   * [Set up your scene](xref:meta-openxr-scene-setup)
   * [Configure Meta Horizon Link](xref:meta-openxr-link)
+  * [Get started with Meta VR Glasses](xref:meta-openxr-meta-vr-glasses)
 * [Architecture](xref:meta-openxr-architecture)
 * [Features](xref:meta-openxr-features)
   * [Display utilities](xref:meta-openxr-display-utilities)

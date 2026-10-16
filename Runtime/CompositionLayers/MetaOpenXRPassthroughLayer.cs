@@ -10,7 +10,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 {
     class MetaOpenXRPassthroughLayer : OpenXRCustomLayerHandler<XrCompositionLayerPassthroughFB>
     {
-        static Dictionary<int, PassthroughDataContainer> s_LayerIdsToPassthroughData = new();
+        // A new handler is created each time the OpenXRLayerProvider starts, so this is scoped to the instance
+        // and its handles are destroyed in Dispose.
+        readonly Dictionary<int, PassthroughDataContainer> m_LayerIdsToPassthroughData = new();
 
         struct PassthroughDataContainer
         {
@@ -40,7 +42,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             Debug.Log("Enter CreateNativeLayer");
 #endif
             // Remove any existing passthrough layer for this ID.
-            if (s_LayerIdsToPassthroughData.ContainsKey(layerInfo.Id))
+            if (m_LayerIdsToPassthroughData.ContainsKey(layerInfo.Id))
                 RemoveLayer(layerInfo.Id);
 
             var session = OpenXRLayerUtility.GetXRSession();
@@ -79,7 +81,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 return false;
             }
 
-            s_LayerIdsToPassthroughData.Add(
+            m_LayerIdsToPassthroughData.Add(
                 layerInfo.Id,
                 new PassthroughDataContainer
                 {
@@ -115,11 +117,11 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 #endif
             if (!layerInfo.Layer.enabled)
             {
-                var passthroughData = s_LayerIdsToPassthroughData[layerInfo.Id];
+                var passthroughData = m_LayerIdsToPassthroughData[layerInfo.Id];
                 var result = MetaOpenXRCameraSubsystem.NativeApi.UnityMetaQuest_xrPassthroughPauseFB(passthroughData.passthroughHandle);
                 var success = result == XrResult.Success;
                 if (success)
-                    s_LayerIdsToPassthroughData[layerInfo.Id] = new PassthroughDataContainer
+                    m_LayerIdsToPassthroughData[layerInfo.Id] = new PassthroughDataContainer
                     {
                         passthroughStarted = false,
                         passthroughHandle = passthroughData.passthroughHandle,
@@ -134,7 +136,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
         protected override bool ActiveNativeLayer(CompositionLayerManager.LayerInfo layerInfo, ref XrCompositionLayerPassthroughFB nativeLayer)
         {
-            if (s_LayerIdsToPassthroughData.TryGetValue(layerInfo.Id, out var passthroughData))
+            if (m_LayerIdsToPassthroughData.TryGetValue(layerInfo.Id, out var passthroughData))
             {
                 if (!passthroughData.passthroughStarted)
                 {
@@ -144,7 +146,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                     var result = MetaOpenXRCameraSubsystem.NativeApi.UnityMetaQuest_xrPassthroughStartFB(passthroughData.passthroughHandle);
                     var success = result == XrResult.Success;
                     if (success)
-                        s_LayerIdsToPassthroughData[layerInfo.Id] = new PassthroughDataContainer
+                        m_LayerIdsToPassthroughData[layerInfo.Id] = new PassthroughDataContainer
                         {
                             passthroughStarted = true,
                             passthroughHandle = passthroughData.passthroughHandle,
@@ -163,15 +165,35 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 #if VERBOSE_LOGGING
             Debug.Log("RemoveLayer");
 #endif
-            if (s_LayerIdsToPassthroughData.TryGetValue(removedLayerId, out var passthroughData))
+            if (m_LayerIdsToPassthroughData.TryGetValue(removedLayerId, out var passthroughData))
+                DestroyPassthrough(passthroughData);
+
+            m_LayerIdsToPassthroughData.Remove(removedLayerId);
+            base.RemoveLayer(removedLayerId);
+        }
+
+        // OpenXRLayerProvider disposes its handlers without calling RemoveLayer, both when the session ends and when
+        // the app pauses. The XrSession is still valid at that point, so destroy the passthrough handles owned by this
+        // handler here. Otherwise, they leak because the next handler starts with an empty map.
+        protected override void Dispose(bool disposing)
+        {
+            // Skip native calls when invoked from the finalizer.
+            if (disposing)
             {
-                MetaOpenXRCameraSubsystem.NativeApi.UnityMetaQuest_xrPassthroughPauseFB(passthroughData.passthroughHandle);
-                MetaOpenXRCameraSubsystem.NativeApi.UnityMetaQuest_xrDestroyPassthroughLayerFB(passthroughData.passthroughLayerHandle);
-                MetaOpenXRCameraSubsystem.NativeApi.UnityMetaQuest_xrDestroyPassthroughFB(passthroughData.passthroughHandle);
+                foreach (var passthroughData in m_LayerIdsToPassthroughData.Values)
+                    DestroyPassthrough(passthroughData);
+
+                m_LayerIdsToPassthroughData.Clear();
             }
 
-            s_LayerIdsToPassthroughData.Remove(removedLayerId);
-            base.RemoveLayer(removedLayerId);
+            base.Dispose(disposing);
+        }
+
+        static void DestroyPassthrough(PassthroughDataContainer passthroughData)
+        {
+            MetaOpenXRCameraSubsystem.NativeApi.UnityMetaQuest_xrPassthroughPauseFB(passthroughData.passthroughHandle);
+            MetaOpenXRCameraSubsystem.NativeApi.UnityMetaQuest_xrDestroyPassthroughLayerFB(passthroughData.passthroughLayerHandle);
+            MetaOpenXRCameraSubsystem.NativeApi.UnityMetaQuest_xrDestroyPassthroughFB(passthroughData.passthroughHandle);
         }
     }
 }

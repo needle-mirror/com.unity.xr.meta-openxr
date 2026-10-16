@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AOT;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.Pool;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.Assertions;
@@ -10,8 +13,15 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 {
     static class AddAnchor
     {
+        // Cleared by CancelAllRequests, which MetaOpenXRAnchorSubsystem calls when its provider is destroyed.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static readonly Dictionary<Guid, AwaitableCompletionSource<Result<XRAnchor>>> s_AddAsyncPendingRequests = new();
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static readonly ObjectPool<AwaitableCompletionSource<Result<XRAnchor>>> s_CompletionSourcePool =
             ObjectPoolCreateUtil.Create<AwaitableCompletionSource<Result<XRAnchor>>>(defaultCapacity: 4);
 

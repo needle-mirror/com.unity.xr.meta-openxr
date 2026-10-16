@@ -284,10 +284,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_Occlusion_TryStart")]
                 internal static extern XRResultStatus TryStart(
-                    GraphicsDeviceType graphisAPI, [MarshalAs(UnmanagedType.U1)]bool enableHandRemoval, [MarshalAs(UnmanagedType.U1)]bool supportDepthTimestamp);
+                    GraphicsDeviceType graphisAPI, [MarshalAs(UnmanagedType.I1)]bool enableHandRemoval, [MarshalAs(UnmanagedType.I1)]bool supportDepthTimestamp);
 
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_Occlusion_TrySetHandRemovalEnabled")]
-                internal static extern XrResult SetHandRemovalEnabled([MarshalAs(UnmanagedType.U1)]bool enableHandRemoval);
+                internal static extern XrResult SetHandRemovalEnabled([MarshalAs(UnmanagedType.I1)]bool enableHandRemoval);
 
                 [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityMetaOpenXR_Occlusion_GetSwapchainSize")]
                 internal static extern uint GetSwapchainSize();

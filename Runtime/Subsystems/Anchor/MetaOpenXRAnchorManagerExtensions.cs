@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Unity.Collections;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using Unity.XR.CoreUtils.Collections;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
@@ -18,6 +21,10 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
     /// <seealso cref="ARAnchorFeature"/>
     public static class MetaOpenXRAnchorManagerExtensions
     {
+        // Cleared after every use.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static StringBuilder s_StringBuilder = new();
 
         static string GetInvalidSubsystemTypeOverrideMessage(XRAnchorSubsystem subsystem)

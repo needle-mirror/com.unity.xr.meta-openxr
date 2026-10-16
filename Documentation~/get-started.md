@@ -15,3 +15,9 @@ Refer to the following topics to understand how to set up your AR Foundation pro
 | [Optimize graphics settings](xref:meta-openxr-graphics-settings) | Understand the required and recommended graphics settings for OpenXR Meta.
 | [Set up your scene](xref:meta-openxr-scene-setup) | Learn how to set up your scene to handle input, Passthrough, and system permissions. |
 | [Configure Meta Horizon Link](xref:meta-openxr-link) | Configure Meta Horizon Link for faster iteration. |
+| [Get started with Meta VR Glasses](xref:meta-openxr-meta-vr-glasses) | Develop for Meta VR Glasses with OpenXR Meta. |
+
+## Additional resources
+
+* [Develop for Meta XR](xref:um-xr-meta-quest-develop) (Unity Manual)
+* [Create an XR project](xref:um-xr-create-projects) (Unity Manual)

@@ -13,7 +13,7 @@ The feature returns gaze poses in head-relative (view) space. You can use the re
 
 To use the Meta Quest Social Eye Gaze feature, your project must meet the following requirements:
 
-* The target device must support eye tracking (Meta Quest Pro).
+* The target device must support eye tracking (Meta Quest Pro or Meta VR Glasses).
 * Your app's Android manifest must declare the `com.oculus.permission.EYE_TRACKING` permission and the `oculus.software.eye_tracking` uses-feature entry. When you enable this feature, the package automatically injects both entries at build time. The runtime permission request must be handled by your app, for example using the `PermissionsManager` component from XR Interaction Toolkit.
     > [!TIP]
     > XR Interaction Toolkit provides a `PermissionsManager` script that enables users to request permissions at runtime. You can add this component to a scene and use it to request `com.oculus.permission.EYE_TRACKING`.
@@ -34,7 +34,7 @@ When the Meta Social Eye Gaze feature is enabled, the package automatically inje
 - `com.oculus.permission.EYE_TRACKING`: required by the Android OS to grant the app access to eye tracking hardware at runtime.
 - `oculus.software.eye_tracking`: declares that the app uses eye tracking hardware. The `required` attribute controls whether devices without eye tracking can install the app.
 
-By default, `required` is set to `false`, which means a user can install your app on any Meta Quest device. On devices without eye tracking support, the feature disables itself at runtime.
+By default, `required` is set to `false`, which means a user can install your app on any Meta XR device. On devices without eye tracking support, the feature disables itself at runtime.
 
 To configure the eye tracking requirement setting, click the gear icon next to **Meta Quest: Social Eye Gaze** in **Project Settings** > **XR Plug-in Management** > **OpenXR**.
 

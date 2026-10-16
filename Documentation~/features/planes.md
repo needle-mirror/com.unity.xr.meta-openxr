@@ -15,8 +15,8 @@ Unity OpenXR: Meta implements two plane provider types that correspond to differ
 
 | **Meta plane provider type** | **OpenXR extension** | **Summary** |
 | :-------------| :---------- | :---------- |
-| `Xr Fb Scene`  | `XR_FB_scene` | Gets all Bounded2D components from the [Scene Model](https://developers.meta.com/horizon/documentation/unity/unity-scene-build-mixed-reality/) (Meta documentation), including tables, couches, wall art, and a simplified representation of the walls, floor, and ceiling. |
-| `Xr Meta Spatial Entity Room Mesh` | `XR_META_spatial_entity_room_mesh` | Gets all faces of the room mesh, which provides a higher fidelity representation of the walls, floor, and ceiling, allowing for more detailed surfaces and non-axis-aligned planes. |
+| `Xr Fb Scene`  | [`XR_FB_scene`](https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#XR_FB_scene) | Gets all Bounded2D components from the [Scene Model](https://developers.meta.com/horizon/documentation/unity/unity-scene-build-mixed-reality/) (Meta documentation), including tables, couches, wall art, and a simplified representation of the walls, floor, and ceiling. |
+| `Xr Meta Spatial Entity Room Mesh` | [`XR_META_spatial_entity_room_mesh`](https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#XR_META_spatial_entity_room_mesh) | Gets all faces of the room mesh, which provides a higher fidelity representation of the walls, floor, and ceiling, allowing for more detailed surfaces and non-axis-aligned planes. |
 
 > [!NOTE]
 > The planes that each provider type discovers and the data associated with discovered planes might vary. Refer to Meta's documentation for more information about the OpenXR extensions used by each provider type.
@@ -32,7 +32,7 @@ You can change the plane provider type your project uses as follows:
 3. Under **Feature Settings**, select the relevant type from the **Plane Provider Type** dropdown.
 
 > [!NOTE]
-> If you choose the `Xr Meta Spatial Entity Entity Room Mesh` and it isn’t available on your device, `Xr Fb Scene` will be used as a fallback.
+> If you choose the `Xr Meta Spatial Entity Room Mesh` and it isn’t available on your device, `Xr Fb Scene` will be used as a fallback.
 
 ![Plane Provider Type setting in the Unity Editor](../images/room-mesh-settings.png)<br/>*Settings for The Meta Quest: Planes feature, shown with Xr Meta Spatial Entity Room Mesh selected as the Plane Provider Type.*
 
@@ -63,7 +63,7 @@ This package maps Meta's native semantic labels to AR Foundation's [PlaneClassif
 
 `Xr Fb Scene` uses the [semantic label component](https://developer.oculus.com/documentation/native/android/mobile-scene-api-ref#getting-semantic-label-component).
 
-`Xr Meta Spatial Entity Room Mesh` uses `XrSemanticLabelMETA` for semantic labeling.
+`Xr Meta Spatial Entity Room Mesh` uses [`XrSemanticLabelMETA`](https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#XrSemanticLabelMETA) for semantic labeling.
 
 Refer to the table below to understand the mapping between AR Foundation's classifications and Meta's semantic labels:
 
@@ -93,7 +93,7 @@ typedef struct UnityXRNativePlane
 } UnityXRNativePlane;
 ```
 
-Cast the `void* planePtr` to an [XrSpace](https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#spaces) handle in C++ using the following example code:
+Cast the `void* planePtr` to an [XrSpace](https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#spaces) handle in C++ using the following example code:
 
 ```cpp
 // Marshal the native plane data from the BoundedPlane.nativePtr in C#

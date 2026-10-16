@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.XR.ARSubsystems;
 using static UnityEngine.XR.OpenXR.Features.Meta.Constants.OpenXRExtensions;
 
@@ -43,7 +46,15 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             }
         }
 
+        // Reset by ClearCachedCapabilityInfo, which OpenXRLifeCycleFeature calls in OnInstanceDestroy.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static List<SystemCapability> s_SystemCapabilities = new();
+
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static Dictionary<SystemCapability, SystemCapabilityInfo> s_InfosByCapability = new()
         {
             { SystemCapability.SpaceDiscovery, new(k_XR_META_spatial_entity_discovery, NativeApi.GetIsSpaceDiscoverySupported) },
@@ -121,43 +132,43 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         static class NativeApi
         {
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_SystemProperties_IsBoundaryVisibilitySupported")]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool GetIsBoundaryVisibilitySupported(ulong xrInstance);
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_SystemProperties_IsEnvironmentDepthSupported")]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool GetIsEnvironmentDepthSupported(ulong xrInstance);
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_SystemProperties_IsHandRemovalSupported")]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool GetIsHandRemovalSupported(ulong xrInstance);
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_SystemProperties_IsPassthroughSupported")]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool GetIsPassthroughSupported(ulong xrInstance);
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_SystemProperties_IsSpaceDiscoverySupported")]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool GetIsSpaceDiscoverySupported(ulong xrInstance);
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_SystemProperties_IsSpacePersistenceSupported")]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool GetIsSpacePersistenceSupported(ulong xrInstance);
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_SystemProperties_IsSpatialEntitySupported")]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool GetIsSpatialEntitySupported(ulong xrInstance);
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_SystemProperties_IsSharedAnchorsSupported")]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool GetIsSharedAnchorsSupported(ulong xrInstance);
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_SystemProperties_IsColocationDiscoverySupported")]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool GetIsColocationDiscoverySupported(ulong xrInstance);
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_SystemProperties_IsEnvironmentRaycastSupported")]
-            [return: MarshalAs(UnmanagedType.U1)]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool GetIsEnvironmentRaycastSupported(ulong xrInstance);
         }
     }

@@ -1,8 +1,10 @@
 #if OPENXR_PLUGIN_1_16_0_PRE_2_OR_NEWER
 using System;
-using System.Runtime.InteropServices;
 using AOT;
 using NUnit.Framework;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.SubsystemsImplementation.Extensions;
 using UnityEngine.XR.OpenXR.Features.Mock;
 using UnityEngine.XR.ARSubsystems;
@@ -17,12 +19,19 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
     {
         const int TestRequestId = 99;
 
+        // Pointers to mock callbacks that RootedFunctionPointer keeps alive for the domain's lifetime; they never change.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static unsafe IntPtr s_SpatialEntityPropertiesSupported_MockCallback =
-            Marshal.GetFunctionPointerForDelegate(
+            RootedFunctionPointer.For(
                 (GetSystemProperties_delegate)SpatialEntityPropertiesSupported_MockCallback);
 
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
         static unsafe IntPtr s_SceneCaptureRequestSuccess_MockCallback =
-            Marshal.GetFunctionPointerForDelegate(
+            RootedFunctionPointer.For(
                 (RequestSceneCaptureFB_Delegate)RequestSceneCaptureFBSuccess_MockCallback);
 
         [MonoPInvokeCallback(typeof(GetSystemProperties_delegate))]

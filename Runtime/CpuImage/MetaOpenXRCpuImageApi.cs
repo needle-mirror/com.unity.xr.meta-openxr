@@ -1,13 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+#if UNITY_6000_5_OR_NEWER
+using Unity.Scripting.LifecycleManagement;
+#endif
 using UnityEngine.XR.ARSubsystems;
 
 namespace UnityEngine.XR.OpenXR.Features.Meta
 {
     class MetaOpenXRCpuImageApi : XRCpuImage.Api
     {
-        static readonly HashSet<TextureFormat> s_SupportedVideoConversionFormats = new HashSet<TextureFormat>
+        // Never modified.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
+        static readonly HashSet<TextureFormat> s_SupportedVideoConversionFormats = new()
         {
             TextureFormat.Alpha8,
             TextureFormat.R8,
@@ -27,7 +34,11 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             RawEnvironmentDepthConfidence = 3,
         }
 
-        internal static MetaOpenXRCpuImageApi instance { get; } = new MetaOpenXRCpuImageApi();
+        // Stateless.
+#if UNITY_6000_5_OR_NEWER
+        [NoAutoStaticsCleanup]
+#endif
+        internal static MetaOpenXRCpuImageApi instance { get; } = new();
 
         internal static bool TryAcquireLatestImage(ImageType imageType, out XRCpuImage.Cinfo cinfo)
             => NativeApi.UnityMetaOpenXR_CpuImage_TryAcquireLatestImage(imageType, out cinfo);
@@ -89,14 +100,17 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         {
 #if UNITY_ANDROID
             [DllImport(Constants.k_ARFoundationLibrary)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityMetaOpenXR_CpuImage_TryAcquireLatestImage(
                 ImageType imageType, out XRCpuImage.Cinfo cameraImageCinfo);
 
             [DllImport(Constants.k_ARFoundationLibrary)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityMetaOpenXR_CpuImage_TryAcquireLatestImageForPosition(
                 int cameraPosition, out XRCpuImage.Cinfo cameraImageCinfo);
 
             [DllImport(Constants.k_ARFoundationLibrary)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityMetaOpenXR_CpuImage_TryAcquireLatestStereoCpuImagePair(
                 out XRCpuImage.Cinfo leftCinfo, out XRCpuImage.Cinfo rightCinfo);
 
@@ -114,17 +128,21 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
             public static extern void UnityMetaOpenXR_CpuImage_DisposeAsyncRequest(int requestHandle);
 
             [DllImport(Constants.k_ARFoundationLibrary)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityMetaOpenXR_CpuImage_TryGetPlane(
                 int nativeHandle, int planeIndex, out XRCpuImage.Plane.Cinfo planeCinfo);
 
             [DllImport(Constants.k_ARFoundationLibrary)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityMetaOpenXR_CpuImage_HandleValid(int nativeHandle);
 
             [DllImport(Constants.k_ARFoundationLibrary)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityMetaOpenXR_CpuImage_TryGetConvertedDataSize(
                 int nativeHandle, Vector2Int dimensions, TextureFormat format, out int size);
 
             [DllImport(Constants.k_ARFoundationLibrary)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityMetaOpenXR_CpuImage_TryConvert(
                 int nativeHandle, XRCpuImage.ConversionParams conversionParams, IntPtr buffer, int bufferLength);
 
@@ -133,6 +151,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 int nativeHandle, XRCpuImage.ConversionParams conversionParams);
 
             [DllImport(Constants.k_ARFoundationLibrary)]
+            [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool UnityMetaOpenXR_CpuImage_TryGetAsyncRequestData(
                 int requestHandle, out IntPtr dataPtr, out int dataLength);
 
