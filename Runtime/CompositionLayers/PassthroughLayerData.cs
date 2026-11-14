@@ -13,8 +13,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         IconPath = "",
         InspectorIcon = "",
         ListViewIcon = "",
-        Description = "Passthrough Layer",
-        SuggestedExtenstionTypes = new Type[] { }
+        Description = "Passthrough Layer"
     )]
     public class PassthroughLayerData : LayerData
     {

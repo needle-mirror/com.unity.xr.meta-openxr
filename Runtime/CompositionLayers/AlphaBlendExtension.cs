@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.InteropServices;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
@@ -50,6 +51,9 @@ namespace Unity.XR.CompositionLayers.Extensions
             return m_NativeArray.GetUnsafePtr();
         }
 
+#if XR_COMPOSITION_LAYERS_7_0_OR_GREATER
+        [Obsolete("OnDestroy is a Unity callback that the package drives. Calling it directly is obsolete as of Composition Layers 7.0.0-pre.1, and it will become protected in a future release.")]
+#endif
         public override void OnDestroy()
         {
             base.OnDestroy();

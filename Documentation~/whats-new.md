@@ -1,22 +1,25 @@
 ---
 uid: meta-openxr-whats-new
 ---
-# What's new in version 2.6
+# What's new in version 7.0
 
-## New features
+Unity OpenXR: Meta 7.0 updates the package for AR Foundation 7.0 and Unity 7000.0, and removes support for session availability APIs that are obsolete in AR Foundation 7.0.
 
-### Stereo image capture
-
-* Added support for CPU camera image left/right single acquire and synchronized stereo pair via [MetaOpenXRCameraSubsystem.TryAcquireLatestCpuImageForPosition](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestCpuImageForPosition(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.CameraPosition,UnityEngine.XR.ARSubsystems.XRCpuImage.Cinfo@)), [MetaOpenXRCameraSubsystem.TryAcquireLatestStereoCpuImagePair](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestStereoCpuImagePair(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.XRCpuImagePair@)), and [MetaOpenXRCameraSubsystem.SetMaxStereoSyncAttempts](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.SetMaxStereoSyncAttempts(System.Int32)) for tuning stereo timestamp matching. Refer to [Access images via CPU](xref:meta-openxr-camera-image-capture#access-images-via-cpu) for more information.
-* Added support for GPU camera image left/right single acquire and synchronized stereo pair via [MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImageForPosition](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestGpuImageForPosition(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.CameraPosition,UnityEngine.XR.ARSubsystems.XRTextureDescriptor@)), [MetaOpenXRCameraSubsystem.ReleaseGpuImageForPosition](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.ReleaseGpuImageForPosition(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.CameraPosition,UnityEngine.XR.ARSubsystems.XRTextureDescriptor)), [MetaOpenXRCameraSubsystem.TryAcquireLatestStereoGpuImagePair](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.TryAcquireLatestStereoGpuImagePair(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.XRTextureDescriptorPair@)), and [MetaOpenXRCameraSubsystem.ReleaseStereoGpuImagePair](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.ReleaseStereoGpuImagePair(UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem.XRTextureDescriptorPair)). Refer to [Access images via GPU](xref:meta-openxr-camera-image-capture#access-images-via-gpu) for more information.
-* Both CPU and GPU image capture functionality accessed through the [MetaOpenXRCameraSubsystem](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaOpenXRCameraSubsystem) now require opting in to the feature.  Refer to [Image Capture](xref:meta-openxr-camera-image-capture) for details.
-
-### Social eye gaze
-
-* Added [MetaSocialEyeGazeFeature](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaSocialEyeGazeFeature) and [MetaSocialEyeGazeDevice](xref:UnityEngine.XR.OpenXR.Features.Meta.MetaSocialEyeGazeDevice) to support individual eye tracking poses.
+Discover new features and performance improvements in the latest update to Unity OpenXR: Meta.
 
 For a full list of changes in this version including backwards-compatible bugfixes, refer to the package [changelog](xref:meta-openxr-changelog).
 
-### Desktop standalone
+## Updated for AR Foundation 7.0
 
-* Added WindowsStandalone64 and macOSStandalone as included platforms for the Unity.XR.MetaOpenXR runtime assembly.
+Unity OpenXR: Meta 7.0 requires Unity 7000.0 or newer, AR Foundation 7.0, and XR Composition Layers 7.0. AR Foundation 7.0 contains breaking changes, such as the rename of `BoundedPlane` to [XRPlane](xref:UnityEngine.XR.ARSubsystems.XRPlane), which the Meta OpenXR plane subsystem now uses. Refer to [Upgrade to AR Foundation 7.0](xref:arfoundation-upgrade-guide-7-0) for the changes you need to make to your project.
+
+## Removed session availability checks
+
+In AR Foundation 7.0, the APIs that check session availability separately from starting a session are obsolete and cause compiler errors. As a result, the Meta OpenXR session subsystem no longer implements a session availability check.
+
+The following table lists the obsolete AR Foundation APIs that the Meta OpenXR session subsystem previously supported, and what to use instead:
+
+| API | Remediation |
+| :-- | :---------- |
+| `XRSessionSubsystem.GetAvailabilityAsync` | Call [XRResultStatus.IsSuccess](xref:UnityEngine.XR.ARSubsystems.XRResultStatus.IsSuccess) on the result of [TryStartAsync](xref:UnityEngine.XR.ARSubsystems.XRSubsystem`3.TryStartAsync*) instead. |
+| `ARSessionManager.CheckAvailability` | Call [XRResultStatus.IsSuccess](xref:UnityEngine.XR.ARSubsystems.XRResultStatus.IsSuccess) on the result of [TryStartAsync](xref:UnityEngine.XR.ARSubsystems.XRSubsystem`3.TryStartAsync*) instead. |

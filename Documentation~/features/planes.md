@@ -83,7 +83,7 @@ Refer to the table below to understand the mapping between AR Foundation's class
 
 ## Native pointer
 
-[BoundedPlane.nativePtr](xref:UnityEngine.XR.ARSubsystems.BoundedPlane.nativePtr) values returned by this package contain a pointer to the following struct:
+[XRPlane.nativePtr](xref:UnityEngine.XR.ARSubsystems.XRPlane.nativePtr) values returned by this package contain a pointer to the following struct:
 
 ```c
 typedef struct UnityXRNativePlane
@@ -96,7 +96,7 @@ typedef struct UnityXRNativePlane
 Cast the `void* planePtr` to an [XrSpace](https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#spaces) handle in C++ using the following example code:
 
 ```cpp
-// Marshal the native plane data from the BoundedPlane.nativePtr in C#
+// Marshal the native plane data from the XRPlane.nativePtr in C#
 UnityXRNativePlane nativePlaneData;
 XrSpace* planeXrSpaceHandle = static_cast<XrSpace*>(nativePlaneData.planePtr);
 ```

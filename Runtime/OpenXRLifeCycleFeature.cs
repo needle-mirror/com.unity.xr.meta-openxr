@@ -42,8 +42,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
         internal static bool TryRefreshEnabledState()
         {
             var metaOpenXRFeatureTypes = TypeCache.GetTypesDerivedFrom<MetaOpenXRFeature>(Constants.k_AssemblyName);
-            return TryRefreshEnabledStateForBuildTarget(BuildTargetGroup.Android, metaOpenXRFeatureTypes)
-                && TryRefreshEnabledStateForBuildTarget(BuildTargetGroup.Standalone, metaOpenXRFeatureTypes);
+            var androidRefreshed = TryRefreshEnabledStateForBuildTarget(BuildTargetGroup.Android, metaOpenXRFeatureTypes);
+            var standaloneRefreshed = TryRefreshEnabledStateForBuildTarget(BuildTargetGroup.Standalone, metaOpenXRFeatureTypes);
+            return androidRefreshed && standaloneRefreshed;
         }
 
         static Action GetRefreshMethodWithRemainingRetries(int remainingRetries)

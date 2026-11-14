@@ -8,15 +8,26 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.7.0] - 2026-10-16
-
-### Added
+## [7.0.0-pre.1] - 2026-11-14
 
 ### Changed
 
-### Deprecated
+- Changed Meta-OpenXR package version to 7.0.0-pre.1.
+- Changed the minimum Unity version from 6000.0 to 7000.0.
+- Changed the minimum dependency version of AR Foundation from 6.6.0 to 7.0.0-pre.1.
+- Changed the minimum dependency version of XR Composition Layers from 2.4.0 to 7.0.0-pre.1.
+- Changed `PassthroughLayerData` to no longer assign the default value of `CompositionLayerDataAttribute.SuggestedExtenstionTypes`, and marked the `AlphaBlendExtension.OnDestroy` override obsolete to match its base method. Both are obsolete in XR Composition Layers 7.0.0-pre.1.
+- Updated the plane subsystem to use [XRPlane](xref:UnityEngine.XR.ARSubsystems.XRPlane), which replaces `BoundedPlane` in AR Foundation 7.0.
 
 ### Removed
+
+- Removed the session subsystem's implementation of session availability checks, because `XRSessionSubsystem.GetAvailabilityAsync` is obsolete as of AR Foundation 7.0. To check whether a session is supported on the device, call [XRResultStatus.IsSuccess](xref:UnityEngine.XR.ARSubsystems.XRResultStatus.IsSuccess) on the result of [TryStartAsync](xref:UnityEngine.XR.ARSubsystems.XRSubsystem`3.TryStartAsync*) instead.
+
+### Fixed
+
+- Fixed a rare issue where plug-in lifecycle could possibly become out of sync with your enabled OpenXR settings.
+
+## [2.7.0] - 2026-10-16
 
 ### Fixed
 
@@ -25,8 +36,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed compiler warnings from usages of APIs that are deprecated as of AR Foundation 6.7.
 - Fixed an issue where `ColocationDiscoveryFeature.advertisementState` and `ColocationDiscoveryFeature.discoveryState` weren't reset when the OpenXR instance was destroyed, which caused later calls to start colocation advertisement or discovery to fail with a validation error after XR was restarted, or after re-entering Play mode with domain reload disabled.
 - Fixed an issue where the passthrough composition layer didn't destroy its native passthrough handles when the OpenXR session ended, and could later try to destroy handles from a previous session after XR was restarted or after re-entering Play mode with domain reload disabled.
-
-### Security
 
 ## [2.6.1] - 2026-08-20
 
@@ -265,8 +274,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue where trackable poses would fail to update when the OpenXR runtime returned valid but untracked data.
 - Fixed an issue where planes that should be classified as `WallArt` were classified as `Other`.
-
-### Security
 
 ## [2.0.0-pre.1] - 2024-03-15
 

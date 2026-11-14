@@ -70,9 +70,9 @@ namespace UnityEngine.XR.OpenXR.Features.Meta.Tests
 #endif
         static readonly DestroyNative s_DestroyPinned = DestroyInterceptor;
 
-        static readonly IntPtr s_CreatePtr = Marshal.GetFunctionPointerForDelegate(s_CreatePinned);
-        static readonly IntPtr s_GetGazesPtr = Marshal.GetFunctionPointerForDelegate(s_GetGazesPinned);
-        static readonly IntPtr s_DestroyPtr = Marshal.GetFunctionPointerForDelegate(s_DestroyPinned);
+        static readonly IntPtr s_CreatePtr = RootedFunctionPointer.For(s_CreatePinned);
+        static readonly IntPtr s_GetGazesPtr = RootedFunctionPointer.For(s_GetGazesPinned);
+        static readonly IntPtr s_DestroyPtr = RootedFunctionPointer.For(s_DestroyPinned);
 
         static readonly unsafe IntPtr k_EyeTrackingSupportedPtr =
             RootedFunctionPointer.For(

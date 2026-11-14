@@ -1,4 +1,3 @@
-using System.Reflection;
 using NUnit.Framework;
 using UnityEditor.PackageManager;
 using UnityEngine.XR.OpenXR.Features.Meta;
@@ -8,6 +7,8 @@ namespace UnityEditor.XR.OpenXR.Features.Meta.Tests
     [TestFixture]
     class EditorDocumentationTests
     {
+        const string k_PackageName = "com.unity.xr.meta-openxr";
+
         /// <summary>
         /// <see cref="PackageManager.PackageInfo"/> for xr.sdk.meta-openxr.
         /// </summary>
@@ -16,10 +17,7 @@ namespace UnityEditor.XR.OpenXR.Features.Meta.Tests
         [OneTimeSetUp]
         public void SetUp()
         {
-            var assembly = Assembly.Load("Unity.XR.MetaOpenXR");
-            Assert.That(assembly, Is.Not.Null);
-
-            m_PackageInfo = PackageManager.PackageInfo.FindForAssembly(assembly);
+            m_PackageInfo = PackageManager.PackageInfo.FindForPackageName(k_PackageName);
             Assert.That(m_PackageInfo, Is.Not.Null);
             Assert.That(m_PackageInfo.version, Is.Not.Null);
             Assert.That(m_PackageInfo.version, Is.Not.Empty);

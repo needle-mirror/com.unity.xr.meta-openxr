@@ -109,7 +109,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
                 }
             }
 
-            public override unsafe TrackableChanges<BoundedPlane> GetChanges(BoundedPlane defaultPlane, Allocator allocator)
+            public override unsafe TrackableChanges<XRPlane> GetChanges(XRPlane defaultPlane, Allocator allocator)
             {
                 NativeApi.GetChanges(
                     out var addedPtr, out var addedCount,
@@ -119,7 +119,7 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
                 try
                 {
-                    return new TrackableChanges<BoundedPlane>(
+                    return new TrackableChanges<XRPlane>(
                         addedPtr, addedCount,
                         updatedPtr, updatedCount,
                         removedPtr, removedCount,

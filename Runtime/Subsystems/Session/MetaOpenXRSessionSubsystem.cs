@@ -132,15 +132,6 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
             public override void Destroy() => NativeApi.UnityOpenXRMeta_Session_Destruct();
 
-#if ARFOUNDATION_6_7_0_OR_NEWER
-            [Obsolete("GetAvailabilityAsync has been deprecated in AR Foundation version 6.7. Call XRResultStatus.IsSuccess on the result of TryStartAsync instead.")]
-#endif
-            public override Promise<SessionAvailability> GetAvailabilityAsync()
-                => Promise<SessionAvailability>.CreateResolvedPromise(
-                    NativeApi.UnityOpenXRMeta_Session_IsSupported()
-                        ? SessionAvailability.Supported | SessionAvailability.Installed
-                        : SessionAvailability.None);
-
             public void OnSessionStateChange(int oldState, int newState)
             {
                 m_SessionState = (XrSessionState)newState;
@@ -187,10 +178,6 @@ namespace UnityEngine.XR.OpenXR.Features.Meta
 
             [DllImport(Constants.k_ARFoundationLibrary)]
             public static extern void UnityOpenXRMeta_Session_Stop();
-
-            [DllImport(Constants.k_ARFoundationLibrary)]
-            [return: MarshalAs(UnmanagedType.I1)]
-            public static extern bool UnityOpenXRMeta_Session_IsSupported();
 
             [DllImport(Constants.k_ARFoundationLibrary, EntryPoint = "UnityOpenXRMeta_SceneCapture_TryRequestSceneCapture")]
             [return: MarshalAs(UnmanagedType.I1)]
